@@ -1,0 +1,102 @@
+<resources>
+    <string name="app_name">Nacleica</string>
+    <string name="noTask">Nu sunt sarcini de efectuat</string>
+    <string name="helloUser">Salut</string>
+    <string name="newTask">Sarcina noua</string>
+    <string name="pendingTask">Sarcina in asteptare</string>
+    <string name="doneTask">Sarcina finisata</string>
+    <string name="cancelTask">Sarcina anulata</string>
+    <string name="user_name">Numele *</string>
+    <string name="user_prename">Prenumele *</string>
+    <string name="password">Parola *</string>
+    <string name="conf_password">Conf. parola *</string>
+    <string name="user_title">Functia angajatului *</string>
+    <string name="login_button">Logheaza-te</string>
+    <string name="register_button">Inregistreaza</string>
+    <string name="no_worker">Nu aveti cont? Sunati administratorul</string>
+    <string name="assign_task">Atribuire sarcina</string>
+    <string name="taskName">Den. sarcinii</string>
+    <string name="worker">Angajatul</string>
+    <string name="period">Perioada de executie</string>
+    <string name="from_period">De la</string>
+    <string name="to_period">Pina la</string>
+    <string name="assign_button">Atribuie</string>
+<!--
+    <string-array name="tab_A">
+        <item>Item 1A</item>
+        <item>Item 1B</item>
+        <item>Item 1C</item>
+        <item>Item 1D</item>
+        <item>Item 1E</item>
+        <item>Item 1F</item>
+        <item>Item 1G</item>
+        <item>Item 1H</item>
+        <item>Item 1I</item>
+        <item>Item 1J</item>
+        <item>Item 1K</item>
+        <item>Item 1L</item>
+        <item>Item 1M</item>
+        <item>Item 1N</item>
+        <item>Item 1O</item>
+        <item>Item 1P</item>
+        <item>Item 1Q</item>
+        <item>Item 1R</item>
+        <item>Item 1S</item>
+        <item>Item 1T</item>
+    </string-array>
+
+    <string-array name="tab_B">
+        <item>Item 2A</item>
+        <item>Item 2B</item>
+        <item>Item 2C</item>
+        <item>Item 2D</item>
+        <item>Item 2E</item>
+        <item>Item 2F</item>
+        <item>Item 2G</item>
+        <item>Item 2H</item>
+        <item>Item 2I</item>
+        <item>Item 2J</item>
+        <item>Item 2K</item>
+        <item>Item 2L</item>
+        <item>Item 2M</item>
+        <item>Item 2N</item>
+        <item>Item 2O</item>
+        <item>Item 2P</item>
+        <item>Item 2Q</item>
+        <item>Item 2R</item>
+        <item>Item 2S</item>
+        <item>Item 2T</item>
+    </string-array>
+
+    <string-array name="tab_C">
+        <item>Item 3A</item>
+        <item>Item 3B</item>
+        <item>Item 3C</item>
+        <item>Item 3D</item>
+        <item>Item 3E</item>
+        <item>Item 3F</item>
+        <item>Item 3G</item>
+        <item>Item 3H</item>
+        <item>Item 3I</item>
+        <item>Item 3J</item>
+        <item>Item 3K</item>
+        <item>Item 3L</item>
+        <item>Item 3M</item>
+        <item>Item 3N</item>
+        <item>Item 3O</item>
+        <item>Item 3P</item>
+        <item>Item 3Q</item>
+        <item>Item 3R</item>
+        <item>Item 3S</item>
+        <item>Item 3T</item>
+    </string-array>-->
+    <string name="val_name">Introduceti numele</string>
+    <string name="val_password">Introduceti parola</string>
+    <string name="error_name">Introduceti numele</string>
+    <string name="error_prename">Introduceti prenumele</string>
+    <string name="error_password">Introduceti parola</string>
+    <string name="error_name_password">Nu exista asa cont. Va rugam sa va inregistra-ti.</string>
+    <string name="error_password_match">Nu coincide cu parola de confirmare</string>
+    <string name="error_email_exists">Deja exista cont cu asa adresa de email</string>
+    <string name="success_message">Inregistrarea s-a salvat cu succes</string>
+</resources>
