@@ -1,16 +1,9 @@
 package com.planning.nacleica;
 
-
-
-
 import android.os.Bundle;
-
 import android.view.View;
-
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -40,15 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        fillNewTask();
+
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
 
         tabs.setupWithViewPager(viewPager);
     }
 
-    public void fillNewTask()
-    {
 
-    }
 }

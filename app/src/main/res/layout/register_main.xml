@@ -20,23 +20,21 @@
             android:layout_gravity="center"
             android:orientation="vertical">
 
-            <!--<ImageView
+           <!-- <ImageView
+                android:id="@+id/imageViewLog"
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:src="@drawable/logo_loading" />-->
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/userImage"
                 android:layout_width="100dp"
-                android:adjustViewBounds="true"
                 android:background="@drawable/img"
                 android:src="@drawable/ic_profile"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
-                android:layout_weight="1"/>-->
-
-            <ImageView
-                android:id="@+id/imageViewLog"
-                android:layout_width="300dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:src="@drawable/logo_loading" />
+                android:layout_weight="1"/>
 
             <!--<LinearLayout
                 android:layout_width="match_parent"
@@ -95,6 +93,22 @@
             <!--</LinearLayout>
         </LinearLayout>
 -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/user_birth_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/user_birth"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_birth_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="@string/user_birth"
+                android:inputType="text"
+                android:maxLines="1" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -109,7 +123,7 @@
                     android:text="@string/user_title"
                     android:textStyle="bold" />
 
-                <Spinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/user_title_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

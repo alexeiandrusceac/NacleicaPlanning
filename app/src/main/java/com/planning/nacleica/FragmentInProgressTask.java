@@ -84,8 +84,7 @@ public class FragmentInProgressTask extends Fragment {
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
-        } else {
-            noDataView.setVisibility(View.VISIBLE);
+        } else { noDataView.setVisibility(View.VISIBLE);
         }
     }
 

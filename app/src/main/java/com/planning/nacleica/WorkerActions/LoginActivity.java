@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.widget.NestedScrollView;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private final AppCompatActivity compatActivity = LoginActivity.this;
     private NestedScrollView scrollView;
     private TextInputLayout nameLayout;
@@ -30,26 +30,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ValidationWorkerInputData valWorkerInput;
     private DataBaseHelper workerDBHelper;
     private AppBarLayout appBarLayout;
-   // private Toolbar loginToolbar;
+    private TextView orRegister;
+    // private Toolbar loginToolbar;
     WorkerSession session;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
-        workerDBHelper = DataBaseHelper.getInstance(this);
-
-        // Worker Session Manager
-        session = new WorkerSession(getApplicationContext());
         getSupportActionBar().hide();
+        initUI();
 
+    }
+
+    void initUI() {
+        workerDBHelper = DataBaseHelper.getInstance(this);
+        session = new WorkerSession(getApplicationContext());
         ///Initializarea obiectelor din activity
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
         nameLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
         passwordLayout = (TextInputLayout) findViewById(R.id.password_layout);
         nameInputEditText = (TextInputEditText) findViewById(R.id.user_name_text);
         passwordInputEditText = (TextInputEditText) findViewById(R.id.password_Input);
-        TextView orRegister = (TextView)findViewById(R.id.orRegister);
+        orRegister = (TextView) findViewById(R.id.orRegister);
         loginButton = (AppCompatButton) findViewById(R.id.login_button);
         registerLink = (TextView) findViewById(R.id.registerlink);
 
@@ -62,40 +65,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.login_button:
                 checkUser();
                 break;
             case R.id.registerlink:
-                Intent intentRegister = new Intent(getApplicationContext(),RegisterActivity.class);
+                Intent intentRegister = new Intent(getApplicationContext(), RegisterActivity.class);
                 startActivity(intentRegister);
                 break;
         }
     }
-    private void checkUser()
-    {
-        if(!valWorkerInput.nameValidating(nameInputEditText,nameLayout,getString(R.string.error_name)))
+
+    private void checkUser() {
+        if (!valWorkerInput.nameValidating(nameInputEditText, nameLayout, getString(R.string.error_name)))
             return;
 
-        if(!valWorkerInput.textFilled(passwordInputEditText,passwordLayout,getString(R.string.error_password)))
+        if (!valWorkerInput.textFilled(passwordInputEditText, passwordLayout, getString(R.string.error_password)))
             return;
 
-        if(workerDBHelper.checkUserOnLogin(nameInputEditText.getText().toString().trim(),passwordInputEditText.getText().toString().trim()))
-        {
-            Worker currWorker = workerDBHelper.getWorker(nameInputEditText.getText().toString(),passwordInputEditText.getText().toString());
-            session.createWorkerLoginSession(nameInputEditText.getText().toString(),passwordInputEditText.getText().toString());
+        if (workerDBHelper.checkUserOnLogin(nameInputEditText.getText().toString().trim(), passwordInputEditText.getText().toString().trim())) {
+            Worker currWorker = workerDBHelper.getWorker(nameInputEditText.getText().toString(), passwordInputEditText.getText().toString());
+            session.createWorkerLoginSession(nameInputEditText.getText().toString(), passwordInputEditText.getText().toString());
 
             Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-            //mainActivityIntent.putExtra("Image",C.Image);
-            //mainActivityIntent.putExtra("Email",currUser.Email);
-            mainActivityIntent.putExtra("Id",currWorker.workerID);
+            mainActivityIntent.putExtra("Image", currWorker.Image);
+            mainActivityIntent.putExtra("Name", currWorker.Name);
+            mainActivityIntent.putExtra("Prename", currWorker.Prename);
+            mainActivityIntent.putExtra("Id", currWorker.workerID);
 
             startActivity(mainActivityIntent);
             finish();
-        }
-        else
-        {
-            Snackbar.make(scrollView,getString(R.string.error_name_password),Snackbar.LENGTH_LONG).show();
+        } else {
+            Snackbar.make(scrollView, getString(R.string.error_name_password), Snackbar.LENGTH_LONG).show();
         }
     }
 }

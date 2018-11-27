@@ -99,4 +99,7 @@
     <string name="error_password_match">Nu coincide cu parola de confirmare</string>
     <string name="error_email_exists">Deja exista cont cu asa adresa de email</string>
     <string name="success_message">Inregistrarea s-a salvat cu succes</string>
+    <string name="user_birth">Data nasterii</string>
+    <string name="take_photo_text">Faceti o poza</string>
+    <string name="choose_photo_text">Alegeti din galerie</string>
 </resources>
