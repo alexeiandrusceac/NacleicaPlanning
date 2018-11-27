@@ -13,11 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by anupamchugh on 05/10/16.
  */
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<TextItemViewHolder> {
+public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<TextItemViewHolder> {
 
     List<Tasks> items;
 
-    public RecyclerViewAdapter(List<Tasks> items) {
+    public WorkerRecyclerViewAdapter(List<Tasks> items) {
         this.items = items;
     }
 

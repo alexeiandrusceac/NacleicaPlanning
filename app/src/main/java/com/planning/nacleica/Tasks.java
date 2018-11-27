@@ -4,10 +4,15 @@ public class Tasks {
     public int idTask;
     public int idWorker;
     public String TaskName;
-    public String TaskDescription;
+    public String TaskCompany;
+    public String TaskCompanyPhone;
     public String TaskState;
     public String TaskPeriodFrom;
     public String TaskPeriodTo;
+    public byte[] TaskImageBefore;
+    public byte[] TaskImageAfter;
+
+
     public Tasks(){}
 
 }

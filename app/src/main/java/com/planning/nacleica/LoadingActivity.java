@@ -1,13 +1,11 @@
 package com.planning.nacleica;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.widget.ImageView;
-import com.planning.nacleica.UserActions.LoginActivity;
-import androidx.annotation.Nullable;
+import com.planning.nacleica.WorkerActions.LoginActivity;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoadingActivity extends AppCompatActivity {

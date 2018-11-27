@@ -9,9 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.planning.nacleica.database.DataBaseHelper;
-
-import org.w3c.dom.Text;
+import com.planning.nacleica.Database.DataBaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,21 +38,19 @@ public class FragmentNewTask extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         noDataView = (TextView)view.findViewById(R.id.noDataView);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-        listOfNewTask = dataBaseHelper.getTask();
+        listOfNewTask = dataBaseHelper.getWorkerNewTask();
        // String[] items = getResources().getStringArray(R.array.tab_A);
         if(listOfNewTask.size()>0) {
             noDataView.setVisibility(View.GONE);
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(listOfNewTask);
+            WorkerRecyclerViewAdapter adapter = new WorkerRecyclerViewAdapter(listOfNewTask);
             recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
-
         }
         else
         {
             noDataView.setVisibility(View.VISIBLE);
         }
-
     }
 }

@@ -23,8 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UserActions.LoginActivity"></activity>
-        <activity android:name=".UserActions.RegisterActivity"></activity>
+        <activity android:name=".WorkerActions.LoginActivity"></activity>
+        <activity android:name=".WorkerActions.RegisterActivity"></activity>
         <activity android:name=".MainActivity"></activity>
         <!--<activity android:name=".UserActions.LoginActivity"></activity>
         <activity android:name=".MainActivity">-->

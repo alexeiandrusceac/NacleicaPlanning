@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.planning.nacleica.database.DataBaseHelper;
+import com.planning.nacleica.Database.DataBaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,11 +75,11 @@ public class FragmentInProgressTask extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         noDataView = (TextView) view.findViewById(R.id.noDataView);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-        listOfInProgressTask = dataBaseHelper.getTask();
+        listOfInProgressTask = dataBaseHelper.getWorkerInProgressTask();
         if (listOfInProgressTask.size() > 0) {
             noDataView.setVisibility(View.GONE);
 //        /String[] items = getResources().getStringArray(R.array.tab_B);
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(listOfInProgressTask);
+            WorkerRecyclerViewAdapter adapter = new WorkerRecyclerViewAdapter(listOfInProgressTask);
             recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(layoutManager);

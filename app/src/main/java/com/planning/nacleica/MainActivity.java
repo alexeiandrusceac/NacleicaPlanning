@@ -6,15 +6,10 @@ package com.planning.nacleica;
 import android.os.Bundle;
 
 import android.view.View;
-import android.widget.TextView;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.planning.nacleica.database.DataBaseHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;

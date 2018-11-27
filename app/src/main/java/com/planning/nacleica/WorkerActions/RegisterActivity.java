@@ -1,7 +1,6 @@
-package com.planning.nacleica.UserActions;
+package com.planning.nacleica.WorkerActions;
 
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,9 +13,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Title;
-import com.planning.nacleica.database.DataBaseHelper;
-
-import java.io.ByteArrayOutputStream;
+import com.planning.nacleica.Database.DataBaseHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;

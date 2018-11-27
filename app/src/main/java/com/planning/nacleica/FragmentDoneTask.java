@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.planning.nacleica.database.DataBaseHelper;
+import com.planning.nacleica.Database.DataBaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,12 +78,11 @@ public class FragmentDoneTask extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         noDataView = (TextView) view.findViewById(R.id.noDataView);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
+        listOfDoneTask = dataBaseHelper.getWorkerDoneTask();
 
-        listOfDoneTask = dataBaseHelper.getTask();
         if (listOfDoneTask.size() > 0) {
             noDataView.setVisibility(View.GONE);
-
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(listOfDoneTask);
+            WorkerRecyclerViewAdapter adapter = new WorkerRecyclerViewAdapter(listOfDoneTask);
             recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(layoutManager);

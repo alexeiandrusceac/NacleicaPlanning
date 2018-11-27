@@ -1,9 +1,8 @@
-package com.planning.nacleica.UserActions;
+package com.planning.nacleica.WorkerActions;
 
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,9 +12,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.planning.nacleica.MainActivity;
 import com.planning.nacleica.R;
-import com.planning.nacleica.database.DataBaseHelper;
+import com.planning.nacleica.Database.DataBaseHelper;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.widget.NestedScrollView;

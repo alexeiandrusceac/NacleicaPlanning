@@ -1,4 +1,4 @@
-package com.planning.nacleica.UserActions;
+package com.planning.nacleica.WorkerActions;
 
 public class Worker {
 
@@ -6,8 +6,9 @@ public class Worker {
     public String Name;
     public String Prename;
     public String Password;
-    public String Title;
-
+    public int Title;
+    public byte[] Image;
+    public String Birthday;
     public Worker(){}
 
 }
