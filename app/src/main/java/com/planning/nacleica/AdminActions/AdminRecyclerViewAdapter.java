@@ -4,6 +4,7 @@ package com.planning.nacleica.AdminActions;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
@@ -18,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class AdminRecyclerViewAdapter extends RecyclerView.Adapter<TextItemViewHolder> {
-
+    TextView noAdminDataView;
     List<Tasks> items;
 
     public AdminRecyclerViewAdapter(List<Tasks> items) {
@@ -28,12 +29,21 @@ public class AdminRecyclerViewAdapter extends RecyclerView.Adapter<TextItemViewH
     @Override
     public TextItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
+        noAdminDataView = view.findViewById(R.id.noDataView);
+
+        if (items.size() > 0) {
+            noAdminDataView.setVisibility(View.GONE);
+        } else {
+            noAdminDataView.setVisibility(View.VISIBLE);
+        }
         return new TextItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(TextItemViewHolder holder, int position) {
-        holder.bind(String.valueOf(items.get(position)));
+
+        holder.bind(items);
+
     }
 
     @Override

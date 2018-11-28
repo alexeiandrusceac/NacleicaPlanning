@@ -3,13 +3,12 @@ package com.planning.nacleica;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.ImageView;
 import com.planning.nacleica.WorkerActions.LoginActivity;
+import com.planning.nacleica.WorkerActions.RegisterActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoadingActivity extends AppCompatActivity {
-    private ImageView imageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,7 +23,7 @@ public class LoadingActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        },5000);
+        },3000);
 
     }
 

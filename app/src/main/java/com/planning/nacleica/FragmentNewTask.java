@@ -29,6 +29,8 @@ public class FragmentNewTask extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment, container, false);
+        //noDataView = (TextView) rootView.findViewById(R.id.noDataView);
+
         return rootView;
 
     }
@@ -36,21 +38,15 @@ public class FragmentNewTask extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        noDataView = (TextView)view.findViewById(R.id.noDataView);
+
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
         listOfNewTask = dataBaseHelper.getWorkerNewTask();
-       // String[] items = getResources().getStringArray(R.array.tab_A);
-        if(listOfNewTask.size()>0) {
-            noDataView.setVisibility(View.GONE);
-            WorkerRecyclerViewAdapter adapter = new WorkerRecyclerViewAdapter(listOfNewTask);
-            recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(adapter);
-        }
-        else
-        {
-            noDataView.setVisibility(View.VISIBLE);
-        }
+
+        WorkerRecyclerViewAdapter adapter = new WorkerRecyclerViewAdapter(listOfNewTask);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
     }
 }

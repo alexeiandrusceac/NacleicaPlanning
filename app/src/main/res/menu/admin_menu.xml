@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item android:id="@+id/home"
+            android:icon="@mipmap/home_ic"
+            android:title="@string/home"/>
+        <item
+            android:title="@string/adminWorkers"
+            android:id="@+id/adminWorkers"/>
+
+        <item
+            android:id="@+id/logOut_button"
+            android:icon="@mipmap/log_out"
+            android:title="@string/logout_button"
+            />
+    </group>
+</menu>

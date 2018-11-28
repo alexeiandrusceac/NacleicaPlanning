@@ -4,9 +4,11 @@ package com.planning.nacleica;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -14,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<TextItemViewHolder> {
-
+    TextView noDataView;
     List<Tasks> items;
 
     public WorkerRecyclerViewAdapter(List<Tasks> items) {
@@ -24,12 +26,21 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<TextItemView
     @Override
     public TextItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
+        noDataView = view.findViewById(R.id.noDataView);
+        if (items.size() > 0) {
+            noDataView.setVisibility(View.GONE);
+        } else {
+            noDataView.setVisibility(View.VISIBLE);
+        }
         return new TextItemViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(TextItemViewHolder holder, int position) {
-        holder.bind(String.valueOf(items.get(position)));
+
+        holder.bind(items);
+
     }
 
     @Override

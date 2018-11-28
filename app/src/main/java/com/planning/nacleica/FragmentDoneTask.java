@@ -39,19 +39,19 @@ public class FragmentDoneTask extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        noDataView = (TextView) view.findViewById(R.id.noDataView);
+        //noDataView = (TextView) view.findViewById(R.id.noDataView);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
         listOfDoneTask = dataBaseHelper.getWorkerDoneTask();
 
         if (listOfDoneTask.size() > 0) {
-            noDataView.setVisibility(View.GONE);
+            //noDataView.setVisibility(View.GONE);
             WorkerRecyclerViewAdapter adapter = new WorkerRecyclerViewAdapter(listOfDoneTask);
             recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
         } else {
-            noDataView.setVisibility(View.GONE);
+           // noDataView.setVisibility(View.GONE);
         }
     }
 }

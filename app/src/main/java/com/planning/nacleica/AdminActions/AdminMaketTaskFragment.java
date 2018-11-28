@@ -38,20 +38,15 @@ public class AdminMaketTaskFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adminNoDataView = (TextView) view.findViewById(R.id.adminNoDataView);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
         listOfAdminMaketTask = dataBaseHelper.getAdminMaketTask();
-        if (listOfAdminMaketTask.size() > 0) {
-            adminNoDataView.setVisibility(View.GONE);
-//        /String[] items = getResources().getStringArray(R.array.tab_B);
-            AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(listOfAdminMaketTask);
-            adminRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-            adminRecyclerView.setLayoutManager(layoutManager);
-            adminRecyclerView.setAdapter(adapter);
-        } else {
-            adminNoDataView.setVisibility(View.VISIBLE);
-        }
+
+        AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(listOfAdminMaketTask);
+        adminRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        adminRecyclerView.setLayoutManager(layoutManager);
+        adminRecyclerView.setAdapter(adapter);
+
     }
 
 }

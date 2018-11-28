@@ -29,8 +29,8 @@ public class AdminNewTaskFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(
-                R.layout.fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment, container, false);
+
         return rootView;
     }
 
@@ -39,20 +39,17 @@ public class AdminNewTaskFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adminNoDataView = (TextView) view.findViewById(R.id.adminNoDataView);
+       // adminNoDataView = (TextView) view.findViewById(R.id.adminNoDataView);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
         listOfAdminTask = dataBaseHelper.getAdminNewTask();
-        if (listOfAdminTask.size() > 0) {
-            adminNoDataView.setVisibility(View.GONE);
-//        /String[] items = getResources().getStringArray(R.array.tab_B);
-            AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(listOfAdminTask);
-            adminRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-            adminRecyclerView.setLayoutManager(layoutManager);
-            adminRecyclerView.setAdapter(adapter);
-        } else {
-            adminNoDataView.setVisibility(View.VISIBLE);
-        }
+
+        //String[] items = getResources().getStringArray(R.array.tab_B);
+        AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(listOfAdminTask);
+        adminRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        adminRecyclerView.setLayoutManager(layoutManager);
+        adminRecyclerView.setAdapter(adapter);
+
     }
 
 }

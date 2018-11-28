@@ -102,4 +102,11 @@
     <string name="user_birth">Data nasterii</string>
     <string name="take_photo_text">Faceti o poza</string>
     <string name="choose_photo_text">Alegeti din galerie</string>
+    <string name="deletePhoto">Eliminati poza</string>
+    <string name="logout_button">Iesire</string>
+    <string name="home">Acasa</string>
+    <string name="adminWorkers">Monitorizarea Angajatilor</string>
+    <string name="no_workers">Nu sunt angajati</string>
+    <string name="navigation_drawer_open">Open </string>
+    <string name="navigation_drawer_close">Close </string>
 </resources>

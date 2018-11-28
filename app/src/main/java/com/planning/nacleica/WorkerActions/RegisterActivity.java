@@ -1,74 +1,42 @@
 package com.planning.nacleica.WorkerActions;
 
-/*
-import android.annotation.TargetApi;
-import android.app.DatePickerDialog;
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.text.InputType;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;*/
-
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
+
 import android.app.DatePickerDialog;
-import android.content.Context;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
+
 import android.text.InputType;
-import android.view.LayoutInflater;
+
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-
-
-import android.app.DatePickerDialog;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.PopupMenu;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSpinner;
-
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Title;
 import com.planning.nacleica.Database.DataBaseHelper;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Calendar;
 
 import androidx.annotation.RequiresApi;
@@ -97,30 +65,31 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private AppCompatImageView userImageValue;
     private TextInputLayout userBirthdayLayout;
     private TextInputEditText userBirthdayValue;
-    private int RESULT_LOAD_IMAGE = 1;
-    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    private static final int RESULT_GALLERY_IMAGE = 1;
+    private static final int RESULT_CAMERA_IMAGE = 0;
     public DatePickerDialog datepicker;
     private ByteArrayOutputStream baos = new ByteArrayOutputStream();
     public View photoView;
-public String data;
+    public String data;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_main);
-        //getSupportActionBar().hide();
+        getSupportActionBar().hide();
         initUI();
     }
 
     void initUI() {
+        valUserData = new ValidationWorkerInputData(compatActivity);
         workerDBHelper = DataBaseHelper.getInstance(this);
+
         workerData = new Worker();
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
-        //final ImagePopup imagePopup = new ImagePopup(this);
         nameInputLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
         prenameInputLayout = (TextInputLayout) findViewById(R.id.user_prename_layout);
         passwordInputLayout = (TextInputLayout) findViewById(R.id.user_pass_layout);
         confPasswordInputLayout = (TextInputLayout) findViewById(R.id.user_confpass_layout);
-
         nameInputValue = (TextInputEditText) findViewById(R.id.user_name_text);
         prenameInputValue = (TextInputEditText) findViewById(R.id.user_prename_text);
         workerTitleSpinner = (AppCompatSpinner) findViewById(R.id.user_title_text);
@@ -129,23 +98,16 @@ public String data;
         userImageValue = (AppCompatImageView) findViewById(R.id.userImage);
         userBirthdayLayout = (TextInputLayout) findViewById(R.id.user_birth_layout);
         userBirthdayValue = (TextInputEditText) findViewById(R.id.user_birth_text);
-
+        data = setDate();
         registerButton = (AppCompatButton) findViewById(R.id.register_button);
-
-
-        // String[] stringArray = (String[])(Title.values());
         workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item, Title.values()));
 
         registerButton.setOnClickListener(this);
-        valUserData = new ValidationWorkerInputData(compatActivity);
-        data =  setDate();
+
         userImageValue.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-               /* LayoutInflater inflaterPhoto = (LayoutInflater)RegisterActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                photoView = inflaterPhoto.inflate(R.menu.photo_menu,null);
-*/
                 PopupMenu popupMenu = new PopupMenu(compatActivity, userImageValue);
                 popupMenu.getMenuInflater().inflate(R.menu.photo_menu, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -153,17 +115,19 @@ public String data;
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.take_photo:
-                                if (checkSelfPermission(Manifest.permission.CAMERA)
-                                        != PackageManager.PERMISSION_GRANTED) {
-                                    requestPermissions(new String[]{Manifest.permission.CAMERA},
-                                            MY_CAMERA_PERMISSION_CODE);
+                                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                    requestPermissions(new String[]{Manifest.permission.CAMERA}, RESULT_CAMERA_IMAGE);
                                 } else {
-                                    startActivityForResult(new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE), RESULT_LOAD_IMAGE);
+                                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                    startActivityForResult(cameraIntent, RESULT_CAMERA_IMAGE);
                                 }
 
                                 return true;
                             case R.id.choose_photo:
-                                startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RESULT_LOAD_IMAGE);
+                                startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RESULT_GALLERY_IMAGE);
+                                return true;
+                            case R.id.delete_photo:
+                                 userImageValue.setImageDrawable(getDrawable(R.drawable.ic_profile));
                                 return true;
                         }
                         Toast.makeText(
@@ -180,40 +144,27 @@ public String data;
         });
     }
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        // MenuInflater inflater = getMenuInflater();
-
+        getMenuInflater().inflate(R.menu.menu_example,menu);
         return true;
-    }*/
+    }
 
-   /* @SuppressLint("NewApi")
+    @SuppressLint("NewApi")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            //case R.id.action_settings:
-            //    return true;
 
-            case R.id.take_photo:
-                if (checkSelfPermission(Manifest.permission.CAMERA)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA},
-                            MY_CAMERA_PERMISSION_CODE);
-                } else {
-                    startActivityForResult(new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE), RESULT_LOAD_IMAGE);
-                }
+            case R.id.action_settings:
+                registerUser();
                 return true;
-            case R.id.choose_photo:
-                startActivityForResult(new Intent(Intent.ACTION_PICK), RESULT_LOAD_IMAGE);
-                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
-
-
         }
 
-    }*/
+    }
 
     @Override
     public void onClick(View v) {
@@ -245,7 +196,7 @@ public String data;
             workerData.Prename = prenameInputValue.getText().toString();
             workerData.Password = passwordInputValue.getText().toString();
             workerData.Image = baos.toByteArray();
-            workerData.Birthday = /*userBirthdayValue.getText().toString();*/data ;
+            workerData.Birthday = /*userBirthdayValue.getText().toString();*/data;
             workerData.Title = workerTitleSpinner.getSelectedItemPosition();
             workerDBHelper.registerNewWorker(workerData);
             Snackbar.make(scrollView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
@@ -262,74 +213,51 @@ public String data;
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
+        if (requestCode == RESULT_CAMERA_IMAGE) {
+
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
                 Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
                 Intent cameraIntent = new
                         Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, RESULT_LOAD_IMAGE);
+                startActivityForResult(cameraIntent, 0);
             } else {
+
                 Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
 
         }
-        /*switch (requestCode) {
-            case 1: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    startActivityForResult(new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RESULT_LOAD_IMAGE);
-                    //startActivityForResult(cameraIntent, RESULT_LOAD_IMAGE);
-
-                } else {
-                    Toast.makeText(this, "Please give your permission.", Toast.LENGTH_LONG).show();
-                }
-                break;
-            }
-        }*/
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-       /* if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            userImageValue.setImageBitmap(photo);
-        }*/
         super.onActivityResult(requestCode, resultCode, data);
+        Bitmap photo = null;
+        Uri selectedImage;
+        switch (requestCode) {
+            case RESULT_CAMERA_IMAGE:
+                if (resultCode == RESULT_OK) {
+                    photo = (Bitmap) data.getExtras().get("data");
+                    userImageValue.setImageBitmap(photo);
+                }
+                break;
 
+            case RESULT_GALLERY_IMAGE:
+                if (resultCode == RESULT_OK) {
+                    selectedImage = data.getData();
+                    try {
+                        photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage));
+                        userImageValue.setImageBitmap(photo);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            //String[] filePathColumn = {MediaStore.Images.Media.DATA};
-/*
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            /*String picturePath = cursor.getString(cursor.getColumnIndex(filePathColumn[0]));
-            BitmapFactory.Options op = new BitmapFactory.Options();
-            op.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(picturePath,op);
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);*/
-
-            try {
-                Bitmap bit = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage));
-
-                userImageValue.setImageBitmap(bit);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage));
-
-            /*} catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }*/
-
-
-            // cursor.close();
-
+                break;
 
         }
     }
+
+
     /*protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 

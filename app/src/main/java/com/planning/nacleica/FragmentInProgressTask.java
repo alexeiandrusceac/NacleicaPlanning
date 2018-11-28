@@ -73,18 +73,18 @@ public class FragmentInProgressTask extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        noDataView = (TextView) view.findViewById(R.id.noDataView);
+        //noDataView = (TextView) view.findViewById(R.id.noDataView);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
         listOfInProgressTask = dataBaseHelper.getWorkerInProgressTask();
         if (listOfInProgressTask.size() > 0) {
-            noDataView.setVisibility(View.GONE);
+            //noDataView.setVisibility(View.GONE);
 //        /String[] items = getResources().getStringArray(R.array.tab_B);
             WorkerRecyclerViewAdapter adapter = new WorkerRecyclerViewAdapter(listOfInProgressTask);
             recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
-        } else { noDataView.setVisibility(View.VISIBLE);
+        } else { //noDataView.setVisibility(View.VISIBLE);
         }
     }
 
