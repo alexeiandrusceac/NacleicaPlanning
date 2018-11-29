@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".WorkerActions.LoginActivity"></activity>
-        <activity android:name=".WorkerActions.RegisterActivity"></activity>
+        <activity android:name=".WorkerActions.RegisterActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".AdminActions.AdminActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".AdminActions.AdminWorkerActivity" android:theme="@style/AppTheme.NoActionBar"></activity>

@@ -26,15 +26,19 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+import android.widget.Toolbar;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSpinner;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Title;
 import com.planning.nacleica.Database.DataBaseHelper;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.util.Calendar;
@@ -71,16 +75,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private ByteArrayOutputStream baos = new ByteArrayOutputStream();
     public View photoView;
     public String data;
+    Intent loginActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_main);
-        getSupportActionBar().hide();
         initUI();
     }
 
     void initUI() {
+        loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         valUserData = new ValidationWorkerInputData(compatActivity);
         workerDBHelper = DataBaseHelper.getInstance(this);
 
@@ -102,8 +107,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         registerButton = (AppCompatButton) findViewById(R.id.register_button);
         workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item, Title.values()));
 
-        registerButton.setOnClickListener(this);
+        androidx.appcompat.widget.Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.register_app_toolbar);
 
+        registerButton.setOnClickListener(this);
+        // action_settings = findViewById(R.id.action_settings);
         userImageValue.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -127,7 +134,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RESULT_GALLERY_IMAGE);
                                 return true;
                             case R.id.delete_photo:
-                                 userImageValue.setImageDrawable(getDrawable(R.drawable.ic_profile));
+                                userImageValue.setImageDrawable(getDrawable(R.drawable.ic_profile));
                                 return true;
                         }
                         Toast.makeText(
@@ -142,33 +149,49 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 popupMenu.show();
             }
         });
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startActivity(loginActivity);
+                finish();
+            }
+        });
+
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_example,menu);
-        return true;
+        getMenuInflater().inflate(R.menu.menu_example, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
-    @SuppressLint("NewApi")
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
-            case R.id.action_settings:
+            case R.id.register_worker:
                 registerUser();
-                return true;
+                break;
 
             default:
-                return super.onOptionsItemSelected(item);
+                break;
         }
 
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.register_worker:
+                registerUser();
+                break;
             case R.id.register_button:
                 registerUser();
                 break;
@@ -201,9 +224,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             workerDBHelper.registerNewWorker(workerData);
             Snackbar.make(scrollView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
             nameInputValue.setText(null);
-
-            Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(loginActivity);
+            finish();
         } else {
             // Snack Bar to show error message that record already exists
             Snackbar.make(scrollView, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show();
@@ -303,4 +325,5 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         });
         return userBirthdayValue.getText().toString();
     }
+
 }

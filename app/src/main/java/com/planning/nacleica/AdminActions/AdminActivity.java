@@ -1,10 +1,13 @@
 package com.planning.nacleica.AdminActions;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +36,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
-public class AdminActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener{
+public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public ViewPagerAdapter adminViewPagerAdapter, adminWorkerViewPageAdapter;
     public ViewPager adminViewPager, adminWorkerViewPager;
     public FloatingActionButton fab;
@@ -53,6 +56,7 @@ public class AdminActivity extends AppCompatActivity implements  NavigationView.
     FrameLayout frameLayout;
     LayoutInflater layoutInflater;
     Toolbar toolbar;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,11 +78,10 @@ public class AdminActivity extends AppCompatActivity implements  NavigationView.
         header = (navigationView).getHeaderView(0);
         usr_name_nav = header.findViewById(R.id.usr_name_nav);
         usr_pren_nav = header.findViewById(R.id.usr_pren_nav);
-        nav_header_imageView= header.findViewById(R.id.nav_header_imageView);
+        nav_header_imageView = header.findViewById(R.id.nav_header_imageView);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setupDrawer();
-
 
 
         Bundle b = getIntent().getExtras();
@@ -99,15 +102,13 @@ public class AdminActivity extends AppCompatActivity implements  NavigationView.
             }
         });
         toolbar = view.findViewById(R.id.main_app_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
 
-        TabLayout tabs =  view.findViewById(R.id.admin_tab);
+        TabLayout tabs = view.findViewById(R.id.admin_tab);
         TabLayout tabsWorker = view.findViewById(R.id.adminWorker_tab);
         adminViewPager = view.findViewById(R.id.adminViewPager);
         adminWorkerViewPager = view.findViewById(R.id.adminWorkerViewPager);
+
         adminViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
         adminViewPager.setAdapter(adminViewPagerAdapter);
 
@@ -117,8 +118,21 @@ public class AdminActivity extends AppCompatActivity implements  NavigationView.
         adminWorkerViewPager.setAdapter(adminWorkerViewPageAdapter);
         tabsWorker.setupWithViewPager(adminWorkerViewPager);
 
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+            @SuppressLint("WrongConstant")
+            @Override
+            public void onClick(View v) {
+
+                drawerLayout.openDrawer(Gravity.START);
+            }
+        });
     }
+
     private void setupDrawer() {
         toggle = new ActionBarDrawerToggle(AdminActivity.this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerOpened(View drawerView) {
@@ -139,6 +153,18 @@ public class AdminActivity extends AppCompatActivity implements  NavigationView.
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        toggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.home:
@@ -146,7 +172,7 @@ public class AdminActivity extends AppCompatActivity implements  NavigationView.
                 Intent homeActivity = new Intent(getApplicationContext(), AdminActivity.class);
                 homeActivity.putExtra("Image", userImage);
                 homeActivity.putExtra("Prename", userPrename);
-                homeActivity.putExtra("Name",userName);
+                homeActivity.putExtra("Name", userName);
                 homeActivity.putExtra("Id", idUser);
                 startActivity(homeActivity);
 
@@ -157,7 +183,7 @@ public class AdminActivity extends AppCompatActivity implements  NavigationView.
                 setTitle(AdminActivity.this.getResources().getString(R.string.adminWorkers));
                 postActivity.putExtra("Image", userImage);
                 postActivity.putExtra("Prename", userPrename);
-                postActivity.putExtra("Name",userName);
+                postActivity.putExtra("Name", userName);
                 postActivity.putExtra("Id", idUser);
                 startActivity(postActivity);
 
