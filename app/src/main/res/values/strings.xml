@@ -10,7 +10,7 @@
     <string name="user_prename">Prenumele *</string>
     <string name="password">Parola *</string>
     <string name="conf_password">Conf. parola *</string>
-    <string name="user_title">Functia angajatului *</string>
+    <string name="user_title">Functia angajat *</string>
     <string name="login_button">Logheaza-te</string>
     <string name="register_button">Inregistreaza</string>
     <string name="no_worker">Nu aveti cont? Sunati administratorul</string>

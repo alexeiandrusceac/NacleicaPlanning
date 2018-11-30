@@ -111,7 +111,6 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
         adminViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
         adminViewPager.setAdapter(adminViewPagerAdapter);
-
         tabs.setupWithViewPager(adminViewPager);
 
         adminWorkerViewPageAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 4);
@@ -127,8 +126,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             @SuppressLint("WrongConstant")
             @Override
             public void onClick(View v) {
-
-                drawerLayout.openDrawer(Gravity.START);
+            drawerLayout.openDrawer(Gravity.START);
             }
         });
     }

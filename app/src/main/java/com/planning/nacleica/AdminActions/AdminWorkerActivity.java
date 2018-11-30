@@ -33,6 +33,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.planning.nacleica.AdminWorkersRecyclerViewAdapter;
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Title;
@@ -42,7 +43,9 @@ import com.planning.nacleica.WorkerActions.WorkerSession;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,6 +58,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class AdminWorkerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     //private final AppCompatActivity compatActivity = AdminWorkerActivity.this;
@@ -62,7 +67,9 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
     private static final int RESULT_CAMERA_IMAGE = 0;
     Toolbar adminWorker_toolbar;
     DrawerLayout drawerLayout;
+    private RecyclerView adminWorkerRecView;
     public TextView usr_name_nav;
+    public AdminWorkersRecyclerViewAdapter adapterWorkers;
     private ActionBarDrawerToggle toggle;
     public TextView usr_pren_nav;
     public View view;
@@ -73,17 +80,17 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
     String userPrename, userName;
     AppCompatSpinner titleSpinner;
     WorkerSession session;
-    public  TextInputEditText nameInputValue;
+    public TextInputEditText nameInputValue;
     public TextInputLayout nameInputLayout;
-    public  TextInputEditText prenameInputValue;
-    public  TextInputLayout prenameInputLayout;
-    public  TextInputEditText passwordInputValue;
-
-    public  TextInputLayout passwordInputLayout;
-    public  TextInputLayout workerTitleLayout;
-    public  AppCompatSpinner workerTitleSpinner;
-    public  TextInputEditText confPasswdInputValue;
-    public  TextInputLayout confPasswordInputLayout;
+    public TextInputEditText prenameInputValue;
+    public TextInputLayout prenameInputLayout;
+    public TextInputEditText passwordInputValue;
+    public LinearLayoutManager layoutWorkerManager;
+    public TextInputLayout passwordInputLayout;
+    public TextInputLayout workerTitleLayout;
+    public AppCompatSpinner workerTitleSpinner;
+    public TextInputEditText confPasswdInputValue;
+    public TextInputLayout confPasswordInputLayout;
     public FloatingActionButton fab;
     int idUser;
     FrameLayout frameLayout;
@@ -94,6 +101,8 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
     public AppCompatImageView workerImage;
     public ValidationWorkerInputData valUserData;
     public String workerBirth;
+    public List<Worker> listOfWorkers;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +111,9 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
     }
 
     void initUI() {
+
         dbHelper = DataBaseHelper.getInstance(this);
+        listOfWorkers = new ArrayList<>();
         session = new WorkerSession(getApplicationContext());
         valUserData = new ValidationWorkerInputData(AdminWorkerActivity.this);
         layoutInflater = (LayoutInflater) AdminWorkerActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -141,7 +152,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
                 final TextInputEditText workerPassword = postMainView.findViewById(R.id.user_pass_text);
                 final AppCompatButton workerButton = postMainView.findViewById(R.id.register_button);
                 workerButton.setVisibility(View.GONE);
-                //final TextInputEditText workerConfPass = postMainView.findViewById(R.id.user_confpass_text);
+
 
                 workerTitleSpinner = postMainView.findViewById(R.id.user_title_text);
                 workerImage = postMainView.findViewById(R.id.userImage);
@@ -218,7 +229,8 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
                         worker.Birthday = workerBirth;
                         worker.Password = workerPassword.getText().toString();
 
-                        dbHelper.registerNewWorker(worker);
+                        dbHelper.registerNewWorker(getApplicationContext(),worker);
+                        refreshListOfWorkers();
                         ad.dismiss();
                     }
                 });
@@ -236,6 +248,8 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
                 drawerLayout.openDrawer(Gravity.START);
             }
         });
+        listOfWorkers = dbHelper.getWorkers();
+        refreshListOfWorkers();
     }
 
     @Override
@@ -363,7 +377,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
                 int month = cldr.get(Calendar.MONTH);
                 int year = cldr.get(Calendar.YEAR);
 
-               DatePickerDialog datepicker = new DatePickerDialog(AdminWorkerActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datepicker = new DatePickerDialog(AdminWorkerActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int date) {
                         dateinput.setText((((date < 10) ? "0" : "") + date) + " / " + (((month < 10) ? "0" : "") + (month + 1)) + " / " + year);
@@ -374,6 +388,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
         });
         return dateinput.getText().toString();
     }
+
     private void registerUser() {
         if (!valUserData.textFilled(nameInputValue, nameInputLayout, getString(R.string.error_name))) {
             return;
@@ -397,7 +412,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
             workerData.Image = baos.toByteArray();
             workerData.Birthday = workerBirth;
             workerData.Title = workerTitleSpinner.getSelectedItemPosition();
-            dbHelper.registerNewWorker(workerData);
+            dbHelper.registerNewWorker(getApplicationContext(),workerData);
 
             Snackbar.make(null, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
             nameInputValue.setText(null);
@@ -406,6 +421,17 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
             // Snack Bar to show error message that record already exists
             Snackbar.make(null, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show();
         }
+    }
+
+    public void refreshListOfWorkers() {
+        adminWorkerRecView = view.findViewById(R.id.adminRecyclerView);
+        adminWorkerRecView.setHasFixedSize(true);
+        layoutWorkerManager = new LinearLayoutManager(AdminWorkerActivity.this);
+        adminWorkerRecView.setLayoutManager(layoutWorkerManager);
+        adapterWorkers = new AdminWorkersRecyclerViewAdapter(AdminWorkerActivity.this, listOfWorkers, idUser);
+        adminWorkerRecView.setAdapter(adapterWorkers);
+        adminWorkerRecView.refreshDrawableState();
+
     }
 /*
     @Override

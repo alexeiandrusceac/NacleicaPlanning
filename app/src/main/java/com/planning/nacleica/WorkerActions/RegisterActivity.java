@@ -221,7 +221,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             workerData.Image = baos.toByteArray();
             workerData.Birthday = /*userBirthdayValue.getText().toString();*/data;
             workerData.Title = workerTitleSpinner.getSelectedItemPosition();
-            workerDBHelper.registerNewWorker(workerData);
+            workerDBHelper.registerNewWorker(getApplicationContext(),workerData);
             Snackbar.make(scrollView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
             nameInputValue.setText(null);
             startActivity(loginActivity);
