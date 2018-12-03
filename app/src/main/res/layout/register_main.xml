@@ -5,20 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".WorkerActions.RegisterActivity">
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/register_app_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentTop="true"
-        android:background="@color/colorPrimary"
-        app:popupTheme="@style/AppTheme.PopupOverlay">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/register_app_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentTop="true"
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
-    </androidx.appcompat.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
 
@@ -57,34 +58,32 @@
                 android:src="@drawable/ic_profile" />
 
 
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/user_name_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/user_name"
-                android:textStyle="bold"
-                 >
+                android:textStyle="bold">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/user_name_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_design"
-                android:hint="@string/user_name"
-                android:inputType="text"
-                android:maxLines="1"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/user_name_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_design"
+                    android:hint="@string/user_name"
+                    android:inputType="text"
+                    android:maxLines="1"
 
-                android:padding="10dp" />
+                    android:padding="10dp" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/user_prename_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="@string/user_prename"
-                android:textStyle="bold"
-                >
+                android:textStyle="bold">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/user_prename_text"
@@ -103,14 +102,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="@string/user_birth"
-                android:textStyle="bold"
-                >
+                android:textStyle="bold">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/user_birth_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_design"
+
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:hint="@string/user_birth"
                     android:inputType="date"
                     android:maxLines="1"
@@ -129,8 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="@string/user_title"
-                    android:textStyle="bold"
-                    >
+                    android:textStyle="bold">
 
                     <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/user_title_text"
@@ -151,38 +152,38 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="@string/password"
-                android:textStyle="bold"
-                 >
+                android:textStyle="bold">
 
-            <com.google.android.material.textfield.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
 
-                android:id="@+id/user_pass_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_design"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:padding="10dp" />
+                    android:id="@+id/user_pass_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_design"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:padding="10dp" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/user_confpass_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="@string/conf_password"
-                android:textStyle="bold"
-                 >
+                android:textStyle="bold">
 
-            <com.google.android.material.textfield.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
 
-                android:id="@+id/user_confpass_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_design"
-                android:hint="@string/conf_password"
-                android:inputType="textPassword"
-                android:padding="10dp" />
+                    android:id="@+id/user_confpass_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_design"
+                    android:hint="@string/conf_password"
+                    android:inputType="textPassword"
+                    android:padding="10dp" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/register_button"
                 android:layout_width="wrap_content"

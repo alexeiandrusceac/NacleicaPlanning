@@ -224,7 +224,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
                         Worker worker = new Worker();
                         worker.Name = workerName.getText().toString();
                         worker.Prename = workerPrename.getText().toString();
-                        worker.Title = workerTitleSpinner.getSelectedItemPosition();
+                        worker.Title = ((Title)(workerTitleSpinner.getSelectedItem())).getTitleIndex();
                         worker.Image = baos.toByteArray();
                         worker.Birthday = workerBirth;
                         worker.Password = workerPassword.getText().toString();

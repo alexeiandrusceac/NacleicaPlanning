@@ -1,6 +1,7 @@
 package com.planning.nacleica;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -19,11 +20,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+@SuppressLint("ValidFragment")
 public class FragmentNewTask extends Fragment {
     TextView noDataView;
     RecyclerView recyclerView;
     ListView list;
+    public int idWorker;
     public List<Tasks> listOfNewTask = new ArrayList<Tasks>();
+
+    @SuppressLint("ValidFragment")
+    public FragmentNewTask(int idWorker) {
+       this.idWorker = idWorker;
+    }
 
     @Nullable
     @Override
@@ -40,7 +48,7 @@ public class FragmentNewTask extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-        listOfNewTask = dataBaseHelper.getWorkerNewTask();
+        listOfNewTask = dataBaseHelper.getWorkerNewTask(idWorker);
 
         WorkerRecyclerViewAdapter adapter = new WorkerRecyclerViewAdapter(listOfNewTask);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);

@@ -12,22 +12,25 @@ import androidx.fragment.app.FragmentPagerAdapter;
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     public int titleAccess;
+    public int idWorker;
 
-    public ViewPagerAdapter(FragmentManager fm, int title) {
+    public ViewPagerAdapter(FragmentManager fm, int title, int idWorker) {
         super(fm);
         this.titleAccess = title;
+        this.idWorker = idWorker;
     }
 
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
+
         if (titleAccess == 4) {
             if (position == 0) {
-                fragment = new FragmentNewTask();
+                fragment = new FragmentNewTask(idWorker);
             } else if (position == 1) {
-                fragment = new FragmentInProgressTask();
+                fragment = new FragmentInProgressTask(idWorker);
             } else if (position == 2) {
-                fragment = new FragmentDoneTask();
+                fragment = new FragmentDoneTask(idWorker);
             }
         } else {
             if (position == 0) {
@@ -35,15 +38,14 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             } else if (position == 1) {
                 fragment = new AdminMaketTaskFragment();
             }
+
         }
         return fragment;
     }
 
     @Override
     public int getCount() {
-
-
-        return (titleAccess == 4) ?  3 : 2;
+        return (titleAccess == 4) ? 3 : 2;
     }
 
     @Override
@@ -57,8 +59,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             } else if (position == 2) {
                 title = "Sarcini finisate";
             }
-        }
-        else {
+        } else {
             if (position == 0) {
                 title = "Intilnire client";
             } else if (position == 1) {

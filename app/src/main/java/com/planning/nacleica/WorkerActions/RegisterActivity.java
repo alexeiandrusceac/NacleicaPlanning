@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -102,8 +103,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         confPasswdInputValue = (TextInputEditText) findViewById(R.id.user_confpass_text);
         userImageValue = (AppCompatImageView) findViewById(R.id.userImage);
         userBirthdayLayout = (TextInputLayout) findViewById(R.id.user_birth_layout);
-        userBirthdayValue = (TextInputEditText) findViewById(R.id.user_birth_text);
-        data = setDate();
+        userBirthdayValue = setDate();
+
         registerButton = (AppCompatButton) findViewById(R.id.register_button);
         workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item, Title.values()));
 
@@ -219,8 +220,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             workerData.Prename = prenameInputValue.getText().toString();
             workerData.Password = passwordInputValue.getText().toString();
             workerData.Image = baos.toByteArray();
-            workerData.Birthday = /*userBirthdayValue.getText().toString();*/data;
-            workerData.Title = workerTitleSpinner.getSelectedItemPosition();
+            workerData.Birthday = userBirthdayValue.getText().toString();
+            workerData.Title = ((Title)(workerTitleSpinner.getSelectedItem())).getTitleIndex();
             workerDBHelper.registerNewWorker(getApplicationContext(),workerData);
             Snackbar.make(scrollView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
             nameInputValue.setText(null);
@@ -273,7 +274,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         e.printStackTrace();
                     }
                 }
-
                 break;
 
         }
@@ -300,14 +300,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }*/
 
 
-    public String setDate() {
+    public TextInputEditText setDate() {
         final Calendar cldr = Calendar.getInstance();
 
-        //final TextInputEditText dateinput = (TextInputEditText) findViewById(R.id.user_birth_text);
-        userBirthdayValue.setInputType(InputType.TYPE_NULL);
-        userBirthdayValue.setOnClickListener(new View.OnClickListener() {
-            @TargetApi(Build.VERSION_CODES.O)
-            @RequiresApi(api = Build.VERSION_CODES.O)
+        final TextInputEditText dateinput = (TextInputEditText) findViewById(R.id.user_birth_text);
+        dateinput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int day = cldr.get(Calendar.DAY_OF_MONTH);
@@ -317,13 +314,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 datepicker = new DatePickerDialog(compatActivity, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-                        userBirthdayValue.setText((((date < 10) ? "0" : "") + date) + " / " + (((month < 10) ? "0" : "") + (month + 1)) + " / " + year);
+                        dateinput.setText((((date < 10) ? "0" : "") + date) + " / " + (((month < 10) ? "0" : "") + (month + 1)) + " / " + year);
                     }
                 }, year, month, day);
                 datepicker.show();
             }
         });
-        return userBirthdayValue.getText().toString();
+        return dateinput;
     }
 
 }

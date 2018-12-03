@@ -142,13 +142,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         workerValues.put(WORKER_TITLE, worker.Title);
         long id = sqLiteDatabase.insert(WORKER_TABLE, null, workerValues);
         if (sqLiteDatabase != null) {
-            Toast.makeText(context, String.format("Angajatul  cu numele " + WORKER_NAME + " " + WORKER_PRENAME + " s-a inregistrat cu succes"), Toast.LENGTH_SHORT).show();
-            Log.d(TAG, String.format("Angajatul  cu numele " + WORKER_NAME + " " + WORKER_PRENAME + " s-a inregistrat cu succes"));
+            Toast.makeText(context, String.format("Angajatul  cu numele " + worker.Name + " " + worker.Prename + " s-a inregistrat cu succes"), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, String.format("Angajatul  cu numele " + worker.Name + " " + worker.Prename + " s-a inregistrat cu succes"));
         } else {
-            Toast.makeText(context, String.format("Angajatul  cu numele " + WORKER_NAME + " " + WORKER_PRENAME + "nu s-a inregistrat"),Toast.LENGTH_SHORT).show();
-            Log.d(TAG, String.format("Angajatul  cu numele " + WORKER_NAME + " " + WORKER_PRENAME + "nu s-a inregistrat"));
+            Toast.makeText(context, String.format("Angajatul  cu numele " + worker.Name + " " + worker.Prename + "nu s-a inregistrat"), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, String.format("Angajatul  cu numele " + worker.Name + " " + worker.Prename + "nu s-a inregistrat"));
         }
-     }
+    }
 
     public List<Worker> getWorkers() {
 
@@ -269,11 +269,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return listOfAdminMaketTask;
     }
 
-    public List<Tasks> getWorkerNewTask() {
+    public List<Tasks> getWorkerNewTask(int idWorker) {
         SQLiteDatabase db = getReadableDatabase();
         List<Tasks> listOfNewTask = new ArrayList<>();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TASK_TABLE + " where " + TASK_STATE + " =?", new String[]{String.valueOf(2)});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TASK_TABLE + " where " + TASK_STATE + " =? " + " AND " + TASK_WORKER_ID + "=?", new String[]{String.valueOf(2), String.valueOf(idWorker)});
         if (cursor.moveToFirst()) {
             do {
                 Tasks newdata = new Tasks();
@@ -296,11 +296,38 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return listOfNewTask;
     }
 
-    public List<Tasks> getWorkerInProgressTask() {
+    public List<Tasks> getWorkersNewTasks() {
+        SQLiteDatabase db = getReadableDatabase();
+        List<Tasks> listOfWorkerNewTask = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TASK_TABLE + " where " + TASK_STATE + " =?", new String[]{String.valueOf(2)});
+        if (cursor.moveToFirst()) {
+            do {
+                Tasks newdata = new Tasks();
+                newdata.idTask = cursor.getInt(cursor.getColumnIndex(TASK_ID));
+                newdata.idWorker = cursor.getInt(cursor.getColumnIndex(TASK_WORKER_ID));
+                newdata.TaskCompany = cursor.getString(cursor.getColumnIndex(TASK_COM_NAME));
+                newdata.TaskCompanyPhone = cursor.getString(cursor.getColumnIndex(TASK_COM_PHONE));
+                newdata.TaskName = cursor.getString(cursor.getColumnIndex(TASK_NAME));
+                newdata.TaskPeriodFrom = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_FROM));
+                newdata.TaskPeriodTo = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_TO));
+                newdata.TaskState = cursor.getString(cursor.getColumnIndex(TASK_STATE));
+                newdata.TaskImageBefore = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_BEFORE));
+                newdata.TaskImageAfter = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_AFTER));
+
+                listOfWorkerNewTask.add(newdata);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        cursor.close();
+        return listOfWorkerNewTask;
+    }
+
+    public List<Tasks> getWorkerInProgressTask(int idWorker) {
         SQLiteDatabase db = getReadableDatabase();
         List<Tasks> listOfInProgressTask = new ArrayList<>();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TASK_TABLE + " where " + TASK_STATE + " =?", new String[]{String.valueOf(3)});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TASK_TABLE + " where " + TASK_STATE + " =?" + " AND " + TASK_WORKER_ID + "=?", new String[]{String.valueOf(3), String.valueOf(idWorker)});
         if (cursor.moveToFirst()) {
             do {
                 Tasks newdata = new Tasks();
@@ -323,11 +350,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return listOfInProgressTask;
     }
 
-    public List<Tasks> getWorkerDoneTask() {
+    public List<Tasks> getWorkerDoneTask(int idWorker) {
         SQLiteDatabase db = getReadableDatabase();
         List<Tasks> listOfDoneTask = new ArrayList<>();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TASK_TABLE + " where " + TASK_STATE + " =?", new String[]{String.valueOf(4)});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TASK_TABLE + " where " + TASK_STATE + " =?" + " AND " + TASK_WORKER_ID + "=?", new String[]{String.valueOf(4), String.valueOf(idWorker)});
         if (cursor.moveToFirst()) {
             do {
                 Tasks newdata = new Tasks();

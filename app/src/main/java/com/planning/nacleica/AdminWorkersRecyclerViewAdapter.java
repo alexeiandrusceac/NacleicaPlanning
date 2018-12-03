@@ -1,6 +1,7 @@
 package com.planning.nacleica;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
@@ -10,20 +11,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.planning.nacleica.AdminActions.AdminWorkerActivity;
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.WorkerActions.Worker;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.EnumMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,7 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminWorkersRecyclerViewAdapter.ViewHolder> {
     static List<Worker> dbWorkerList;
     //static List<Worker> copyDbList;
-    //private DatePickerDialog datePicker;
+    public DatePickerDialog datePicker;
     private int idHotel;
     private boolean showContent = true;
     private DataBaseHelper dataBaseHelper;
@@ -95,12 +101,12 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
         final EditText titleView;
         final AppCompatSpinner titleSpinner;
         final AppCompatImageView workerImageView;
-        final String date;
         final EditText passwordView;
+        final AppCompatButton registerButton;
         final EditText confPasswordView;
 
         view = layoutInflaterAndroid.inflate(R.layout.register_main, null);
-        date = context.setDate(view);
+
         nameView = view.findViewById(R.id.user_name_text);
         nameView.setText(String.valueOf(worker.Name));
         nameView.setTextColor(Color.BLACK);
@@ -111,31 +117,34 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
         prenameView.setTextColor(Color.BLACK);
         prenameView.setHintTextColor(Color.RED);
 
-        birthView = view.findViewById(R.id.user_birth_text);
-        birthView.setText(date);
+        birthView = setDate(view);
+        birthView.setText(String.valueOf(worker.Birthday));
         birthView.setTextColor(Color.BLACK);
         birthView.setHintTextColor(Color.RED);
 
         passwordView = view.findViewById(R.id.user_pass_text);
-        passwordView.setText(date);
+        passwordView.setText(String.valueOf(worker.Password));
         passwordView.setTextColor(Color.BLACK);
         passwordView.setHintTextColor(Color.RED);
 
         confPasswordView = view.findViewById(R.id.user_confpass_text);
-        confPasswordView.setText(date);
+        confPasswordView.setText(String.valueOf(worker.Password));
         confPasswordView.setTextColor(Color.BLACK);
         confPasswordView.setHintTextColor(Color.RED);
 
         titleSpinner = view.findViewById(R.id.user_title_text);
         titleSpinner.setAdapter(new ArrayAdapter<Title>(context, android.R.layout.simple_spinner_item, Title.values()));
-        //workerImageView = view.findViewById(R.id.userImage);
-       /* titleView = view.findViewById(R.id.user_title_view);
-        titleView.setText(String.valueOf(worker.Title));
-*/
+        titleSpinner.setSelection(worker.Title - 1);
+
+        workerImageView = view.findViewById(R.id.userImage);
+        workerImageView.setImageBitmap(BitmapFactory.decodeByteArray(worker.Image, 0, worker.Image.length));
+
+        registerButton = view.findViewById(R.id.register_button);
+        registerButton.setVisibility(View.GONE);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(context);
         alertDialogBuilderUserInput.setView(view);
 
-        //checkExternalStorage();
+
 
         if (shouldUpdate && worker != null) {
 
@@ -191,10 +200,12 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
                     // actualizeaza datele
                     worker.Name = nameView.getText().toString();
                     worker.Prename = prenameView.getText().toString();
-                    worker.Birthday = date;//birthView.getText().toString();//(outputText[0] == null ? 0 : Integer.parseInt(outputText[0]));
+                    worker.Title = ((Title) (titleSpinner.getSelectedItem())).getTitleIndex();
+                    worker.Birthday = birthView.getText().toString();//birthView.getText().toString();//(outputText[0] == null ? 0 : Integer.parseInt(outputText[0]));
                     worker.Password = passwordView.getText().toString();
 
                     updateData(dbWorkerList.get(position), position);
+
                     //calculateSumTotal();
 
                 }
@@ -276,6 +287,29 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
         });*/
     }
 
+    public TextInputEditText setDate(View view) {
+        final Calendar cldr = Calendar.getInstance();
+
+        final TextInputEditText dateinput = view.findViewById(R.id.user_birth_text);
+        dateinput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+
+                datePicker = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                        dateinput.setText((((date < 10) ? "0" : "") + date) + " / " + (((month < 10) ? "0" : "") + (month + 1)) + " / " + year);
+                    }
+                }, year, month, day);
+                datePicker.show();
+            }
+        });
+        return dateinput;
+    }
+
     private void updateData(Worker worker, int position) {
         dataBaseHelper.updateData(context, worker);
         dbWorkerList.set(position, worker);
@@ -290,10 +324,14 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
     @Override
     public void onBindViewHolder(@NonNull AdminWorkersRecyclerViewAdapter.ViewHolder holder, int position) {
         byte[] byteArray = dbWorkerList.get(position).Image;
+
+        //Object title = (Object)(dbWorkerList.get(position).Title);
+
         holder.name.setText(dbWorkerList.get(position).Name);
         holder.prename.setText(dbWorkerList.get(position).Prename);
         holder.birthday.setText(dbWorkerList.get(position).Birthday);
-       // holder.idWorker.setText(String.valueOf(dbWorkerList.get(position).workerID));
+        holder.title.setText(String.valueOf(Title.values()[dbWorkerList.get(position).Title - 1]));
+        // holder.idWorker.setText(String.valueOf(dbWorkerList.get(position).workerID));
         holder.image.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
        /* holder.phone.setText(dbList.get(position).Phone);
         holder.city.setText(dbList.get(position).City);
@@ -308,16 +346,17 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView name, prename, birthday, idWorker;
+        public TextView name, prename, birthday, title, idWorker;
         public AppCompatImageView image;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
-            name =  itemLayoutView.findViewById(R.id.nameView);
+            name = itemLayoutView.findViewById(R.id.nameView);
             prename = itemLayoutView.findViewById(R.id.prenameView);
             birthday = itemLayoutView.findViewById(R.id.birthView);
+            title = itemLayoutView.findViewById(R.id.titleView);
             //idWorker =  itemLayoutView.findViewById(R.id.idView);
-            image =itemLayoutView.findViewById(R.id.workerImageView);
+            image = itemLayoutView.findViewById(R.id.workerImageView);
 
         }
 

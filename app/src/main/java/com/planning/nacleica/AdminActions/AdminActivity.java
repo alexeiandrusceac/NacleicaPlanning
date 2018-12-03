@@ -109,11 +109,11 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         adminViewPager = view.findViewById(R.id.adminViewPager);
         adminWorkerViewPager = view.findViewById(R.id.adminWorkerViewPager);
 
-        adminViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
+        adminViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0,idUser);
         adminViewPager.setAdapter(adminViewPagerAdapter);
         tabs.setupWithViewPager(adminViewPager);
 
-        adminWorkerViewPageAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 4);
+        adminWorkerViewPageAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 4,idUser);
         adminWorkerViewPager.setAdapter(adminWorkerViewPageAdapter);
         tabsWorker.setupWithViewPager(adminWorkerViewPager);
 

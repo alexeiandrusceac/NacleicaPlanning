@@ -1,6 +1,7 @@
 package com.planning.nacleica;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -18,11 +19,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+@SuppressLint("ValidFragment")
 public class FragmentInProgressTask extends Fragment {
     public List<Tasks> listOfInProgressTask = new ArrayList<Tasks>();
     TextView noDataView;
     RecyclerView recyclerView;
+    int idWorker;
 
+    public FragmentInProgressTask(int idWorker)
+    {
+       this.idWorker = idWorker;
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,7 +82,7 @@ public class FragmentInProgressTask extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //noDataView = (TextView) view.findViewById(R.id.noDataView);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-        listOfInProgressTask = dataBaseHelper.getWorkerInProgressTask();
+        listOfInProgressTask = dataBaseHelper.getWorkerInProgressTask(idWorker);
         if (listOfInProgressTask.size() > 0) {
             //noDataView.setVisibility(View.GONE);
 //        /String[] items = getResources().getStringArray(R.array.tab_B);

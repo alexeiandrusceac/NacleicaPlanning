@@ -1,6 +1,7 @@
 package com.planning.nacleica;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -19,11 +20,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+@SuppressLint("ValidFragment")
 public class FragmentDoneTask extends Fragment {
     TextView noDataView;
+    int idWorker;
     RecyclerView recyclerView;
     public List<Tasks> listOfDoneTask = new ArrayList<Tasks>();
 
+    public FragmentDoneTask(int idWorker)
+    {
+        this.idWorker = idWorker;
+    }
     /*   public List<Tasks> listOfCancelTask = new ArrayList<Tasks>();
      */
     @Nullable
@@ -41,7 +48,7 @@ public class FragmentDoneTask extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //noDataView = (TextView) view.findViewById(R.id.noDataView);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-        listOfDoneTask = dataBaseHelper.getWorkerDoneTask();
+        listOfDoneTask = dataBaseHelper.getWorkerDoneTask(idWorker);
 
         if (listOfDoneTask.size() > 0) {
             //noDataView.setVisibility(View.GONE);
