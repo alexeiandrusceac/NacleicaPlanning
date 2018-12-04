@@ -88,25 +88,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (workerDBHelper.checkUserOnLogin(nameInputEditText.getText().toString().trim(), passwordInputEditText.getText().toString().trim())) {
             Worker currWorker = workerDBHelper.getWorker(nameInputEditText.getText().toString(), passwordInputEditText.getText().toString());
             session.createWorkerLoginSession(nameInputEditText.getText().toString(), passwordInputEditText.getText().toString());
+            if(currWorker !=null) {
+                if (currWorker.Title != 4) {
+                    Intent mainActivityIntent = new Intent(getApplicationContext(), AdminActivity.class);
+                    mainActivityIntent.putExtra("Image", currWorker.Image);
+                    mainActivityIntent.putExtra("Name", currWorker.Name);
+                    mainActivityIntent.putExtra("Prename", currWorker.Prename);
+                    mainActivityIntent.putExtra("Id", currWorker.workerID);
 
-            if (currWorker.Title != 4) {
-                Intent mainActivityIntent = new Intent(getApplicationContext(), AdminActivity.class);
-                mainActivityIntent.putExtra("Image", currWorker.Image);
-                mainActivityIntent.putExtra("Name", currWorker.Name);
-                mainActivityIntent.putExtra("Prename", currWorker.Prename);
-                mainActivityIntent.putExtra("Id", currWorker.workerID);
+                    startActivity(mainActivityIntent);
+                    finish();
+                } else {
+                    Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    mainActivityIntent.putExtra("Image", currWorker.Image);
+                    mainActivityIntent.putExtra("Name", currWorker.Name);
+                    mainActivityIntent.putExtra("Prename", currWorker.Prename);
+                    mainActivityIntent.putExtra("Id", currWorker.workerID);
 
-                startActivity(mainActivityIntent);
-                finish();
-            } else {
-                Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-                mainActivityIntent.putExtra("Image", currWorker.Image);
-                mainActivityIntent.putExtra("Name", currWorker.Name);
-                mainActivityIntent.putExtra("Prename", currWorker.Prename);
-                mainActivityIntent.putExtra("Id", currWorker.workerID);
-
-                startActivity(mainActivityIntent);
-                finish();
+                    startActivity(mainActivityIntent);
+                    finish();
+                }
             }
         } else {
             Snackbar.make(scrollView, getString(R.string.error_name_password), Snackbar.LENGTH_LONG).show();

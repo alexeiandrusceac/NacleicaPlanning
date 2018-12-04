@@ -37,6 +37,7 @@ import com.planning.nacleica.AdminWorkersRecyclerViewAdapter;
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Title;
+import com.planning.nacleica.Utils;
 import com.planning.nacleica.WorkerActions.ValidationWorkerInputData;
 import com.planning.nacleica.WorkerActions.Worker;
 import com.planning.nacleica.WorkerActions.WorkerSession;
@@ -62,7 +63,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AdminWorkerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    //private final AppCompatActivity compatActivity = AdminWorkerActivity.this;
+    private final AppCompatActivity compatActivity = AdminWorkerActivity.this;
     private static final int RESULT_GALLERY_IMAGE = 1;
     private static final int RESULT_CAMERA_IMAGE = 0;
     Toolbar adminWorker_toolbar;
@@ -102,6 +103,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
     public ValidationWorkerInputData valUserData;
     public String workerBirth;
     public List<Worker> listOfWorkers;
+    public Utils utils;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,7 +113,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
     }
 
     void initUI() {
-
+        utils = new Utils(compatActivity);
         dbHelper = DataBaseHelper.getInstance(this);
         listOfWorkers = new ArrayList<>();
         session = new WorkerSession(getApplicationContext());
@@ -148,7 +150,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
 
                 final TextInputEditText workerName = postMainView.findViewById(R.id.user_name_text);
                 final TextInputEditText workerPrename = postMainView.findViewById(R.id.user_prename_text);
-                workerBirth = setDate(postMainView);//postMainView.findViewById(R.id.user_birth_text);
+                final TextInputEditText workerBirth = utils.dateToEditText((TextInputEditText) postMainView.findViewById(R.id.user_birth_text));
                 final TextInputEditText workerPassword = postMainView.findViewById(R.id.user_pass_text);
                 final AppCompatButton workerButton = postMainView.findViewById(R.id.register_button);
                 workerButton.setVisibility(View.GONE);
@@ -161,7 +163,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
 
                     @Override
                     public void onClick(View v) {
-                        PopupMenu popupMenu = new PopupMenu(AdminWorkerActivity.this, workerImage);
+                        /*PopupMenu popupMenu = new PopupMenu(AdminWorkerActivity.this, workerImage);
                         popupMenu.getMenuInflater().inflate(R.menu.photo_menu, popupMenu.getMenu());
                         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @SuppressLint("NewApi")
@@ -180,7 +182,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
                                         startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RESULT_GALLERY_IMAGE);
                                         return true;
                                     case R.id.delete_photo:
-                                        workerImage.setImageDrawable(getDrawable(R.drawable.ic_profile));
+                                        workerImage.setImageDrawable(getDrawable(R.drawable.ic_profile2));
                                         return true;
                                 }
                                 Toast.makeText(
@@ -192,7 +194,8 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
                             }
                         });
 
-                        popupMenu.show();
+                        popupMenu.show();*/
+                        utils.openImagePopupMenu(workerImage);
                     }
                 });
 
@@ -218,18 +221,17 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
                     @SuppressLint("ResourceType")
                     @Override
                     public void onClick(View v) {
-                        Bitmap bitmap = ((BitmapDrawable) workerImage.getDrawable()).getBitmap();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
 
                         Worker worker = new Worker();
                         worker.Name = workerName.getText().toString();
                         worker.Prename = workerPrename.getText().toString();
-                        worker.Title = ((Title)(workerTitleSpinner.getSelectedItem())).getTitleIndex();
-                        worker.Image = baos.toByteArray();
-                        worker.Birthday = workerBirth;
+                        worker.Title = ((Title) (workerTitleSpinner.getSelectedItem())).getTitleIndex();
+                        worker.Image = utils.convertToByteArray(workerImage);
+                        worker.Birthday = workerBirth.getText().toString();
                         worker.Password = workerPassword.getText().toString();
 
-                        dbHelper.registerNewWorker(getApplicationContext(),worker);
+                        dbHelper.registerNewWorker(getApplicationContext(), worker);
                         refreshListOfWorkers();
                         ad.dismiss();
                     }
@@ -271,10 +273,11 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Bitmap photo = null;
-        Uri selectedImage;
         switch (requestCode) {
             case RESULT_CAMERA_IMAGE:
                 if (resultCode == RESULT_OK) {
@@ -285,13 +288,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
 
             case RESULT_GALLERY_IMAGE:
                 if (resultCode == RESULT_OK) {
-                    selectedImage = data.getData();
-                    try {
-                        photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage));
-                        workerImage.setImageBitmap(photo);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    workerImage.setImageBitmap(utils.getBitmap(data.getData()));
                 }
 
                 break;
@@ -363,7 +360,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
         return true;
     }
 
-    public String setDate(View dialogView) {
+    /*public String setDate(View dialogView) {
         final Calendar cldr = Calendar.getInstance();
 
         final TextInputEditText dateinput = dialogView.findViewById(R.id.user_birth_text);
@@ -387,7 +384,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
             }
         });
         return dateinput.getText().toString();
-    }
+    }*/
 
     private void registerUser() {
         if (!valUserData.textFilled(nameInputValue, nameInputLayout, getString(R.string.error_name))) {
@@ -412,7 +409,7 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
             workerData.Image = baos.toByteArray();
             workerData.Birthday = workerBirth;
             workerData.Title = workerTitleSpinner.getSelectedItemPosition();
-            dbHelper.registerNewWorker(getApplicationContext(),workerData);
+            dbHelper.registerNewWorker(getApplicationContext(), workerData);
 
             Snackbar.make(null, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
             nameInputValue.setText(null);

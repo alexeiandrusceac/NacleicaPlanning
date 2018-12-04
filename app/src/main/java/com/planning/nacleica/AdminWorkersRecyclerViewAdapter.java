@@ -94,63 +94,54 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
 
     private void showDialogEditData(final boolean shouldUpdate, final Worker worker, final int position) {
         final LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
-        final View view;
-        final EditText nameView;
-        final EditText prenameView;
-        final EditText birthView;
-        final EditText titleView;
-        final AppCompatSpinner titleSpinner;
-        final AppCompatImageView workerImageView;
-        final EditText passwordView;
-        final AppCompatButton registerButton;
-        final EditText confPasswordView;
 
-        view = layoutInflaterAndroid.inflate(R.layout.register_main, null);
-
-        nameView = view.findViewById(R.id.user_name_text);
+        final View view = layoutInflaterAndroid.inflate(R.layout.register_main, null);
+        final EditText nameView = view.findViewById(R.id.user_name_text);
         nameView.setText(String.valueOf(worker.Name));
         nameView.setTextColor(Color.BLACK);
         nameView.setHintTextColor(Color.RED);
 
-        prenameView = view.findViewById(R.id.user_prename_text);
+        final EditText prenameView = view.findViewById(R.id.user_prename_text);
         prenameView.setText(String.valueOf(worker.Prename));
         prenameView.setTextColor(Color.BLACK);
         prenameView.setHintTextColor(Color.RED);
 
-        birthView = setDate(view);
+        final EditText birthView = context.utils.dateToEditText((TextInputEditText)view.findViewById(R.id.user_birth_text));
         birthView.setText(String.valueOf(worker.Birthday));
         birthView.setTextColor(Color.BLACK);
         birthView.setHintTextColor(Color.RED);
 
-        passwordView = view.findViewById(R.id.user_pass_text);
+        final AppCompatSpinner titleSpinner = view.findViewById(R.id.user_title_text);
+        titleSpinner.setAdapter(new ArrayAdapter<Title>(context, android.R.layout.simple_spinner_item, Title.values()));
+        titleSpinner.setSelection(worker.Title - 1);
+
+        final AppCompatImageView workerImageView = view.findViewById(R.id.userImage);
+        workerImageView.setImageBitmap(BitmapFactory.decodeByteArray(worker.Image, 0, worker.Image.length));
+        workerImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.utils.openImagePopupMenu(workerImageView);
+            }
+        });
+
+        final EditText passwordView =  view.findViewById(R.id.user_pass_text);
         passwordView.setText(String.valueOf(worker.Password));
         passwordView.setTextColor(Color.BLACK);
         passwordView.setHintTextColor(Color.RED);
 
-        confPasswordView = view.findViewById(R.id.user_confpass_text);
+        final AppCompatButton registerButton = view.findViewById(R.id.register_button);
+        registerButton.setVisibility(View.GONE);
+
+        final EditText confPasswordView = view.findViewById(R.id.user_confpass_text);
         confPasswordView.setText(String.valueOf(worker.Password));
         confPasswordView.setTextColor(Color.BLACK);
         confPasswordView.setHintTextColor(Color.RED);
 
-        titleSpinner = view.findViewById(R.id.user_title_text);
-        titleSpinner.setAdapter(new ArrayAdapter<Title>(context, android.R.layout.simple_spinner_item, Title.values()));
-        titleSpinner.setSelection(worker.Title - 1);
 
-        workerImageView = view.findViewById(R.id.userImage);
-        workerImageView.setImageBitmap(BitmapFactory.decodeByteArray(worker.Image, 0, worker.Image.length));
-
-        registerButton = view.findViewById(R.id.register_button);
-        registerButton.setVisibility(View.GONE);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(context);
         alertDialogBuilderUserInput.setView(view);
 
 
-
-        if (shouldUpdate && worker != null) {
-
-            nameView.setText(String.valueOf(worker.Name));
-            nameView.setTextColor(Color.BLACK);
-        }
         alertDialogBuilderUserInput
                 .setCancelable(false)
                 .setView(view)
@@ -201,9 +192,9 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
                     worker.Name = nameView.getText().toString();
                     worker.Prename = prenameView.getText().toString();
                     worker.Title = ((Title) (titleSpinner.getSelectedItem())).getTitleIndex();
-                    worker.Birthday = birthView.getText().toString();//birthView.getText().toString();//(outputText[0] == null ? 0 : Integer.parseInt(outputText[0]));
+                    worker.Birthday = birthView.getText().toString();
                     worker.Password = passwordView.getText().toString();
-
+                    worker.Image = context.utils.convertToByteArray(workerImageView);
                     updateData(dbWorkerList.get(position), position);
 
                     //calculateSumTotal();

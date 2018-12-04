@@ -11,7 +11,10 @@ import android.content.pm.PackageManager;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,9 +42,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Title;
 import com.planning.nacleica.Database.DataBaseHelper;
+import com.planning.nacleica.Utils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Calendar;
 
 import androidx.annotation.RequiresApi;
@@ -73,10 +79,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private static final int RESULT_GALLERY_IMAGE = 1;
     private static final int RESULT_CAMERA_IMAGE = 0;
     public DatePickerDialog datepicker;
-    private ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    //private
     public View photoView;
     public String data;
     Intent loginActivity;
+    public Utils utils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,10 +93,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     void initUI() {
-        loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
+        loginActivity = new Intent(compatActivity, LoginActivity.class);
         valUserData = new ValidationWorkerInputData(compatActivity);
         workerDBHelper = DataBaseHelper.getInstance(this);
-
+        utils = new Utils(compatActivity);
         workerData = new Worker();
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
         nameInputLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
@@ -103,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         confPasswdInputValue = (TextInputEditText) findViewById(R.id.user_confpass_text);
         userImageValue = (AppCompatImageView) findViewById(R.id.userImage);
         userBirthdayLayout = (TextInputLayout) findViewById(R.id.user_birth_layout);
-        userBirthdayValue = setDate();
+        userBirthdayValue = utils.dateToEditText((TextInputEditText)findViewById(R.id.user_birth_text));
 
         registerButton = (AppCompatButton) findViewById(R.id.register_button);
         workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item, Title.values()));
@@ -116,7 +123,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(compatActivity, userImageValue);
+                utils.openImagePopupMenu(userImageValue);
+               /* PopupMenu popupMenu = new PopupMenu(compatActivity, userImageValue);
                 popupMenu.getMenuInflater().inflate(R.menu.photo_menu, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @SuppressLint("NewApi")
@@ -135,7 +143,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RESULT_GALLERY_IMAGE);
                                 return true;
                             case R.id.delete_photo:
-                                userImageValue.setImageDrawable(getDrawable(R.drawable.ic_profile));
+                                userImageValue.setImageDrawable(getDrawable(R.drawable.ic_profile2));
                                 return true;
                         }
                         Toast.makeText(
@@ -147,7 +155,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     }
                 });
 
-                popupMenu.show();
+                popupMenu.show();*/
             }
         });
         setSupportActionBar(toolbar);
@@ -212,17 +220,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if (!workerDBHelper.checkUserOnLogin(nameInputValue.getText().toString().trim())) {
-
-            Bitmap bitmap = ((BitmapDrawable) userImageValue.getDrawable()).getBitmap();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-
             workerData.Name = nameInputValue.getText().toString();
             workerData.Prename = prenameInputValue.getText().toString();
             workerData.Password = passwordInputValue.getText().toString();
-            workerData.Image = baos.toByteArray();
+            workerData.Image = utils.convertToByteArray(userImageValue);
             workerData.Birthday = userBirthdayValue.getText().toString();
-            workerData.Title = ((Title)(workerTitleSpinner.getSelectedItem())).getTitleIndex();
-            workerDBHelper.registerNewWorker(getApplicationContext(),workerData);
+            workerData.Title = ((Title) (workerTitleSpinner.getSelectedItem())).getTitleIndex();
+            workerDBHelper.registerNewWorker(getApplicationContext(), workerData);
             Snackbar.make(scrollView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
             nameInputValue.setText(null);
             startActivity(loginActivity);
@@ -252,10 +256,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Bitmap photo = null;
-        Uri selectedImage;
+
         switch (requestCode) {
             case RESULT_CAMERA_IMAGE:
                 if (resultCode == RESULT_OK) {
@@ -266,61 +271,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             case RESULT_GALLERY_IMAGE:
                 if (resultCode == RESULT_OK) {
-                    selectedImage = data.getData();
-                    try {
-                        photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage));
-                        userImageValue.setImageBitmap(photo);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    userImageValue.setImageBitmap(utils.getBitmap(data.getData()));
                 }
                 break;
 
         }
-    }
-
-
-    /*protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-
-            userImageValue.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-
-        }*/
-
-
-    public TextInputEditText setDate() {
-        final Calendar cldr = Calendar.getInstance();
-
-        final TextInputEditText dateinput = (TextInputEditText) findViewById(R.id.user_birth_text);
-        dateinput.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-
-                datepicker = new DatePickerDialog(compatActivity, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-                        dateinput.setText((((date < 10) ? "0" : "") + date) + " / " + (((month < 10) ? "0" : "") + (month + 1)) + " / " + year);
-                    }
-                }, year, month, day);
-                datepicker.show();
-            }
-        });
-        return dateinput;
     }
 
 }
