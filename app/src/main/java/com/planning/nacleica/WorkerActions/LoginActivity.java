@@ -86,8 +86,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
 
         if (workerDBHelper.checkUserOnLogin(nameInputEditText.getText().toString().trim(), passwordInputEditText.getText().toString().trim())) {
+
             Worker currWorker = workerDBHelper.getWorker(nameInputEditText.getText().toString(), passwordInputEditText.getText().toString());
+
             session.createWorkerLoginSession(nameInputEditText.getText().toString(), passwordInputEditText.getText().toString());
+
             if(currWorker !=null) {
                 if (currWorker.Title != 4) {
                     Intent mainActivityIntent = new Intent(getApplicationContext(), AdminActivity.class);

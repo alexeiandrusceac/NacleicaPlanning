@@ -22,16 +22,6 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <!--<androidx.appcompat.widget.Toolbar
-        android:id="@+id/main_app_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/colorGray"
-        app:popupTheme="@style/AppTheme.PopupOverlay">
-
-    </androidx.appcompat.widget.Toolbar>-->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"

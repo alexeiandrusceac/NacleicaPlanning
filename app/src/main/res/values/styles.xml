@@ -67,4 +67,11 @@
         <item name="tabTextColor">@color/mtrl_tabs_icon_color_selector_colored</item>
         <item name="tabRippleColor">@color/mtrl_tabs_colored_ripple_color</item>
     </style>
+
+
+    <style name="divider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/dividerVertical</item>
+    </style>
 </resources>

@@ -13,7 +13,8 @@
     android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <androidx.cardview.widget.CardView  android:layout_width="80dp"
+    <androidx.cardview.widget.CardView
+        android:layout_width="80dp"
         android:layout_height="80dp"
         android:elevation="12dp"
         android:id="@+id/view2"

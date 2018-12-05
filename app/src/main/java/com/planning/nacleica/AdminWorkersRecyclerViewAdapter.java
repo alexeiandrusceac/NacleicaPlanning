@@ -120,6 +120,7 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
         workerImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                context.imageView = workerImageView;
                 context.utils.openImagePopupMenu(workerImageView);
             }
         });
@@ -196,8 +197,6 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
                     worker.Password = passwordView.getText().toString();
                     worker.Image = context.utils.convertToByteArray(workerImageView);
                     updateData(dbWorkerList.get(position), position);
-
-                    //calculateSumTotal();
 
                 }
             }
@@ -276,29 +275,6 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
             }
 
         });*/
-    }
-
-    public TextInputEditText setDate(View view) {
-        final Calendar cldr = Calendar.getInstance();
-
-        final TextInputEditText dateinput = view.findViewById(R.id.user_birth_text);
-        dateinput.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-
-                datePicker = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-                        dateinput.setText((((date < 10) ? "0" : "") + date) + " / " + (((month < 10) ? "0" : "") + (month + 1)) + " / " + year);
-                    }
-                }, year, month, day);
-                datePicker.show();
-            }
-        });
-        return dateinput;
     }
 
     private void updateData(Worker worker, int position) {

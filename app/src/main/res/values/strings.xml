@@ -21,6 +21,11 @@
     <string name="from_period">De la</string>
     <string name="to_period">Pina la</string>
     <string name="assign_button">Atribuie</string>
+    <string name="worker_name">Numele:</string>
+    <string name="worker_prename">Prenumele:</string>
+    <string name="worker_birth">Data nasterii:</string>
+    <string name="worker_title">Functia angajat:</string>
+
 <!--
     <string-array name="tab_A">
         <item>Item 1A</item>

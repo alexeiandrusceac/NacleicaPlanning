@@ -10,27 +10,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.GradientDrawable;
-import android.media.ExifInterface;
-import android.net.Uri;
+
 import android.os.Build;
 import android.os.Bundle;
 
-import android.text.InputType;
-
 import android.view.Menu;
-import android.view.MenuInflater;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.PopupMenu;
+
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -44,19 +34,14 @@ import com.planning.nacleica.Title;
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.Utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Calendar;
-
+import androidx.appcompat.widget.Toolbar;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.widget.NestedScrollView;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
-    private final AppCompatActivity compatActivity = RegisterActivity.this;
+    private final AppCompatActivity compatRegisterActivity = RegisterActivity.this;
     private NestedScrollView scrollView;
     private TextInputEditText nameInputValue;
     private TextInputLayout nameInputLayout;
@@ -79,8 +64,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private static final int RESULT_GALLERY_IMAGE = 1;
     private static final int RESULT_CAMERA_IMAGE = 0;
     public DatePickerDialog datepicker;
-    //private
-    public View photoView;
     public String data;
     Intent loginActivity;
     public Utils utils;
@@ -93,10 +76,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     void initUI() {
-        loginActivity = new Intent(compatActivity, LoginActivity.class);
-        valUserData = new ValidationWorkerInputData(compatActivity);
-        workerDBHelper = DataBaseHelper.getInstance(this);
-        utils = new Utils(compatActivity);
+        loginActivity = new Intent(compatRegisterActivity, LoginActivity.class);
+        valUserData = new ValidationWorkerInputData(compatRegisterActivity);
+        workerDBHelper = DataBaseHelper.getInstance(compatRegisterActivity);
+        utils = new Utils(compatRegisterActivity);
         workerData = new Worker();
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
         nameInputLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
@@ -113,12 +96,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         userBirthdayValue = utils.dateToEditText((TextInputEditText)findViewById(R.id.user_birth_text));
 
         registerButton = (AppCompatButton) findViewById(R.id.register_button);
-        workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item, Title.values()));
+        workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(compatRegisterActivity, android.R.layout.simple_spinner_item, Title.values()));
 
-        androidx.appcompat.widget.Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.register_app_toolbar);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.register_app_toolbar);
         registerButton.setOnClickListener(this);
-        // action_settings = findViewById(R.id.action_settings);
         userImageValue.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -244,13 +225,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Toast.makeText(compatRegisterActivity, "Permisiunea camerei este acceptata", Toast.LENGTH_LONG).show();
                 Intent cameraIntent = new
                         Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(cameraIntent, 0);
             } else {
 
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                Toast.makeText(compatRegisterActivity, "Permisiunea camerei este refuzata", Toast.LENGTH_LONG).show();
             }
 
         }
