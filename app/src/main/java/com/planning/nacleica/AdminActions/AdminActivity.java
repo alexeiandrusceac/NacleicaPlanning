@@ -2,6 +2,7 @@ package com.planning.nacleica.AdminActions;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,10 +20,13 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputEditText;
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.MainActivity;
 import com.planning.nacleica.R;
+import com.planning.nacleica.Title;
 import com.planning.nacleica.ViewPagerAdapter;
+import com.planning.nacleica.WorkerActions.Worker;
 import com.planning.nacleica.WorkerActions.WorkerSession;
 
 import org.w3c.dom.Text;
@@ -31,6 +36,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -98,10 +104,11 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                createTask();
             }
         });
         toolbar = view.findViewById(R.id.main_app_toolbar);
+
 
 
         TabLayout tabs = view.findViewById(R.id.admin_tab);
@@ -130,7 +137,71 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             }
         });
     }
+    void createTask()
+    {
+        LayoutInflater layoutInflater = (LayoutInflater) AdminActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View postMainTaskView = layoutInflater.inflate(R.layout.new_task_main, null, false);
 
+        final TextInputEditText nameTaskText = postMainTaskView.findViewById(R.id.nameTaskText);
+        final TextInputEditText workerPrename = postMainTaskView.findViewById(R.id.user_prename_text);
+        final TextInputEditText workerBirth = utils.dateToEditText((TextInputEditText) postMainView.findViewById(R.id.user_birth_text));
+        final TextInputEditText workerPassword = postMainTaskView.findViewById(R.id.user_pass_text);
+        final AppCompatButton workerButton = postMainTaskView.findViewById(R.id.register_button);
+        workerButton.setVisibility(View.GONE);
+
+
+        workerTitleSpinner = postMainView.findViewById(R.id.user_title_text);
+        workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(compatAdminWorkerActivity, android.R.layout.simple_spinner_item, Title.values()));
+        workerImage = postMainView.findViewById(R.id.userImage);
+        workerImage.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                imageView = workerImage;
+                utils.openImagePopupMenu(workerImage);
+            }
+        });
+
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(compatAdminWorkerActivity).setTitle("Adaugarea angajatului").setView(postMainView).setCancelable(false).setPositiveButton(
+                "Inregistreaza", new DialogInterface.OnClickListener() {
+                    @SuppressLint("ResourceType")
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                    }
+                }
+        ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        final AlertDialog ad = alertDialog.create();
+        ad.show();
+        ad.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onClick(View v) {
+
+                Worker worker = new Worker();
+                worker.Name = workerName.getText().toString();
+                worker.Prename = workerPrename.getText().toString();
+                worker.Title = ((Title) (workerTitleSpinner.getSelectedItem())).getTitleIndex();
+                worker.Image = utils.convertToByteArray(workerImage);
+                worker.Birthday = workerBirth.getText().toString();
+                worker.Password = workerPassword.getText().toString();
+
+                dbHelper.registerNewWorker(getApplicationContext(), worker);
+                refreshListOfWorkers();
+
+                ad.dismiss();
+                //registerUser();
+            }
+        });
+    }
+    }
     private void setupDrawer() {
         toggle = new ActionBarDrawerToggle(AdminActivity.this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerOpened(View drawerView) {
