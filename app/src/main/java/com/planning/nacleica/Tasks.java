@@ -6,7 +6,7 @@ public class Tasks {
     public String TaskName;
     public String TaskCompany;
     public String TaskCompanyPhone;
-    public String TaskState;
+    public int TaskState;
     public String TaskPeriodFrom;
     public String TaskPeriodTo;
     public byte[] TaskImageBefore;

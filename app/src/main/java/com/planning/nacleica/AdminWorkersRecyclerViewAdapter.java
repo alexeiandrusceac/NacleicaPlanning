@@ -68,7 +68,7 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
     @NonNull
     @Override
     public AdminWorkersRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.adminworkers_content_main, null);
+        final View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.adminworkers_content_main, parent,false);
 
         itemLayoutView.setOnClickListener(new View.OnClickListener() {
             @Override

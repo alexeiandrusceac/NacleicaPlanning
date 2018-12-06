@@ -6,8 +6,26 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
+        android:paddingTop="55dp"
         android:layout_height="wrap_content">
-
+        <TextView
+            android:id= "@+id/comp_name"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:paddingLeft="8dp"
+            android:paddingTop="@dimen/fab_margin"
+            android:paddingRight="8dp"
+            android:paddingBottom="@dimen/fab_margin"
+            android:textSize="18sp"/>
+        <TextView
+            android:id= "@+id/comp_phone"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:paddingLeft="8dp"
+            android:paddingTop="@dimen/fab_margin"
+            android:paddingRight="8dp"
+            android:paddingBottom="@dimen/fab_margin"
+            android:textSize="18sp"/>
         <TextView
             android:id="@+id/task_title"
             android:layout_width="match_parent"

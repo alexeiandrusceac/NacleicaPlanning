@@ -167,8 +167,6 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
                             @SuppressLint("ResourceType")
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
-
                             }
                         }
                 ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {

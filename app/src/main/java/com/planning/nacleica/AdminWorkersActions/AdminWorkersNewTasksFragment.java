@@ -41,7 +41,7 @@ public class AdminWorkersNewTasksFragment extends Fragment {
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
         listOfAdminWorkersTask = dataBaseHelper.getWorkersNewTasks();
 
-        AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(listOfAdminWorkersTask);
+        AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(getContext(),listOfAdminWorkersTask);
         adminRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         adminRecyclerView.setLayoutManager(layoutManager);

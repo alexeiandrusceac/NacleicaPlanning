@@ -76,7 +76,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     private String CREATE_TASK_TABLE = "CREATE TABLE " + TASK_TABLE + "(" + TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TASK_WORKER_ID + " INTEGER, " +
-            TASK_NAME + " TEXT," + TASK_COM_NAME + " TEXT," + TASK_COM_PHONE + " TEXT," + TASK_STATE + " INTEGER,  " + TASK_PERIOD_FROM + " TEXT, " + TASK_PERIOD_TO + " TEXT," + TASK_IMAGE_BEFORE + "BLOB," + TASK_IMAGE_AFTER + "BLOB" + ")";
+            TASK_NAME + " TEXT," + TASK_COM_NAME + " TEXT," + TASK_COM_PHONE + " TEXT," + TASK_STATE + " INTEGER,  " + TASK_PERIOD_FROM + " TEXT, " + TASK_PERIOD_TO + " TEXT," + TASK_IMAGE_BEFORE + " BLOB, " + TASK_IMAGE_AFTER + " BLOB" + ")";
 
     private String CREATE_WORKER_TABLE = "CREATE TABLE " + WORKER_TABLE + "(" + WORKER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             WORKER_NAME + " TEXT," + WORKER_PRENAME + " TEXT, " + WORKER_PASSWORD + " TEXT, " + WORKER_TITLE + " INT," + WORKER_IMAGE + " BLOB," + WORKER_BIRTHDAY + " TEXT" + ")";
@@ -149,7 +149,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.d(TAG, String.format("Angajatul  cu numele " + worker.Name + " " + worker.Prename + "nu s-a inregistrat"));
         }
     }
-
+    public void createNewTask(Context context,Tasks newTask)
+    {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TASK_NAME,newTask.TaskName);
+        contentValues.put(TASK_COM_NAME,newTask.TaskCompany);
+        contentValues.put(TASK_COM_PHONE,newTask.TaskCompanyPhone);
+        contentValues.put(TASK_STATE,newTask.TaskState);
+        contentValues.put(TASK_PERIOD_FROM,newTask.TaskPeriodFrom);
+        contentValues.put(TASK_PERIOD_TO,newTask.TaskPeriodTo);
+        contentValues.put(TASK_IMAGE_AFTER,newTask.TaskImageAfter);
+        contentValues.put(TASK_IMAGE_BEFORE,newTask.TaskImageBefore);
+        long id= sqLiteDatabase.insert(TASK_TABLE,null,contentValues);
+        if (sqLiteDatabase != null) {
+            Toast.makeText(context, String.format("Sarcina  cu numele " + newTask.TaskName + " s-a creat cu succes"), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, String.format("Sarcina  cu numele " + newTask.TaskName + " s-a creat cu succes"));
+        } else {
+            Toast.makeText(context, String.format("Sarcina  cu numele " + newTask.TaskName + " nu s-a creat"), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, String.format("Sarcina  cu numele " + newTask.TaskName + " nu s-a creat"));
+        }
+    }
     public List<Worker> getWorkers() {
 
         List<Worker> listOfWorkers = new ArrayList<>();
@@ -215,7 +235,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public List<Tasks> getAdminNewTask() {
-        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         List<Tasks> listOfAdminNewTask = new ArrayList<>();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TASK_TABLE + " where " + TASK_STATE + " =? ", new String[]{String.valueOf(0)});
@@ -229,7 +249,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 newdata.TaskName = cursor.getString(cursor.getColumnIndex(TASK_NAME));
                 newdata.TaskPeriodFrom = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_FROM));
                 newdata.TaskPeriodTo = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_TO));
-                newdata.TaskState = cursor.getString(cursor.getColumnIndex(TASK_STATE));
+                newdata.TaskState = cursor.getInt(cursor.getColumnIndex(TASK_STATE));
                 newdata.TaskImageBefore = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_BEFORE));
                 newdata.TaskImageAfter = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_AFTER));
 
@@ -257,7 +277,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 newdata.TaskName = cursor.getString(cursor.getColumnIndex(TASK_NAME));
                 newdata.TaskPeriodFrom = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_FROM));
                 newdata.TaskPeriodTo = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_TO));
-                newdata.TaskState = cursor.getString(cursor.getColumnIndex(TASK_STATE));
+                newdata.TaskState = cursor.getInt(cursor.getColumnIndex(TASK_STATE));
                 newdata.TaskImageBefore = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_BEFORE));
                 newdata.TaskImageAfter = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_AFTER));
 
@@ -284,7 +304,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 newdata.TaskName = cursor.getString(cursor.getColumnIndex(TASK_NAME));
                 newdata.TaskPeriodFrom = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_FROM));
                 newdata.TaskPeriodTo = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_TO));
-                newdata.TaskState = cursor.getString(cursor.getColumnIndex(TASK_STATE));
+                newdata.TaskState = cursor.getInt(cursor.getColumnIndex(TASK_STATE));
                 newdata.TaskImageBefore = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_BEFORE));
                 newdata.TaskImageAfter = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_AFTER));
 
@@ -311,7 +331,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 newdata.TaskName = cursor.getString(cursor.getColumnIndex(TASK_NAME));
                 newdata.TaskPeriodFrom = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_FROM));
                 newdata.TaskPeriodTo = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_TO));
-                newdata.TaskState = cursor.getString(cursor.getColumnIndex(TASK_STATE));
+                newdata.TaskState = cursor.getInt(cursor.getColumnIndex(TASK_STATE));
                 newdata.TaskImageBefore = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_BEFORE));
                 newdata.TaskImageAfter = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_AFTER));
 
@@ -338,7 +358,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 newdata.TaskName = cursor.getString(cursor.getColumnIndex(TASK_NAME));
                 newdata.TaskPeriodFrom = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_FROM));
                 newdata.TaskPeriodTo = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_TO));
-                newdata.TaskState = cursor.getString(cursor.getColumnIndex(TASK_STATE));
+                newdata.TaskState = cursor.getInt(cursor.getColumnIndex(TASK_STATE));
                 newdata.TaskImageBefore = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_BEFORE));
                 newdata.TaskImageAfter = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_AFTER));
 
@@ -365,7 +385,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 newdata.TaskName = cursor.getString(cursor.getColumnIndex(TASK_NAME));
                 newdata.TaskPeriodFrom = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_FROM));
                 newdata.TaskPeriodTo = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_TO));
-                newdata.TaskState = cursor.getString(cursor.getColumnIndex(TASK_STATE));
+                newdata.TaskState = cursor.getInt(cursor.getColumnIndex(TASK_STATE));
                 newdata.TaskImageBefore = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_BEFORE));
                 newdata.TaskImageAfter = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_AFTER));
 

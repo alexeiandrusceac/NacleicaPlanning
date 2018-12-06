@@ -1,11 +1,14 @@
 package com.planning.nacleica.AdminActions;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.Gravity;
@@ -21,18 +24,25 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
+import com.planning.nacleica.AdminWorkersRecyclerViewAdapter;
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.MainActivity;
 import com.planning.nacleica.R;
+import com.planning.nacleica.Tasks;
 import com.planning.nacleica.Title;
+import com.planning.nacleica.Utils;
 import com.planning.nacleica.ViewPagerAdapter;
 import com.planning.nacleica.WorkerActions.Worker;
 import com.planning.nacleica.WorkerActions.WorkerSession;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,15 +50,19 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    public AppCompatActivity compatAdminActivity = AdminActivity.this;
     public ViewPagerAdapter adminViewPagerAdapter, adminWorkerViewPageAdapter;
     public ViewPager adminViewPager, adminWorkerViewPager;
     public FloatingActionButton fab;
     private DataBaseHelper dbHelper;
     private ActionBarDrawerToggle toggle;
     String userPrename, userName;
+    private static final int RESULT_GALLERY_IMAGE = 1;
+    private static final int RESULT_CAMERA_IMAGE = 0;
     private NavigationView navigationView;
     private static AppCompatImageView nav_header_imageView;
     private DrawerLayout drawerLayout;
@@ -57,12 +71,16 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     public TextView usr_pren_nav;
     public View view;
     int idUser;
+    public List<Tasks> listOfAdminNewTasks = new ArrayList<>();
     private View header;
     WorkerSession session;
     FrameLayout frameLayout;
     LayoutInflater layoutInflater;
     Toolbar toolbar;
-
+    public AppCompatImageView imageView;
+       public Utils utils;
+       private TabLayout tabsAdmin;
+       private TabLayout tabsWorker;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +90,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
     void initUI() {
         dbHelper = DataBaseHelper.getInstance(this);
-
+        utils = new Utils(compatAdminActivity);
 
         session = new WorkerSession(getApplicationContext());
 
@@ -81,7 +99,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         navigationView = (NavigationView) findViewById(R.id.navigationView);
 
         navigationView.setNavigationItemSelectedListener(this);
-        header = (navigationView).getHeaderView(0);
+        header = navigationView.getHeaderView(0);
         usr_name_nav = header.findViewById(R.id.usr_name_nav);
         usr_pren_nav = header.findViewById(R.id.usr_pren_nav);
         nav_header_imageView = header.findViewById(R.id.nav_header_imageView);
@@ -108,21 +126,10 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             }
         });
         toolbar = view.findViewById(R.id.main_app_toolbar);
-
-
-
-        TabLayout tabs = view.findViewById(R.id.admin_tab);
-        TabLayout tabsWorker = view.findViewById(R.id.adminWorker_tab);
+        tabsAdmin = view.findViewById(R.id.admin_tab);
+        tabsWorker = view.findViewById(R.id.adminWorker_tab);
         adminViewPager = view.findViewById(R.id.adminViewPager);
         adminWorkerViewPager = view.findViewById(R.id.adminWorkerViewPager);
-
-        adminViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0,idUser);
-        adminViewPager.setAdapter(adminViewPagerAdapter);
-        tabs.setupWithViewPager(adminViewPager);
-
-        adminWorkerViewPageAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 4,idUser);
-        adminWorkerViewPager.setAdapter(adminWorkerViewPageAdapter);
-        tabsWorker.setupWithViewPager(adminWorkerViewPager);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -133,36 +140,40 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             @SuppressLint("WrongConstant")
             @Override
             public void onClick(View v) {
-            drawerLayout.openDrawer(Gravity.START);
+                drawerLayout.openDrawer(Gravity.START);
             }
         });
+        refreshListOfAdminTasks();
     }
-    void createTask()
-    {
+
+    void createTask() {
         LayoutInflater layoutInflater = (LayoutInflater) AdminActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View postMainTaskView = layoutInflater.inflate(R.layout.new_task_main, null, false);
 
-        final TextInputEditText nameTaskText = postMainTaskView.findViewById(R.id.nameTaskText);
-        final TextInputEditText workerPrename = postMainTaskView.findViewById(R.id.user_prename_text);
-        final TextInputEditText workerBirth = utils.dateToEditText((TextInputEditText) postMainView.findViewById(R.id.user_birth_text));
-        final TextInputEditText workerPassword = postMainTaskView.findViewById(R.id.user_pass_text);
-        final AppCompatButton workerButton = postMainTaskView.findViewById(R.id.register_button);
+        final AppCompatImageView imageBeforeView = postMainTaskView.findViewById(R.id.imageBeforeView);
+        final TextInputEditText nameTaskText = postMainTaskView.findViewById(R.id.task_name_value);
+        final TextInputEditText nameCompText = postMainTaskView.findViewById(R.id.comp_name_value);
+        final TextInputEditText dateFromText = utils.dateToEditText((TextInputEditText) postMainTaskView.findViewById(R.id.date_from_value));
+        final TextInputEditText dateToText = utils.dateToEditText((TextInputEditText) postMainTaskView.findViewById(R.id.date_to_value));
+        final TextInputEditText compPhoneText =  postMainTaskView.findViewById(R.id.comp_phone_value);
+
+        /*final AppCompatButton createButton = postMainTaskView.findViewById(R.id.create_button);
         workerButton.setVisibility(View.GONE);
 
 
         workerTitleSpinner = postMainView.findViewById(R.id.user_title_text);
-        workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(compatAdminWorkerActivity, android.R.layout.simple_spinner_item, Title.values()));
-        workerImage = postMainView.findViewById(R.id.userImage);
-        workerImage.setOnClickListener(new View.OnClickListener() {
+        workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(compatAdminWorkerActivity, android.R.layout.simple_spinner_item, Title.values()));*/
+
+        imageBeforeView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                imageView = workerImage;
-                utils.openImagePopupMenu(workerImage);
+                imageView = imageBeforeView;
+                utils.openImagePopupMenu(imageBeforeView);
             }
         });
 
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(compatAdminWorkerActivity).setTitle("Adaugarea angajatului").setView(postMainView).setCancelable(false).setPositiveButton(
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(compatAdminActivity).setTitle("Adaugarea angajatului").setView(postMainTaskView).setCancelable(false).setPositiveButton(
                 "Inregistreaza", new DialogInterface.OnClickListener() {
                     @SuppressLint("ResourceType")
                     @Override
@@ -185,23 +196,26 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             @Override
             public void onClick(View v) {
 
-                Worker worker = new Worker();
-                worker.Name = workerName.getText().toString();
-                worker.Prename = workerPrename.getText().toString();
-                worker.Title = ((Title) (workerTitleSpinner.getSelectedItem())).getTitleIndex();
-                worker.Image = utils.convertToByteArray(workerImage);
-                worker.Birthday = workerBirth.getText().toString();
-                worker.Password = workerPassword.getText().toString();
+                Tasks task = new Tasks();
+                task.TaskName = nameTaskText.getText().toString();
+                task.TaskState = 0;
+                task.TaskCompany = nameCompText.getText().toString();
+                task.TaskCompanyPhone = compPhoneText.getText().toString();
+                task.TaskPeriodFrom = dateFromText.getText().toString();
+                task.TaskPeriodTo = dateToText.getText().toString();
+                task.TaskImageBefore = utils.convertToByteArray(imageBeforeView);
+                task.TaskImageAfter = utils.convertToByteArray(imageBeforeView);
+                //worker.Password = workerPassword.getText().toString();
 
-                dbHelper.registerNewWorker(getApplicationContext(), worker);
-                refreshListOfWorkers();
+                dbHelper.createNewTask(getApplicationContext(), task);
+                refreshListOfAdminTasks();
 
                 ad.dismiss();
                 //registerUser();
             }
         });
     }
-    }
+
     private void setupDrawer() {
         toggle = new ActionBarDrawerToggle(AdminActivity.this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerOpened(View drawerView) {
@@ -264,5 +278,51 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                 return false;
         }
         return true;
+    }
+    @TargetApi(Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bitmap photo = null;
+        switch (requestCode) {
+            case RESULT_CAMERA_IMAGE:
+                if (resultCode == RESULT_OK) {
+                    photo = (Bitmap) data.getExtras().get("data");
+                    imageView.setImageBitmap(photo);
+                }
+                break;
+
+            case RESULT_GALLERY_IMAGE:
+                if (resultCode == RESULT_OK) {
+                    imageView.setImageBitmap(utils.getBitmap(data.getData()));
+                }
+
+                break;
+
+        }
+    }
+    public void refreshListOfAdminTasks()
+    {
+
+
+        adminViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0, idUser);
+        adminViewPager.setAdapter(adminViewPagerAdapter);
+        tabsAdmin.setupWithViewPager(adminViewPager);
+
+
+        adminWorkerViewPageAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 4, idUser);
+        adminWorkerViewPager.setAdapter(adminWorkerViewPageAdapter);
+        tabsWorker.setupWithViewPager(adminWorkerViewPager);
+
+
+/*
+        adminWorkerRecView = view.findViewById(R.id.adminRecyclerView);
+        adminWorkerRecView.setHasFixedSize(true);
+        layoutWorkerManager = new LinearLayoutManager(compatAdminWorkerActivity);
+        adminWorkerRecView.setLayoutManager(layoutWorkerManager);
+        adapterWorkers = new AdminWorkersRecyclerViewAdapter(AdminWorkerActivity.this, listOfWorkers, idUser);
+        adminWorkerRecView.setAdapter(adapterWorkers);
+        showEmptyDataTextView();
+        adminWorkerRecView.refreshDrawableState();*/
     }
 }

@@ -41,7 +41,7 @@ public class AdminMaketTaskFragment extends Fragment {
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
         listOfAdminMaketTask = dataBaseHelper.getAdminMaketTask();
 
-        AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(listOfAdminMaketTask);
+        AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(getContext(),listOfAdminMaketTask);
         adminRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         adminRecyclerView.setLayoutManager(layoutManager);

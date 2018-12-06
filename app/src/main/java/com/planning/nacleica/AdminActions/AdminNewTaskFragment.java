@@ -44,7 +44,7 @@ public class AdminNewTaskFragment extends Fragment {
         listOfAdminTask = dataBaseHelper.getAdminNewTask();
 
         //String[] items = getResources().getStringArray(R.array.tab_B);
-        AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(listOfAdminTask);
+        AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(getContext(),listOfAdminTask);
         adminRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         adminRecyclerView.setLayoutManager(layoutManager);

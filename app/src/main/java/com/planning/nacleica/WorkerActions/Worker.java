@@ -9,6 +9,13 @@ public class Worker {
     public int Title;
     public byte[] Image;
     public String Birthday;
-    public Worker(){}
+
+    public Worker() {
+    }
+
+    public String getWorkerName(int idWorker)
+    {
+        return Name + " "+ Prename;
+    }
 
 }

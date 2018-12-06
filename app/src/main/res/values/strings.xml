@@ -25,6 +25,9 @@
     <string name="worker_prename">Prenumele:</string>
     <string name="worker_birth">Data nasterii:</string>
     <string name="worker_title">Functia angajat:</string>
+    <string name="comp_name">Denumirea companiei *</string>
+    <string name="create">Creare</string>
+    <string name="comp_phone">Nr. telefon * </string>
 
 <!--
     <string-array name="tab_A">
