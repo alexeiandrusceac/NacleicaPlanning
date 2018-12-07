@@ -26,7 +26,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<TextItemView
     @Override
     public TextItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
-        noDataView = view.findViewById(R.id.noDataView);
+        noDataView = view.findViewById(R.id.noTaskDataView);
         if (items.size() > 0) {
             noDataView.setVisibility(View.GONE);
         } else {

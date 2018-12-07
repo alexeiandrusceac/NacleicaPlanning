@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         TabLayout tabs = view.findViewById(R.id.sliding_tabs);
         viewPager = view.findViewById(R.id.viewPager);
 
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),4,idUser);
+        viewPagerAdapter = new ViewPagerAdapter(getApplicationContext(),getSupportFragmentManager(),4,idUser);
         viewPager.setAdapter(viewPagerAdapter);
 
         tabs.setupWithViewPager(viewPager);

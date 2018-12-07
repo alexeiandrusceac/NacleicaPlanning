@@ -30,7 +30,7 @@
             android:id="@+id/sliding_tabs"
             style="@style/Widget.MaterialComponents.TabLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="top"
             app:tabMode="fixed" />
 
@@ -70,7 +70,10 @@
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+            <!--<include layout="@layout/fragment"/>-->
+        </androidx.viewpager.widget.ViewPager>
     </LinearLayout>
 
     <!--<com.google.android.material.floatingactionbutton.FloatingActionButton

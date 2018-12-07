@@ -28,6 +28,8 @@
     <string name="comp_name">Denumirea companiei *</string>
     <string name="create">Creare</string>
     <string name="comp_phone">Nr. telefon * </string>
+    <string name="maket_task">Da la machetare</string>
+    <string name="edit_task">Editare</string>
 
 <!--
     <string-array name="tab_A">

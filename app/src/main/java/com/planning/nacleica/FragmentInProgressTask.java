@@ -76,7 +76,7 @@ public class FragmentInProgressTask extends Fragment {
 
         return view;*/
     }
-
+/*
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -93,6 +93,6 @@ public class FragmentInProgressTask extends Fragment {
             recyclerView.setAdapter(adapter);
         } else { //noDataView.setVisibility(View.VISIBLE);
         }
-    }
+    }*/
 
 }

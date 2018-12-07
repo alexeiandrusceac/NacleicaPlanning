@@ -35,7 +35,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminWorkersRecyclerViewAdapter.ViewHolder> {
-    static List<Worker> dbWorkerList;
+    static List<Worker> dbWorkerList = new ArrayList<>();
     //static List<Worker> copyDbList;
     public DatePickerDialog datePicker;
     private int idHotel;
@@ -55,12 +55,9 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
     public Worker worker;
 
     public AdminWorkersRecyclerViewAdapter(AdminWorkerActivity context, List<Worker> dbList, int user_id) {
-        this.dbWorkerList = new ArrayList<>();
-        //this.listOfRooms = new ArrayList<Rooms>();
+
         this.context = context;
         this.dbWorkerList = dbList;
-        /*copyDbList = new ArrayList<Hotels>();
-        copyDbList.addAll(dbList);*/
         dataBaseHelper = DataBaseHelper.getInstance(context);
         this.idUser = user_id;
     }
@@ -74,7 +71,7 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
             @Override
             public void onClick(View v) {
 
-                showDialogEditData(true, dbWorkerList.get(0), 0);
+                showDialogEditData(true, dbWorkerList.get(v.getId()), v.getId());
             }
         });
         /*reservationButton.setOnClickListener(new View.OnClickListener() {

@@ -50,6 +50,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
@@ -71,7 +72,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     public TextView usr_pren_nav;
     public View view;
     int idUser;
-    public List<Tasks> listOfAdminNewTasks = new ArrayList<>();
+
     private View header;
     WorkerSession session;
     FrameLayout frameLayout;
@@ -118,7 +119,10 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
         view = layoutInflater.inflate(R.layout.admin_main, frameLayout);
         fab = view.findViewById(R.id.adminWorkerFab);
-
+        tabsAdmin = view.findViewById(R.id.admin_tab);
+        tabsWorker = view.findViewById(R.id.adminWorker_tab);
+        adminViewPager = view.findViewById(R.id.adminViewPager);
+        adminWorkerViewPager = view.findViewById(R.id.adminWorkerViewPager);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,10 +130,8 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             }
         });
         toolbar = view.findViewById(R.id.main_app_toolbar);
-        tabsAdmin = view.findViewById(R.id.admin_tab);
-        tabsWorker = view.findViewById(R.id.adminWorker_tab);
-        adminViewPager = view.findViewById(R.id.adminViewPager);
-        adminWorkerViewPager = view.findViewById(R.id.adminWorkerViewPager);
+
+
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -304,25 +306,17 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     public void refreshListOfAdminTasks()
     {
 
+        adminViewPagerAdapter = new ViewPagerAdapter(getApplicationContext(),
+                getSupportFragmentManager(),0, idUser);
 
-        adminViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0, idUser);
         adminViewPager.setAdapter(adminViewPagerAdapter);
-        tabsAdmin.setupWithViewPager(adminViewPager);
 
+        tabsAdmin.setupWithViewPager(adminViewPager,true);
+        adminWorkerViewPageAdapter = new ViewPagerAdapter(getApplicationContext(),getSupportFragmentManager(), 4, idUser);
 
-        adminWorkerViewPageAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 4, idUser);
         adminWorkerViewPager.setAdapter(adminWorkerViewPageAdapter);
         tabsWorker.setupWithViewPager(adminWorkerViewPager);
 
 
-/*
-        adminWorkerRecView = view.findViewById(R.id.adminRecyclerView);
-        adminWorkerRecView.setHasFixedSize(true);
-        layoutWorkerManager = new LinearLayoutManager(compatAdminWorkerActivity);
-        adminWorkerRecView.setLayoutManager(layoutWorkerManager);
-        adapterWorkers = new AdminWorkersRecyclerViewAdapter(AdminWorkerActivity.this, listOfWorkers, idUser);
-        adminWorkerRecView.setAdapter(adapterWorkers);
-        showEmptyDataTextView();
-        adminWorkerRecView.refreshDrawableState();*/
     }
 }

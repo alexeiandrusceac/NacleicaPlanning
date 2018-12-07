@@ -4,49 +4,46 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AdminMaketTaskFragment extends Fragment {
     public List<Tasks> listOfAdminMaketTask = new ArrayList<>();
-    TextView adminNoDataView;
     RecyclerView adminRecyclerView;
+    public FragmentActivity fragmentActivity = getActivity();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(
-                R.layout.fragment, container, false);
-        return rootView;
-    }
-
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+        View rootView = inflater.inflate(R.layout.fragment, container, false);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
         listOfAdminMaketTask = dataBaseHelper.getAdminMaketTask();
 
-        AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(getContext(),listOfAdminMaketTask);
-        adminRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        adminRecyclerView = rootView.findViewById(R.id.recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(fragmentActivity);
         adminRecyclerView.setLayoutManager(layoutManager);
-        adminRecyclerView.setAdapter(adapter);
-
+        final AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(getContext(),listOfAdminMaketTask);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                fragmentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adminRecyclerView.setAdapter(adapter);
+                    }
+                });
+            }
+        }).start();
+        return rootView;
     }
-
 }

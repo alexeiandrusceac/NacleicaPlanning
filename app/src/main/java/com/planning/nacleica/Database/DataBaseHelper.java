@@ -97,6 +97,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
+    public void updateData(Context context, Tasks tasks) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TASK_NAME, tasks.TaskName);
+        contentValues.put(TASK_IMAGE_BEFORE, tasks.TaskImageBefore);
+        contentValues.put(TASK_IMAGE_AFTER, tasks.TaskImageAfter);
+        contentValues.put(TASK_STATE, tasks.TaskState);
+        contentValues.put(TASK_COM_NAME, tasks.TaskCompany);
+        contentValues.put(TASK_COM_PHONE, tasks.TaskCompanyPhone);
+        contentValues.put(TASK_PERIOD_FROM, tasks.TaskPeriodFrom);
+        contentValues.put(TASK_PERIOD_TO, tasks.TaskPeriodTo);
+        sqLiteDatabase.update(TASK_TABLE, contentValues, TASK_ID + "=?", new String[]{String.valueOf(tasks.idTask)});
+        if (sqLiteDatabase != null) {
+            Toast.makeText(context, "Informatia sa actualizat cu succes", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Nu sa actualizat informatia", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
     public void updateData(Context context, Worker worker) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -149,19 +169,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.d(TAG, String.format("Angajatul  cu numele " + worker.Name + " " + worker.Prename + "nu s-a inregistrat"));
         }
     }
-    public void createNewTask(Context context,Tasks newTask)
-    {
+
+    public void createNewTask(Context context, Tasks newTask) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TASK_NAME,newTask.TaskName);
-        contentValues.put(TASK_COM_NAME,newTask.TaskCompany);
-        contentValues.put(TASK_COM_PHONE,newTask.TaskCompanyPhone);
-        contentValues.put(TASK_STATE,newTask.TaskState);
-        contentValues.put(TASK_PERIOD_FROM,newTask.TaskPeriodFrom);
-        contentValues.put(TASK_PERIOD_TO,newTask.TaskPeriodTo);
-        contentValues.put(TASK_IMAGE_AFTER,newTask.TaskImageAfter);
-        contentValues.put(TASK_IMAGE_BEFORE,newTask.TaskImageBefore);
-        long id= sqLiteDatabase.insert(TASK_TABLE,null,contentValues);
+        contentValues.put(TASK_NAME, newTask.TaskName);
+        contentValues.put(TASK_COM_NAME, newTask.TaskCompany);
+        contentValues.put(TASK_COM_PHONE, newTask.TaskCompanyPhone);
+        contentValues.put(TASK_STATE, newTask.TaskState);
+        contentValues.put(TASK_PERIOD_FROM, newTask.TaskPeriodFrom);
+        contentValues.put(TASK_PERIOD_TO, newTask.TaskPeriodTo);
+        contentValues.put(TASK_IMAGE_AFTER, newTask.TaskImageAfter);
+        contentValues.put(TASK_IMAGE_BEFORE, newTask.TaskImageBefore);
+        long id = sqLiteDatabase.insert(TASK_TABLE, null, contentValues);
         if (sqLiteDatabase != null) {
             Toast.makeText(context, String.format("Sarcina  cu numele " + newTask.TaskName + " s-a creat cu succes"), Toast.LENGTH_SHORT).show();
             Log.d(TAG, String.format("Sarcina  cu numele " + newTask.TaskName + " s-a creat cu succes"));
@@ -170,6 +190,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.d(TAG, String.format("Sarcina  cu numele " + newTask.TaskName + " nu s-a creat"));
         }
     }
+
     public List<Worker> getWorkers() {
 
         List<Worker> listOfWorkers = new ArrayList<>();
@@ -269,19 +290,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + TASK_TABLE + " where " + TASK_STATE + " =?", new String[]{String.valueOf(1)});
         if (cursor.moveToFirst()) {
             do {
-                Tasks newdata = new Tasks();
-                newdata.idTask = cursor.getInt(cursor.getColumnIndex(TASK_ID));
-                newdata.idWorker = cursor.getInt(cursor.getColumnIndex(TASK_WORKER_ID));
-                newdata.TaskCompany = cursor.getString(cursor.getColumnIndex(TASK_COM_NAME));
-                newdata.TaskCompanyPhone = cursor.getString(cursor.getColumnIndex(TASK_COM_PHONE));
-                newdata.TaskName = cursor.getString(cursor.getColumnIndex(TASK_NAME));
-                newdata.TaskPeriodFrom = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_FROM));
-                newdata.TaskPeriodTo = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_TO));
-                newdata.TaskState = cursor.getInt(cursor.getColumnIndex(TASK_STATE));
-                newdata.TaskImageBefore = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_BEFORE));
-                newdata.TaskImageAfter = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_AFTER));
+                Tasks newMaketTask = new Tasks();
+                newMaketTask.idTask = cursor.getInt(cursor.getColumnIndex(TASK_ID));
+                newMaketTask.idWorker = cursor.getInt(cursor.getColumnIndex(TASK_WORKER_ID));
+                newMaketTask.TaskCompany = cursor.getString(cursor.getColumnIndex(TASK_COM_NAME));
+                newMaketTask.TaskCompanyPhone = cursor.getString(cursor.getColumnIndex(TASK_COM_PHONE));
+                newMaketTask.TaskName = cursor.getString(cursor.getColumnIndex(TASK_NAME));
+                newMaketTask.TaskPeriodFrom = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_FROM));
+                newMaketTask.TaskPeriodTo = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_TO));
+                newMaketTask.TaskState = cursor.getInt(cursor.getColumnIndex(TASK_STATE));
+                newMaketTask.TaskImageBefore = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_BEFORE));
+                newMaketTask.TaskImageAfter = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_AFTER));
 
-                listOfAdminMaketTask.add(newdata);
+                listOfAdminMaketTask.add(newMaketTask);
             } while (cursor.moveToNext());
         }
         db.close();

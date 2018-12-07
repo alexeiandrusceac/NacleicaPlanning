@@ -1,5 +1,7 @@
 package com.planning.nacleica;
 
+import android.content.Context;
+
 import com.planning.nacleica.AdminActions.AdminMaketTaskFragment;
 import com.planning.nacleica.AdminActions.AdminNewTaskFragment;
 
@@ -13,10 +15,11 @@ import androidx.fragment.app.FragmentPagerAdapter;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     public int titleAccess;
     public int idWorker;
-
-    public ViewPagerAdapter(FragmentManager fm, int title, int idWorker) {
+    public Context context;
+    public ViewPagerAdapter(Context context,FragmentManager fm, int title, int idWorker) {
         super(fm);
         this.titleAccess = title;
+        this.context = context;
         this.idWorker = idWorker;
     }
 
@@ -34,7 +37,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             }
         } else {
             if (position == 0) {
-                fragment = new AdminNewTaskFragment();
+                fragment = new  AdminNewTaskFragment();
             } else if (position == 1) {
                 fragment = new AdminMaketTaskFragment();
             }

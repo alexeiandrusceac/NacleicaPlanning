@@ -25,6 +25,7 @@ public class AdminWorkersNewTasksFragment extends Fragment {
     TextView adminNoDataView;
     RecyclerView adminRecyclerView;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,14 +39,14 @@ public class AdminWorkersNewTasksFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
+        /*DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
         listOfAdminWorkersTask = dataBaseHelper.getWorkersNewTasks();
 
         AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(getContext(),listOfAdminWorkersTask);
         adminRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         adminRecyclerView.setLayoutManager(layoutManager);
-        adminRecyclerView.setAdapter(adapter);
+        adminRecyclerView.setAdapter(adapter);*/
 
     }
 }
