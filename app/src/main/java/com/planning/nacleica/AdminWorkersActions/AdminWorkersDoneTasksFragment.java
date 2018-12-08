@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.planning.nacleica.AdminActions.AdminActivity;
 import com.planning.nacleica.Database.DataBaseHelper;
@@ -23,13 +22,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 @SuppressLint("ValidFragment")
-public class AdminWorkersNewTasksFragment extends Fragment {
-    public List<Tasks> listOfAdminWorkersNewTask = new ArrayList<>();
+public class AdminWorkersDoneTasksFragment extends Fragment {
+    public List<Tasks> listOfAdminWorkersDoneTask = new ArrayList<>();
     RecyclerView adminRecyclerView;
     public FragmentActivity fragmentActivity = getActivity();
     AdminActivity activity;
 
-    public AdminWorkersNewTasksFragment(AdminActivity activity) {
+    @SuppressLint("ValidFragment")
+    public AdminWorkersDoneTasksFragment(AdminActivity activity) {
         this.activity = activity;
     }
 
@@ -39,12 +39,12 @@ public class AdminWorkersNewTasksFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment, container, false);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-        listOfAdminWorkersNewTask = dataBaseHelper.getWorkersNewTasks();
+        listOfAdminWorkersDoneTask = dataBaseHelper.getWorkersDoneTasks();
 
         adminRecyclerView = rootView.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(fragmentActivity);
         adminRecyclerView.setLayoutManager(layoutManager);
-        final AdminWorkersNewTasksRecyclerAdapter adapter = new AdminWorkersNewTasksRecyclerAdapter(activity, listOfAdminWorkersNewTask);
+        final AdminWorkersDoneRecyclerAdapter adapter = new AdminWorkersDoneRecyclerAdapter(activity, listOfAdminWorkersDoneTask);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -58,5 +58,4 @@ public class AdminWorkersNewTasksFragment extends Fragment {
         }).start();
         return rootView;
     }
-
 }

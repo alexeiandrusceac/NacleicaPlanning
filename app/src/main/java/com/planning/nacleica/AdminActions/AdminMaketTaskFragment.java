@@ -1,5 +1,6 @@
 package com.planning.nacleica.AdminActions;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +17,17 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+@SuppressLint("ValidFragment")
 public class AdminMaketTaskFragment extends Fragment {
     public List<Tasks> listOfAdminMaketTask = new ArrayList<>();
     RecyclerView adminRecyclerView;
     public FragmentActivity fragmentActivity = getActivity();
+    public AdminActivity activity;
 
+    public AdminMaketTaskFragment (AdminActivity activity)
+    {
+        this.activity = activity;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -30,13 +37,13 @@ public class AdminMaketTaskFragment extends Fragment {
         listOfAdminMaketTask = dataBaseHelper.getAdminMaketTask();
 
         adminRecyclerView = rootView.findViewById(R.id.recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(fragmentActivity);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
         adminRecyclerView.setLayoutManager(layoutManager);
-        final AdminRecyclerViewAdapter adapter = new AdminRecyclerViewAdapter(getContext(),listOfAdminMaketTask);
+        final AdminMaketTaskRecyclerViewAdapter adapter = new AdminMaketTaskRecyclerViewAdapter(activity,listOfAdminMaketTask);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                fragmentActivity.runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adminRecyclerView.setAdapter(adapter);

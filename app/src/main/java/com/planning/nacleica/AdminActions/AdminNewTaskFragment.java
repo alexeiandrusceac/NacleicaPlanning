@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
 import com.planning.nacleica.Database.DataBaseHelper;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,11 +20,17 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+@SuppressLint("ValidFragment")
 public class AdminNewTaskFragment extends Fragment {
     public List<Tasks> listOfAdminNewTask = new ArrayList<>();
     public FragmentActivity fragmentActivity = getActivity();
     RecyclerView adminRecyclerView;
-    public AdminNewTaskFragment(){}
+    AdminActivity activity;
+
+    public AdminNewTaskFragment(AdminActivity activity) {
+        this.activity = activity;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -31,14 +40,14 @@ public class AdminNewTaskFragment extends Fragment {
         listOfAdminNewTask = dataBaseHelper.getAdminNewTask();
 
         adminRecyclerView = rootView.findViewById(R.id.recycler_view);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(fragmentActivity);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
         adminRecyclerView.setLayoutManager(layoutManager);
-        final AdminNewTasksRecyclerViewAdapter adapter = new AdminNewTasksRecyclerViewAdapter(listOfAdminNewTask);
+        final AdminNewTasksRecyclerViewAdapter adapter = new AdminNewTasksRecyclerViewAdapter(activity,listOfAdminNewTask);
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                fragmentActivity.runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adminRecyclerView.setAdapter(adapter);

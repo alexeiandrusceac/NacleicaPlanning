@@ -37,24 +37,17 @@ public class FragmentNewTask extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment, container, false);
-        //noDataView = (TextView) rootView.findViewById(R.id.noDataView);
-
-        return rootView;
-
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+        noDataView = (TextView) rootView.findViewById(R.id.noTaskDataView);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
         listOfNewTask = dataBaseHelper.getWorkerNewTask(idWorker);
 
         WorkerRecyclerViewAdapter adapter = new WorkerRecyclerViewAdapter(listOfNewTask);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        return rootView;
 
     }
+
 }

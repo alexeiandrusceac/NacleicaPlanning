@@ -1,10 +1,11 @@
 package com.planning.nacleica.AdminActions;
 
 
-import android.Manifest;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.text.TextUtils;
@@ -13,7 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +22,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
-import com.planning.nacleica.TextItemViewHolder;
-import com.planning.nacleica.Title;
+
 import com.planning.nacleica.Utils;
 import com.planning.nacleica.WorkerActions.Worker;
 
@@ -31,7 +31,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AppCompatButton;
+
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.PopupMenu;
@@ -58,6 +58,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
     public AdminNewTasksRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
         noAdminDataView = view.findViewById(R.id.noTaskDataView);
+        noAdminDataView.setText(R.string.noNewTasks);
         cardView = view.findViewById(R.id.cardViewTask);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,10 +70,39 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.maket_task:
+                                LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                View postMainTaskView = layoutInflater.inflate(R.layout.choose_worker, null, false);
+                                final AppCompatSpinner workerSpinner = postMainTaskView.findViewById(R.id.worker_choose);
+                                workerSpinner.setAdapter(new ArrayAdapter<Worker>(activity,android.R.layout.simple_spinner_item,dataBaseHelper.getWorkers(2)));
 
-                                listOfTasks.get(v.getId()).TaskState = 1;
-                                dataBaseHelper.updateData(activity, listOfTasks.get(v.getId()));
-                                view.refreshDrawableState();
+                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity).setTitle("Atribuire la machetare").setView(view).setCancelable(false).setPositiveButton(
+                                        "Atribuie", new DialogInterface.OnClickListener() {
+                                            @SuppressLint("ResourceType")
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) { }
+                                        }
+                                ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                                final AlertDialog ad = alertDialog.create();
+                                ad.show();
+                                ad.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                    @SuppressLint("ResourceType")
+                                    @Override
+                                    public void onClick(View v) {
+                                        listOfTasks.get(v.getId()).idWorker = ((Worker)workerSpinner.getSelectedItem()).workerID;
+                                        listOfTasks.get(v.getId()).TaskState = 1;
+                                        dataBaseHelper.updateData(activity, listOfTasks.get(v.getId()));
+                                        view.refreshDrawableState();
+                                        ad.dismiss();
+
+                                    }
+                                });
+
                                 return true;
                             case R.id.edit_task:
                                 showDialogEditData(true, listOfTasks.get(v.getId()), v.getId());
@@ -87,8 +117,6 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                 popupMenu.show();
             }
         });
-
-
         if (listOfTasks.size() > 0) {
             noAdminDataView.setVisibility(View.GONE);
         } else {
@@ -100,14 +128,14 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        byte[] array = listOfTasks.get(position).TaskImageBefore;
         holder.taskTitle.setText(listOfTasks.get(position).TaskName);
         holder.compPhone.setText(listOfTasks.get(position).TaskCompanyPhone);
         holder.compName.setText(listOfTasks.get(position).TaskCompany);
         holder.dateFrom.setText(listOfTasks.get(position).TaskPeriodFrom);
         holder.dateTo.setText(listOfTasks.get(position).TaskPeriodTo);
+        holder.imageBefore.setImageBitmap(BitmapFactory.decodeByteArray(array,0,array.length));
         //holder.infoWorker.setText(getWorkerName(listOfTasks.get(position).idWorker));
-
-
     }
 
     private void showDialogEditData(final boolean shouldUpdate, final Tasks task, final int position) {
@@ -218,7 +246,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                 } else if (TextUtils.isEmpty(compPhone.getText().toString())) {
                     Toast.makeText(activity, "Introduceti nr de telefon a clientului!", Toast.LENGTH_SHORT).show();
                     return;
-                } else if ((TextUtils.isEmpty(dateFrom.getText().toString())) || (TextUtils.isEmpty(dateTo.getText().toString()))) {
+                } else if ((TextUtils.isEmpty(dateFrom.getText().toString())) && (TextUtils.isEmpty(dateTo.getText().toString()))) {
                     Toast.makeText(activity, "Introduceti perioada de realizare a sarcinii!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -261,20 +289,18 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
 
-        public TextView compName, compPhone, infoWorker, taskTitle, idWorker, dateFrom, dateTo;
+        public TextView compName, compPhone, infoWorker, taskTitle, dateFrom, dateTo;
         public AppCompatImageView imageBefore;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
             compName = itemLayoutView.findViewById(R.id.comp_name);
             compPhone = itemLayoutView.findViewById(R.id.comp_phone);
-            //infoWorker = itemLayoutView.findViewById(R.id.infoWorker);
-
             taskTitle = itemLayoutView.findViewById(R.id.task_title);
             dateFrom = itemLayoutView.findViewById(R.id.task_periodFrom);
             dateTo = itemLayoutView.findViewById(R.id.task_periodTo);
-
-            //idWorker =  itemLayoutView.findViewById(R.id.idView);
+            infoWorker = itemLayoutView.findViewById(R.id.infoWorker);
+            infoWorker.setVisibility(View.GONE);
             imageBefore = itemLayoutView.findViewById(R.id.imageBeforeView);
 
         }

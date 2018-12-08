@@ -190,7 +190,28 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.d(TAG, String.format("Sarcina  cu numele " + newTask.TaskName + " nu s-a creat"));
         }
     }
+    public List<Worker> getWorkers(int title)
+    {
+        List<Worker> listDesigner  = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        Cursor curWorker = sqLiteDatabase.rawQuery("SELECT * from " + WORKER_TABLE + " Where "+ WORKER_TITLE + "=?",new String[]{String.valueOf(title)} );
+        if (curWorker.moveToFirst()) {
+            do {
+                Worker worker = new Worker();
+                worker.workerID = curWorker.getInt(curWorker.getColumnIndex(WORKER_ID));
+                worker.Name = curWorker.getString(curWorker.getColumnIndex(WORKER_NAME));
+                worker.Prename = curWorker.getString(curWorker.getColumnIndex(WORKER_PRENAME));
+                worker.Password = curWorker.getString(curWorker.getColumnIndex(WORKER_PASSWORD));
+                worker.Title = curWorker.getInt(curWorker.getColumnIndex(WORKER_TITLE));
+                worker.Image = curWorker.getBlob(curWorker.getColumnIndex(WORKER_IMAGE));
+                worker.Birthday = curWorker.getString(curWorker.getColumnIndex(WORKER_BIRTHDAY));
+                listDesigner.add(worker);
+            } while (curWorker.moveToNext());
 
+        }
+        curWorker.close();
+        return listDesigner;
+    }
     public List<Worker> getWorkers() {
 
         List<Worker> listOfWorkers = new ArrayList<>();
@@ -335,6 +356,59 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         cursor.close();
         return listOfNewTask;
+    }
+    public List<Tasks> getWorkersDoneTasks()
+    {
+        SQLiteDatabase db = getReadableDatabase();
+        List<Tasks> listOfWorkerDoneTask = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TASK_TABLE + " where " + TASK_STATE + " =?", new String[]{String.valueOf(4)});
+        if (cursor.moveToFirst()) {
+            do {
+                Tasks newdata = new Tasks();
+                newdata.idTask = cursor.getInt(cursor.getColumnIndex(TASK_ID));
+                newdata.idWorker = cursor.getInt(cursor.getColumnIndex(TASK_WORKER_ID));
+                newdata.TaskCompany = cursor.getString(cursor.getColumnIndex(TASK_COM_NAME));
+                newdata.TaskCompanyPhone = cursor.getString(cursor.getColumnIndex(TASK_COM_PHONE));
+                newdata.TaskName = cursor.getString(cursor.getColumnIndex(TASK_NAME));
+                newdata.TaskPeriodFrom = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_FROM));
+                newdata.TaskPeriodTo = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_TO));
+                newdata.TaskState = cursor.getInt(cursor.getColumnIndex(TASK_STATE));
+                newdata.TaskImageBefore = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_BEFORE));
+                newdata.TaskImageAfter = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_AFTER));
+
+                listOfWorkerDoneTask.add(newdata);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        cursor.close();
+        return listOfWorkerDoneTask;
+    }
+    public List<Tasks> getWorkersInProgTasks() {
+        SQLiteDatabase db = getReadableDatabase();
+        List<Tasks> listOfWorkerProgTask = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TASK_TABLE + " where " + TASK_STATE + " =?", new String[]{String.valueOf(3)});
+        if (cursor.moveToFirst()) {
+            do {
+                Tasks newdata = new Tasks();
+                newdata.idTask = cursor.getInt(cursor.getColumnIndex(TASK_ID));
+                newdata.idWorker = cursor.getInt(cursor.getColumnIndex(TASK_WORKER_ID));
+                newdata.TaskCompany = cursor.getString(cursor.getColumnIndex(TASK_COM_NAME));
+                newdata.TaskCompanyPhone = cursor.getString(cursor.getColumnIndex(TASK_COM_PHONE));
+                newdata.TaskName = cursor.getString(cursor.getColumnIndex(TASK_NAME));
+                newdata.TaskPeriodFrom = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_FROM));
+                newdata.TaskPeriodTo = cursor.getString(cursor.getColumnIndex(TASK_PERIOD_TO));
+                newdata.TaskState = cursor.getInt(cursor.getColumnIndex(TASK_STATE));
+                newdata.TaskImageBefore = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_BEFORE));
+                newdata.TaskImageAfter = cursor.getBlob(cursor.getColumnIndex(TASK_IMAGE_AFTER));
+
+                listOfWorkerProgTask.add(newdata);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        cursor.close();
+        return listOfWorkerProgTask;
     }
 
     public List<Tasks> getWorkersNewTasks() {

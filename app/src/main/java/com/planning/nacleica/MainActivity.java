@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     void initUI() {
         dbHelper = DataBaseHelper.getInstance(this);
 
-
         session = new WorkerSession(getApplicationContext());
 
         layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         TabLayout tabs = view.findViewById(R.id.sliding_tabs);
         viewPager = view.findViewById(R.id.viewPager);
 
-        viewPagerAdapter = new ViewPagerAdapter(getApplicationContext(),getSupportFragmentManager(),4,idUser);
+        viewPagerAdapter = new ViewPagerAdapter(MainActivity.this,false ,getSupportFragmentManager(),4,idUser);
         viewPager.setAdapter(viewPagerAdapter);
 
         tabs.setupWithViewPager(viewPager);

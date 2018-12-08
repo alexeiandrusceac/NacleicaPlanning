@@ -2,8 +2,12 @@ package com.planning.nacleica;
 
 import android.content.Context;
 
+import com.planning.nacleica.AdminActions.AdminActivity;
 import com.planning.nacleica.AdminActions.AdminMaketTaskFragment;
 import com.planning.nacleica.AdminActions.AdminNewTaskFragment;
+import com.planning.nacleica.AdminWorkersActions.AdminWorkersDoneTasksFragment;
+import com.planning.nacleica.AdminWorkersActions.AdminWorkersInProgressTasksFragment;
+import com.planning.nacleica.AdminWorkersActions.AdminWorkersNewTasksFragment;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -16,18 +20,40 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public int titleAccess;
     public int idWorker;
     public Context context;
-    public ViewPagerAdapter(Context context,FragmentManager fm, int title, int idWorker) {
+    public boolean taskforadmin = false;
+
+    public ViewPagerAdapter(Context context, boolean taskforadmin, FragmentManager fm, int title, int idWorker) {
         super(fm);
         this.titleAccess = title;
         this.context = context;
         this.idWorker = idWorker;
+        this.taskforadmin = taskforadmin;
     }
 
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
 
-        if (titleAccess == 4) {
+        // verifica daca este lucrator simplu
+        if (titleAccess != 4 && taskforadmin == true) {
+
+            if (position == 0) {
+                fragment = new AdminNewTaskFragment((AdminActivity) context);
+            } else if (position == 1) {
+                fragment = new AdminMaketTaskFragment((AdminActivity) context);
+            }
+
+        } else if (titleAccess != 4 && taskforadmin == false) {
+
+            if (position == 0) {
+                fragment = new AdminWorkersNewTasksFragment((AdminActivity) context);
+            } else if (position == 1) {
+                fragment = new AdminWorkersInProgressTasksFragment((AdminActivity) context);
+            } else if (position == 2) {
+                fragment = new AdminWorkersDoneTasksFragment((AdminActivity) context);
+            }
+
+        } else {
             if (position == 0) {
                 fragment = new FragmentNewTask(idWorker);
             } else if (position == 1) {
@@ -35,14 +61,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             } else if (position == 2) {
                 fragment = new FragmentDoneTask(idWorker);
             }
-        } else {
-            if (position == 0) {
-                fragment = new  AdminNewTaskFragment();
-            } else if (position == 1) {
-                fragment = new AdminMaketTaskFragment();
-            }
-
         }
+
         return fragment;
     }
 
@@ -54,19 +74,28 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         String title = null;
-        if (titleAccess == 4) {
+        if (titleAccess != 4 && taskforadmin == true) {
             if (position == 0) {
-                title = "Sarcini noi";
+                title = context.getResources().getText(R.string.client_Tasks) + "(" + ((AdminNewTaskFragment) getItem(position)).listOfAdminNewTask.size() + ")";
             } else if (position == 1) {
-                title = "Sarcini prelucrare";
+                title = context.getResources().getText(R.string.maket_Tasks) + "(" + ((AdminMaketTaskFragment) getItem(position)).listOfAdminMaketTask.size() + ")";
+            }
+        } else if (titleAccess != 4 && taskforadmin == false) {
+
+            if (position == 0) {
+                title = context.getResources().getText(R.string.new_Tasks) + "(" + ((AdminWorkersNewTasksFragment) getItem(position)).listOfAdminWorkersNewTask.size() + ")";
+            } else if (position == 1) {
+                title = context.getResources().getText(R.string.prel_Tasks) + "(" + ((AdminWorkersInProgressTasksFragment) getItem(position)).listOfAdminWorkersInProgTask.size() + ")";
             } else if (position == 2) {
-                title = "Sarcini finisate";
+                title = context.getResources().getText(R.string.done_Tasks) + "(" + ((AdminWorkersDoneTasksFragment) getItem(position)).listOfAdminWorkersDoneTask.size() + ")";
             }
         } else {
             if (position == 0) {
-                title = "Intilnire client";
+                title = context.getResources().getText(R.string.new_Tasks) + "(" + ((FragmentNewTask) getItem(position)).listOfNewTask.size() + ")";
             } else if (position == 1) {
-                title = "Sarcina la machetare";
+                title = context.getResources().getText(R.string.prel_Tasks) + "(" + ((FragmentInProgressTask) getItem(position)).listOfInProgressTask.size() + ")";
+            } else if (position == 2) {
+                title = context.getResources().getText(R.string.done_Tasks) + "(" + ((FragmentDoneTask) getItem(position)).listOfDoneTask.size() + ")";
             }
         }
         return title;

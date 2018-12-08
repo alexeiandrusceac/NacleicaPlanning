@@ -13,7 +13,7 @@ public class Worker {
     public Worker() {
     }
 
-    public String getWorkerName(int idWorker)
+    public String getWorkerName(int workerID)
     {
         return Name + " "+ Prename;
     }

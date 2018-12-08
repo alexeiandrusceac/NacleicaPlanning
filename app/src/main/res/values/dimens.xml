@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name = "fab_margin">16dp</dimen>
+    <dimen name="new_Tasks">6dp</dimen>
+    <dimen name="prel_Tasks">6dp</dimen>
+    <dimen name="done_Tasks">6dp</dimen>
+    <dimen name="client_Tasks">6dp</dimen>
+    <dimen name="maket_Tasks">6dp</dimen>
+
 </resources>

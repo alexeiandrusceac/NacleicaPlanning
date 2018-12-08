@@ -289,18 +289,12 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
     public void onBindViewHolder(@NonNull AdminWorkersRecyclerViewAdapter.ViewHolder holder, int position) {
         byte[] byteArray = dbWorkerList.get(position).Image;
 
-        //Object title = (Object)(dbWorkerList.get(position).Title);
-
         holder.name.setText(dbWorkerList.get(position).Name);
         holder.prename.setText(dbWorkerList.get(position).Prename);
         holder.birthday.setText(dbWorkerList.get(position).Birthday);
         holder.title.setText(String.valueOf(Title.values()[dbWorkerList.get(position).Title - 1]));
-        // holder.idWorker.setText(String.valueOf(dbWorkerList.get(position).workerID));
         holder.image.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
-       /* holder.phone.setText(dbList.get(position).Phone);
-        holder.city.setText(dbList.get(position).City);
-        holder.idHotel.setText(String.valueOf(dbList.get(position).Id_Hotel));
-    */
+
     }
 
     @Override

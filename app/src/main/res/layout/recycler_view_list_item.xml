@@ -46,7 +46,7 @@
                     card_view:contentPadding="0dp">
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/workerImageView"
+                        android:id="@+id/imageView"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:adjustViewBounds="true"
@@ -167,6 +167,28 @@
 
                     <TextView
                         android:id="@+id/task_periodTo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:textColor="#808080" />
+                </LinearLayout>
+
+                <LinearLayout android:id="@+id/workerID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/periodId"
+                    android:layout_weight="0.3"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/workerLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/worker_designer"
+                        android:textColor="#000000"
+                        android:textSize="10dp" />
+
+                    <TextView
+                        android:id="@+id/infoWorker"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="3dp"

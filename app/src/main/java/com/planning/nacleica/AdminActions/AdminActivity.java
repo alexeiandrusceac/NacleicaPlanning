@@ -95,7 +95,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
         session = new WorkerSession(getApplicationContext());
 
-        layoutInflater = (LayoutInflater) AdminActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater = (LayoutInflater) compatAdminActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
         navigationView = (NavigationView) findViewById(R.id.navigationView);
 
@@ -207,13 +207,11 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                 task.TaskPeriodTo = dateToText.getText().toString();
                 task.TaskImageBefore = utils.convertToByteArray(imageBeforeView);
                 task.TaskImageAfter = utils.convertToByteArray(imageBeforeView);
-                //worker.Password = workerPassword.getText().toString();
 
                 dbHelper.createNewTask(getApplicationContext(), task);
                 refreshListOfAdminTasks();
-
                 ad.dismiss();
-                //registerUser();
+
             }
         });
     }
@@ -263,7 +261,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
                 break;
             case R.id.adminWorkers:
-                Toast.makeText(AdminActivity.this, "Ati selectat ofertele dvs", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdminActivity.this, "Ati selectat monitorizarea angajatilor", Toast.LENGTH_SHORT).show();
                 Intent postActivity = new Intent(getApplicationContext(), AdminWorkerActivity.class);
                 setTitle(AdminActivity.this.getResources().getString(R.string.adminWorkers));
                 postActivity.putExtra("Image", userImage);
@@ -306,13 +304,12 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     public void refreshListOfAdminTasks()
     {
 
-        adminViewPagerAdapter = new ViewPagerAdapter(getApplicationContext(),
-                getSupportFragmentManager(),0, idUser);
+        adminViewPagerAdapter = new ViewPagerAdapter(compatAdminActivity,true,getSupportFragmentManager(),0, idUser);
 
         adminViewPager.setAdapter(adminViewPagerAdapter);
-
         tabsAdmin.setupWithViewPager(adminViewPager,true);
-        adminWorkerViewPageAdapter = new ViewPagerAdapter(getApplicationContext(),getSupportFragmentManager(), 4, idUser);
+
+        adminWorkerViewPageAdapter = new ViewPagerAdapter(compatAdminActivity,false,getSupportFragmentManager(), 4, idUser);
 
         adminWorkerViewPager.setAdapter(adminWorkerViewPageAdapter);
         tabsWorker.setupWithViewPager(adminWorkerViewPager);
