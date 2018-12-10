@@ -11,7 +11,7 @@
         android:text="@string/worker_choose"/>
 
     <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/worker"
+        android:id="@+id/choose_worker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 

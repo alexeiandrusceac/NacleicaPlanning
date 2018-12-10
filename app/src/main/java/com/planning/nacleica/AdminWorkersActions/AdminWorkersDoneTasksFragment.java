@@ -29,8 +29,9 @@ public class AdminWorkersDoneTasksFragment extends Fragment {
     AdminActivity activity;
 
     @SuppressLint("ValidFragment")
-    public AdminWorkersDoneTasksFragment(AdminActivity activity) {
+    public AdminWorkersDoneTasksFragment(AdminActivity activity, List<Tasks> listOfAdminWorkersDoneTask) {
         this.activity = activity;
+        this.listOfAdminWorkersDoneTask = listOfAdminWorkersDoneTask;
     }
 
     @Nullable

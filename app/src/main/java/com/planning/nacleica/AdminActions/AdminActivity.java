@@ -10,12 +10,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,21 +22,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
-import com.planning.nacleica.AdminWorkersRecyclerViewAdapter;
 import com.planning.nacleica.Database.DataBaseHelper;
-import com.planning.nacleica.MainActivity;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
-import com.planning.nacleica.Title;
 import com.planning.nacleica.Utils;
 import com.planning.nacleica.ViewPagerAdapter;
-import com.planning.nacleica.WorkerActions.Worker;
-import com.planning.nacleica.WorkerActions.WorkerSession;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.planning.nacleica.AuthActions.WorkerSession;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,12 +35,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -159,13 +145,6 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         final TextInputEditText dateToText = utils.dateToEditText((TextInputEditText) postMainTaskView.findViewById(R.id.date_to_value));
         final TextInputEditText compPhoneText =  postMainTaskView.findViewById(R.id.comp_phone_value);
 
-        /*final AppCompatButton createButton = postMainTaskView.findViewById(R.id.create_button);
-        workerButton.setVisibility(View.GONE);
-
-
-        workerTitleSpinner = postMainView.findViewById(R.id.user_title_text);
-        workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(compatAdminWorkerActivity, android.R.layout.simple_spinner_item, Title.values()));*/
-
         imageBeforeView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -175,7 +154,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             }
         });
 
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(compatAdminActivity).setTitle("Adaugarea angajatului").setView(postMainTaskView).setCancelable(false).setPositiveButton(
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(compatAdminActivity).setView(postMainTaskView).setCancelable(false).setPositiveButton(
                 "Inregistreaza", new DialogInterface.OnClickListener() {
                     @SuppressLint("ResourceType")
                     @Override
@@ -210,6 +189,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
                 dbHelper.createNewTask(getApplicationContext(), task);
                 refreshListOfAdminTasks();
+
                 ad.dismiss();
 
             }
@@ -303,7 +283,6 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     }
     public void refreshListOfAdminTasks()
     {
-
         adminViewPagerAdapter = new ViewPagerAdapter(compatAdminActivity,true,getSupportFragmentManager(),0, idUser);
 
         adminViewPager.setAdapter(adminViewPagerAdapter);

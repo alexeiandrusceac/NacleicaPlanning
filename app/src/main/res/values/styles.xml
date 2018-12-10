@@ -23,7 +23,8 @@
         <item name="android:background">@null</item>
         <item name="tabIconTint">@null</item>
         <item name="tabMaxWidth">@dimen/design_tab_max_width</item>
-        <item name="tabIndicatorAnimationDuration">@integer/design_tab_indicator_anim_duration_ms</item>
+        <item name="tabIndicatorAnimationDuration">@integer/design_tab_indicator_anim_duration_ms
+        </item>
         <item name="tabIndicatorColor">?attr/colorAccent</item>
         <item name="tabIndicatorGravity">bottom</item>
         <item name="tabIndicator">@drawable/mtrl_tabs_default_indicator</item>
@@ -52,7 +53,8 @@
         <item name="enforceTextAppearance">true</item>
         <!--<item name="android:background">?attr/colorSurface</item>-->
         <item name="tabIconTint">@color/mtrl_tabs_icon_color_selector</item>
-        <item name="tabIndicatorAnimationDuration">@integer/mtrl_tab_indicator_anim_duration_ms</item>
+        <item name="tabIndicatorAnimationDuration">@integer/mtrl_tab_indicator_anim_duration_ms
+        </item>
         <item name="tabIndicatorColor">?attr/colorPrimary</item>
         <item name="tabTextAppearance">?attr/textAppearanceButton</item>
         <item name="tabTextColor">@color/mtrl_tabs_icon_color_selector</item>
@@ -73,5 +75,12 @@
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">?android:attr/dividerVertical</item>
+    </style>
+
+    <style name="add_worker">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">30dp</item>
+        <item name="android:text">Adaugarea angajatului</item>
+
     </style>
 </resources>

@@ -1,9 +1,9 @@
-package com.planning.nacleica;
+package com.planning.nacleica.AdminActions;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.text.TextUtils;
@@ -11,20 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.planning.nacleica.AdminActions.AdminWorkerActivity;
 import com.planning.nacleica.Database.DataBaseHelper;
-import com.planning.nacleica.WorkerActions.Worker;
+import com.planning.nacleica.AuthActions.Worker;
+import com.planning.nacleica.R;
+import com.planning.nacleica.Title;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.EnumMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -32,7 +30,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import static com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes;
 
 public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminWorkersRecyclerViewAdapter.ViewHolder> {
     static List<Worker> dbWorkerList = new ArrayList<>();
@@ -53,6 +55,7 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
     private EditText roomPriceText;*/
     private LinearLayout linearLayout;
     public Worker worker;
+    public CardView cardView;
 
     public AdminWorkersRecyclerViewAdapter(AdminWorkerActivity context, List<Worker> dbList, int user_id) {
 
@@ -65,27 +68,17 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
     @NonNull
     @Override
     public AdminWorkersRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.adminworkers_content_main, parent,false);
-
-        itemLayoutView.setOnClickListener(new View.OnClickListener() {
+        final View adminWorkersListView = LayoutInflater.from(parent.getContext()).inflate(R.layout.adminworkers_content_main, parent, false);
+        cardView = adminWorkersListView.findViewById(R.id.cardView);
+        cardView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
-                showDialogEditData(true, dbWorkerList.get(v.getId()), v.getId());
+            public void onClick(final View v) {
+                int index = ((ViewGroup) (adminWorkersListView.getParent())).indexOfChild(adminWorkersListView);
+                showDialogEditData(true, dbWorkerList.get(index), index);
             }
         });
-        /*reservationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String hotelTitle = ((TextView) itemLayoutView.findViewById(R.id.titleView)).getText().toString();
 
-                idHotel = Integer.parseInt(((TextView) itemLayoutView.findViewById(R.id.idView)).getText().toString());
-                showReservationDialog(hotelTitle);
-            }
-        });*/
-
-
-        AdminWorkersRecyclerViewAdapter.ViewHolder viewHolder = new AdminWorkersRecyclerViewAdapter.ViewHolder(itemLayoutView);
+        AdminWorkersRecyclerViewAdapter.ViewHolder viewHolder = new AdminWorkersRecyclerViewAdapter.ViewHolder(adminWorkersListView);
         return viewHolder;
     }
 
@@ -93,6 +86,12 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
         final LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
 
         final View view = layoutInflaterAndroid.inflate(R.layout.register_main, null);
+        final Toolbar  editToolbar = view.findViewById(R.id.register_app_toolbar);
+
+
+        editToolbar.setTitle("Editare angajat");
+        editToolbar.setTitleTextAppearance(context, R.style.add_worker);
+
         final EditText nameView = view.findViewById(R.id.user_name_text);
         nameView.setText(String.valueOf(worker.Name));
         nameView.setTextColor(Color.BLACK);
@@ -103,7 +102,7 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
         prenameView.setTextColor(Color.BLACK);
         prenameView.setHintTextColor(Color.RED);
 
-        final EditText birthView = context.utils.dateToEditText((TextInputEditText)view.findViewById(R.id.user_birth_text));
+        final EditText birthView = context.utils.dateToEditText((TextInputEditText) view.findViewById(R.id.user_birth_text));
         birthView.setText(String.valueOf(worker.Birthday));
         birthView.setTextColor(Color.BLACK);
         birthView.setHintTextColor(Color.RED);
@@ -122,7 +121,7 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
             }
         });
 
-        final EditText passwordView =  view.findViewById(R.id.user_pass_text);
+        final EditText passwordView = view.findViewById(R.id.user_pass_text);
         passwordView.setText(String.valueOf(worker.Password));
         passwordView.setTextColor(Color.BLACK);
         passwordView.setHintTextColor(Color.RED);
@@ -194,84 +193,11 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
                     worker.Password = passwordView.getText().toString();
                     worker.Image = context.utils.convertToByteArray(workerImageView);
                     updateData(dbWorkerList.get(position), position);
-
                 }
             }
 
         });
 
-    /*} else
-
-    {
-        view = layoutInflaterAndroid.inflate(R.layout.data_dialog_input, null);
-        input = view.findViewById(R.id.inputText);
-        input.setText(String.valueOf(inOut.INPUT));
-        input.setTextColor(Color.BLACK);
-        input.setHintTextColor(Color.RED);
-        dateInputSet = view.findViewById(R.id.dateText);
-        dateInputSet.setText(String.valueOf(inOut.DATE));
-        dateInputSet.setTextColor(Color.BLACK);
-        dateInputSet.setHintTextColor(Color.RED);
-        dateInput = setDate(view);
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(MonitorizareMainActivity.this);
-        alertDialogBuilderUserInput.setView(view);
-
-        checkExternalStorage();
-
-        if (shouldUpdate && inOut != null) {
-
-            dateInput.setText(String.valueOf(inOut.DATE));
-
-            dateInput.setTextColor(Color.BLACK);
-        }
-        alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setView(view)
-                .setPositiveButton(shouldUpdate ? "Actualizeaza" : "Salveaza", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogBox, int id) {
-
-                    }
-                })
-                .setNegativeButton("Anuleaza",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogBox, int id) {
-                                dialogBox.cancel();
-                            }
-                        });
-
-        final AlertDialog alertDialog = alertDialogBuilderUserInput.create();
-        alertDialog.show();
-
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onClick(View v) {
-
-                inputText[0] = ((EditText) (view.findViewById(R.id.inputText))).getText().toString();
-                if (TextUtils.isEmpty(inputText[0])) {
-                    Toast.makeText(MonitorizareMainActivity.this, "Introduceti cit ati primit!", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (TextUtils.isEmpty(dateInput.getText().toString())) {
-                    Toast.makeText(MonitorizareMainActivity.this, "Introduceti data primirii!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                alertDialog.dismiss();
-
-                // verifica daca utilizatorul actualizeaza datele
-                if (shouldUpdate && inOut != null) {
-                    // actualizeaza datele
-                    inOut.DATE = dateInput.getText().toString();
-                    inOut.INPUT = (inputText[0] == null ? 0 : Integer.parseInt(inputText[0]));
-                    inOut.OUTPUT = 0;
-
-                    updateData(listOfNewData.get(position), position);
-                    calculateSumTotal();
-
-                }
-            }
-
-        });*/
     }
 
     private void updateData(Worker worker, int position) {
@@ -288,7 +214,6 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
     @Override
     public void onBindViewHolder(@NonNull AdminWorkersRecyclerViewAdapter.ViewHolder holder, int position) {
         byte[] byteArray = dbWorkerList.get(position).Image;
-
         holder.name.setText(dbWorkerList.get(position).Name);
         holder.prename.setText(dbWorkerList.get(position).Prename);
         holder.birthday.setText(dbWorkerList.get(position).Birthday);

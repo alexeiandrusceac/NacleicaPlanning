@@ -11,7 +11,7 @@ import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
 import com.planning.nacleica.Utils;
-import com.planning.nacleica.WorkerActions.Worker;
+import com.planning.nacleica.AuthActions.Worker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AdminWorkersInProgRecyclerAdapter extends RecyclerView.Adapter<AdminWorkersInProgRecyclerAdapter.ViewHolder>  {

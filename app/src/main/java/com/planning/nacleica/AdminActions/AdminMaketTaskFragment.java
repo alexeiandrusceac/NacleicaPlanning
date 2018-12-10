@@ -24,9 +24,10 @@ public class AdminMaketTaskFragment extends Fragment {
     public FragmentActivity fragmentActivity = getActivity();
     public AdminActivity activity;
 
-    public AdminMaketTaskFragment (AdminActivity activity)
+    public AdminMaketTaskFragment (AdminActivity activity,List<Tasks> listOfAdminMaketTask)
     {
         this.activity = activity;
+        this.listOfAdminMaketTask = listOfAdminMaketTask;
     }
     @Nullable
     @Override

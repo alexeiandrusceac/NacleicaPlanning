@@ -16,10 +16,8 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
-import com.planning.nacleica.AdminActions.AdminActivity;
-import com.planning.nacleica.AdminActions.AdminWorkerActivity;
 import com.planning.nacleica.Database.DataBaseHelper;
-import com.planning.nacleica.WorkerActions.WorkerSession;
+import com.planning.nacleica.AuthActions.WorkerSession;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

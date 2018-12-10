@@ -1,4 +1,4 @@
-package com.planning.nacleica.WorkerActions;
+package com.planning.nacleica.AuthActions;
 
 
 import android.content.Intent;

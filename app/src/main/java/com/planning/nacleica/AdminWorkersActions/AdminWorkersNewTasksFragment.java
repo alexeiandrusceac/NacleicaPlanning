@@ -29,8 +29,9 @@ public class AdminWorkersNewTasksFragment extends Fragment {
     public FragmentActivity fragmentActivity = getActivity();
     AdminActivity activity;
 
-    public AdminWorkersNewTasksFragment(AdminActivity activity) {
+    public AdminWorkersNewTasksFragment(AdminActivity activity,List<Tasks> listOfAdminWorkersNewTask) {
         this.activity = activity;
+        this.listOfAdminWorkersNewTask = listOfAdminWorkersNewTask;
     }
 
     @Nullable

@@ -11,7 +11,7 @@ import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
 import com.planning.nacleica.Utils;
-import com.planning.nacleica.WorkerActions.Worker;
+import com.planning.nacleica.AuthActions.Worker;
 
 import java.util.ArrayList;
 import java.util.List;

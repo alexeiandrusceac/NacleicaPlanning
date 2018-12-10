@@ -1,4 +1,4 @@
-package com.planning.nacleica;
+package com.planning.nacleica.WorkerActions;
 
 
 import android.annotation.SuppressLint;
@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.planning.nacleica.Database.DataBaseHelper;
+import com.planning.nacleica.R;
+import com.planning.nacleica.Tasks;
+import com.planning.nacleica.WorkerRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

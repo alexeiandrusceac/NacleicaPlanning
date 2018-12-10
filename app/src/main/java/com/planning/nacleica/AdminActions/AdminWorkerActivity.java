@@ -8,17 +8,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.util.SizeF;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -26,17 +29,17 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.resources.TextAppearance;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.planning.nacleica.AdminWorkersRecyclerViewAdapter;
+import com.planning.nacleica.AdminWorkersActions.AdminWorkersInProgressTasksFragment;
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Title;
 import com.planning.nacleica.Utils;
-import com.planning.nacleica.WorkerActions.ValidationWorkerInputData;
-import com.planning.nacleica.WorkerActions.Worker;
-import com.planning.nacleica.WorkerActions.WorkerSession;
+import com.planning.nacleica.AuthActions.ValidationWorkerInputData;
+import com.planning.nacleica.AuthActions.Worker;
+import com.planning.nacleica.AuthActions.WorkerSession;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -45,6 +48,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.Size;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 
@@ -53,7 +57,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ComponentActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -137,11 +140,12 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
         fab = view.findViewById(R.id.adminWorkerAdd);
         noAdminWorkersView = view.findViewById(R.id.noWorkers);
         fab.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onClick(View v) {
                 LayoutInflater layoutInflater = (LayoutInflater) compatAdminWorkerActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View postMainView = layoutInflater.inflate(R.layout.register_main, null, false);
-
+                final Toolbar registerToolbar = postMainView.findViewById(R.id.register_app_toolbar);
                 final TextInputEditText workerName = postMainView.findViewById(R.id.user_name_text);
                 final TextInputEditText workerPrename = postMainView.findViewById(R.id.user_prename_text);
                 final TextInputEditText workerBirth = utils.dateToEditText((TextInputEditText) postMainView.findViewById(R.id.user_birth_text));
@@ -149,6 +153,10 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
                 final AppCompatButton workerButton = postMainView.findViewById(R.id.register_button);
                 workerButton.setVisibility(View.GONE);
 
+                int[] array= {android.R.attr.text};
+                TypedArray typedArray = obtainStyledAttributes(R.style.add_worker,array);
+                registerToolbar.setTitle(typedArray.getString(0));
+                registerToolbar.setTitleTextAppearance(compatAdminWorkerActivity, R.style.add_worker);
 
                 workerTitleSpinner = postMainView.findViewById(R.id.user_title_text);
                 workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(compatAdminWorkerActivity, android.R.layout.simple_spinner_item, Title.values()));
@@ -162,19 +170,22 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
                     }
                 });
 
-                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(compatAdminWorkerActivity).setTitle("Adaugarea angajatului").setView(postMainView).setCancelable(false).setPositiveButton(
-                        "Inregistreaza", new DialogInterface.OnClickListener() {
-                            @SuppressLint("ResourceType")
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(compatAdminWorkerActivity)
+                        .setView(postMainView)
+
+                        .setCancelable(false).setPositiveButton(
+                                "Inregistreaza", new DialogInterface.OnClickListener() {
+                                    @SuppressLint("ResourceType")
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                }
+                        ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
                             }
-                        }
-                ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+                        });
 
                 final AlertDialog ad = alertDialog.create();
                 ad.show();
@@ -190,16 +201,16 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
                         worker.Image = utils.convertToByteArray(workerImage);
                         worker.Birthday = workerBirth.getText().toString();
                         worker.Password = workerPassword.getText().toString();
-
                         dbHelper.registerNewWorker(getApplicationContext(), worker);
                         refreshListOfWorkers();
-
                         ad.dismiss();
-                        //registerUser();
+
                     }
                 });
             }
+
         });
+
         adminWorker_toolbar = view.findViewById(R.id.adminWorker_toolbar);
         setSupportActionBar(adminWorker_toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -343,40 +354,40 @@ public class AdminWorkerActivity extends AppCompatActivity implements Navigation
         return true;
     }
 
-/*
-    private void registerUser() {
-        if (!valUserData.textFilled(nameInputValue, nameInputLayout, getString(R.string.error_name))) {
-            return;
-        }
-        if (!valUserData.textFilled(passwordInputValue, passwordInputLayout, getString(R.string.error_password))) {
-            return;
-        }
-        if (!valUserData.isInputEditTextMatches(passwordInputValue, confPasswdInputValue,
-                confPasswordInputLayout, getString(R.string.error_password_match))) {
-            return;
-        }
+    /*
+        private void registerUser() {
+            if (!valUserData.textFilled(nameInputValue, nameInputLayout, getString(R.string.error_name))) {
+                return;
+            }
+            if (!valUserData.textFilled(passwordInputValue, passwordInputLayout, getString(R.string.error_password))) {
+                return;
+            }
+            if (!valUserData.isInputEditTextMatches(passwordInputValue, confPasswdInputValue,
+                    confPasswordInputLayout, getString(R.string.error_password_match))) {
+                return;
+            }
 
-        if (!dbHelper.checkUserOnLogin(nameInputValue.getText().toString().trim())) {
+            if (!dbHelper.checkUserOnLogin(nameInputValue.getText().toString().trim())) {
 
-            Worker workerData = new Worker();
-            workerData.Name = nameInputValue.getText().toString();
-            workerData.Prename = prenameInputValue.getText().toString();
-            workerData.Password = passwordInputValue.getText().toString();
-            workerData.Image = utils.convertToByteArray(workerImage);
-            workerData.Birthday = workerBirth;
-            workerData.Title = workerTitleSpinner.getSelectedItemPosition();
+                Worker workerData = new Worker();
+                workerData.Name = nameInputValue.getText().toString();
+                workerData.Prename = prenameInputValue.getText().toString();
+                workerData.Password = passwordInputValue.getText().toString();
+                workerData.Image = utils.convertToByteArray(workerImage);
+                workerData.Birthday = workerBirth;
+                workerData.Title = workerTitleSpinner.getSelectedItemPosition();
 
-            dbHelper.registerNewWorker(getApplicationContext(), workerData);
-            refreshListOfWorkers();
-            Snackbar.make(null, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
-            nameInputValue.setText(null);
+                dbHelper.registerNewWorker(getApplicationContext(), workerData);
+                refreshListOfWorkers();
+                Snackbar.make(null, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
+                nameInputValue.setText(null);
 
-        } else {
-            // Snack Bar to show error message that record already exists
-            Snackbar.make(null, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show();
+            } else {
+                // Snack Bar to show error message that record already exists
+                Snackbar.make(null, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show();
+            }
         }
-    }
-*/
+    */
     public void refreshListOfWorkers() {
         listOfWorkers = dbHelper.getWorkers();
         adminWorkerRecView = view.findViewById(R.id.adminRecyclerView);

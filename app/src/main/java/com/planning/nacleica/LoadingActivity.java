@@ -3,8 +3,7 @@ package com.planning.nacleica;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import com.planning.nacleica.WorkerActions.LoginActivity;
-import com.planning.nacleica.WorkerActions.RegisterActivity;
+import com.planning.nacleica.AuthActions.LoginActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 

@@ -1,32 +1,23 @@
 package com.planning.nacleica.AdminWorkersActions;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.planning.nacleica.AdminActions.AdminActivity;
-import com.planning.nacleica.AdminActions.AdminMaketTaskRecyclerViewAdapter;
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
 import com.planning.nacleica.Utils;
-import com.planning.nacleica.WorkerActions.Worker;
+import com.planning.nacleica.AuthActions.Worker;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -54,7 +45,7 @@ public class AdminWorkersNewTasksRecyclerAdapter  extends RecyclerView.Adapter<A
         noAdminDataView = view.findViewById(R.id.noTaskDataView);
         noAdminDataView.setText(R.string.noWorkerNewTasks);
 
-        if (listsOfNewTasks.size() > 0) {
+        if (getItemCount() > 0) {
             noAdminDataView.setVisibility(View.GONE);
         } else {
             noAdminDataView.setVisibility(View.VISIBLE);
@@ -73,6 +64,7 @@ public class AdminWorkersNewTasksRecyclerAdapter  extends RecyclerView.Adapter<A
         holder.dateTo.setText(listsOfNewTasks.get(position).TaskPeriodTo);
         holder.imageAfter.setImageBitmap(BitmapFactory.decodeByteArray(array, 0, array.length));
         holder.infoWorker.setText(new Worker().getWorkerName(listsOfNewTasks.get(position).idWorker));
+        activity.refreshListOfAdminTasks();
     }
 
     @Override

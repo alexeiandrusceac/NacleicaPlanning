@@ -1,8 +1,4 @@
-package com.planning.nacleica.WorkerActions;
-
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
+package com.planning.nacleica.AuthActions;
 
 import android.app.DatePickerDialog;
 

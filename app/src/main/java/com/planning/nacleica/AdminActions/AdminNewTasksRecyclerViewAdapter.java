@@ -1,7 +1,6 @@
 package com.planning.nacleica.AdminActions;
 
 
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,7 +23,7 @@ import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
 
 import com.planning.nacleica.Utils;
-import com.planning.nacleica.WorkerActions.Worker;
+import com.planning.nacleica.AuthActions.Worker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
     CardView cardView;
     DataBaseHelper dataBaseHelper;
     Utils utils;
-
+    public int indexChild;
     public AdminNewTasksRecyclerViewAdapter(AdminActivity context, List<Tasks> tasksList) {
 
         this.listOfTasks = tasksList;
@@ -70,16 +69,18 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.maket_task:
+                                indexChild = ((ViewGroup) (view.getParent())).indexOfChild(view);
                                 LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                 View postMainTaskView = layoutInflater.inflate(R.layout.choose_worker, null, false);
-                                final AppCompatSpinner workerSpinner = postMainTaskView.findViewById(R.id.worker_choose);
-                                workerSpinner.setAdapter(new ArrayAdapter<Worker>(activity,android.R.layout.simple_spinner_item,dataBaseHelper.getWorkers(2)));
+                                final AppCompatSpinner workerSpinner = postMainTaskView.findViewById(R.id.choose_worker);
+                                workerSpinner.setAdapter(new ArrayAdapter<Worker>(activity, android.R.layout.simple_spinner_item, dataBaseHelper.getWorkers(2)));
 
                                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity).setTitle("Atribuire la machetare").setView(view).setCancelable(false).setPositiveButton(
                                         "Atribuie", new DialogInterface.OnClickListener() {
                                             @SuppressLint("ResourceType")
                                             @Override
-                                            public void onClick(DialogInterface dialog, int which) { }
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
                                         }
                                 ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
                                     @Override
@@ -94,9 +95,9 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                                     @SuppressLint("ResourceType")
                                     @Override
                                     public void onClick(View v) {
-                                        listOfTasks.get(v.getId()).idWorker = ((Worker)workerSpinner.getSelectedItem()).workerID;
-                                        listOfTasks.get(v.getId()).TaskState = 1;
-                                        dataBaseHelper.updateData(activity, listOfTasks.get(v.getId()));
+                                        listOfTasks.get(indexChild).idWorker = ((Worker) workerSpinner.getSelectedItem()).workerID;
+                                        listOfTasks.get(indexChild).TaskState = 1;
+                                        dataBaseHelper.updateData(activity, listOfTasks.get(indexChild));
                                         view.refreshDrawableState();
                                         ad.dismiss();
 
@@ -105,7 +106,8 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
 
                                 return true;
                             case R.id.edit_task:
-                                showDialogEditData(true, listOfTasks.get(v.getId()), v.getId());
+                                indexChild = ((ViewGroup) (view.getParent())).indexOfChild(view);
+                                showDialogEditData(true, listOfTasks.get(indexChild), indexChild);
                                 view.refreshDrawableState();
                                 return true;
                         }
@@ -117,7 +119,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                 popupMenu.show();
             }
         });
-        if (listOfTasks.size() > 0) {
+        if (getItemCount() > 0) {
             noAdminDataView.setVisibility(View.GONE);
         } else {
             noAdminDataView.setVisibility(View.VISIBLE);
@@ -134,7 +136,8 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
         holder.compName.setText(listOfTasks.get(position).TaskCompany);
         holder.dateFrom.setText(listOfTasks.get(position).TaskPeriodFrom);
         holder.dateTo.setText(listOfTasks.get(position).TaskPeriodTo);
-        holder.imageBefore.setImageBitmap(BitmapFactory.decodeByteArray(array,0,array.length));
+        holder.imageBefore.setImageBitmap(BitmapFactory.decodeByteArray(array, 0, array.length));
+
         //holder.infoWorker.setText(getWorkerName(listOfTasks.get(position).idWorker));
     }
 
@@ -301,7 +304,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
             dateTo = itemLayoutView.findViewById(R.id.task_periodTo);
             infoWorker = itemLayoutView.findViewById(R.id.infoWorker);
             infoWorker.setVisibility(View.GONE);
-            imageBefore = itemLayoutView.findViewById(R.id.imageBeforeView);
+            imageBefore = itemLayoutView.findViewById(R.id.imageView);
 
         }
 

@@ -22,13 +22,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 @SuppressLint("ValidFragment")
 public class AdminNewTaskFragment extends Fragment {
-    public List<Tasks> listOfAdminNewTask = new ArrayList<>();
+   // public List<Tasks> listOfAdminNewTask = new ArrayList<>();
     public FragmentActivity fragmentActivity = getActivity();
     RecyclerView adminRecyclerView;
     AdminActivity activity;
+    public List<Tasks> adminNewTaskList = new ArrayList<>();
 
-    public AdminNewTaskFragment(AdminActivity activity) {
+    public AdminNewTaskFragment(AdminActivity activity , List<Tasks> listOfAdminNewTask) {
         this.activity = activity;
+        this.adminNewTaskList = listOfAdminNewTask;
     }
 
     @Nullable
@@ -36,13 +38,11 @@ public class AdminNewTaskFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment, container, false);
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-        listOfAdminNewTask = dataBaseHelper.getAdminNewTask();
 
         adminRecyclerView = rootView.findViewById(R.id.recycler_view);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
         adminRecyclerView.setLayoutManager(layoutManager);
-        final AdminNewTasksRecyclerViewAdapter adapter = new AdminNewTasksRecyclerViewAdapter(activity,listOfAdminNewTask);
+        final AdminNewTasksRecyclerViewAdapter adapter = new AdminNewTasksRecyclerViewAdapter(activity,adminNewTaskList);
         new Thread(new Runnable() {
             @Override
             public void run() {

@@ -13,12 +13,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.planning.nacleica.Tasks;
-import com.planning.nacleica.WorkerActions.Worker;
+import com.planning.nacleica.AuthActions.Worker;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 
 /**

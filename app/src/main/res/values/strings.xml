@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Nacleica</string>
     <string name="noTask">Nu sunt sarcini de efectuat</string>
     <string name="helloUser">Salut</string>
@@ -62,4 +62,5 @@
     <string name="worker_designer">Designer</string>
     <string name="noWorkerInProgTasks">Nu sunt sarcini in progres</string>
     <string name="noWorkerDoneTasks"> Nu sunt sarcini finisate</string>
+<!--    <string name="text" tools:ignore="ReferenceType">@style/add_worker</string>-->
 </resources>
