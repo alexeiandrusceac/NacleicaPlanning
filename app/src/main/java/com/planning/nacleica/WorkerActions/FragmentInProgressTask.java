@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.planning.nacleica.Database.DataBaseHelper;
+import com.planning.nacleica.MainActivity;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
 
@@ -24,77 +24,26 @@ import androidx.recyclerview.widget.RecyclerView;
 @SuppressLint("ValidFragment")
 public class FragmentInProgressTask extends Fragment {
     public List<Tasks> listOfInProgressTask = new ArrayList<Tasks>();
-    TextView noDataView;
     RecyclerView recyclerView;
     int idWorker;
-
-    public FragmentInProgressTask(int idWorker)
-    {
-       this.idWorker = idWorker;
+    MainActivity mainActivity;
+    public FragmentInProgressTask(MainActivity mainActivity,List<Tasks> listOfInProgressTask, int idWorker) {
+        this.listOfInProgressTask = listOfInProgressTask;
+        this.idWorker = idWorker;
+        this.mainActivity = mainActivity;
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(
-                R.layout.fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment, container, false);
+
+        WorkerProgTaskRecyclerViewAdapter adapter = new WorkerProgTaskRecyclerViewAdapter(mainActivity,listOfInProgressTask);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
         return rootView;
-
-        /**The below code was when the ListView was used in place of RecyclerView. **/
-
-        /*View view = inflater.inflate(R.layout.fragment_list, container, false);
-
-        list = (ListView) view.findViewById(R.id.list);
-        ArrayList stringList= new ArrayList();
-
-        stringList.add("Item 2A");
-        stringList.add("Item 2B");
-        stringList.add("Item 2C");
-        stringList.add("Item 2D");
-        stringList.add("Item 2E");
-        stringList.add("Item 2F");
-        stringList.add("Item 2G");
-        stringList.add("Item 2H");
-        stringList.add("Item 2I");
-        stringList.add("Item 2J");
-        stringList.add("Item 2K");
-        stringList.add("Item 2L");
-        stringList.add("Item 2M");
-        stringList.add("Item 2N");
-        stringList.add("Item 2O");
-        stringList.add("Item 2P");
-        stringList.add("Item 2Q");
-        stringList.add("Item 2R");
-        stringList.add("Item 2S");
-        stringList.add("Item 2T");
-        stringList.add("Item 2U");
-        stringList.add("Item 2V");
-        stringList.add("Item 2W");
-        stringList.add("Item 2X");
-        stringList.add("Item 2Y");
-        stringList.add("Item 2Z");
-
-        CustomAdapter adapter = new CustomAdapter(stringList,getActivity());
-        list.setAdapter(adapter);
-
-        return view;*/
     }
-/*
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //noDataView = (TextView) view.findViewById(R.id.noDataView);
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-        listOfInProgressTask = dataBaseHelper.getWorkerInProgressTask(idWorker);
-        if (listOfInProgressTask.size() > 0) {
-            //noDataView.setVisibility(View.GONE);
-//        /String[] items = getResources().getStringArray(R.array.tab_B);
-            WorkerRecyclerViewAdapter adapter = new WorkerRecyclerViewAdapter(listOfInProgressTask);
-            recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(adapter);
-        } else { //noDataView.setVisibility(View.VISIBLE);
-        }
-    }*/
 
 }

@@ -18,17 +18,15 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.cardview.widget.CardView;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AdminWorkersInProgRecyclerAdapter extends RecyclerView.Adapter<AdminWorkersInProgRecyclerAdapter.ViewHolder>  {
     TextView noAdminDataView;
     AdminActivity activity;
     List<Tasks> listOfAdminWorkersInProgTask = new ArrayList<>();
-    CardView cardView;
     DataBaseHelper dataBaseHelper;
-    Utils utils;
-    Worker worker;
+
     public AdminWorkersInProgRecyclerAdapter(AdminActivity activity, List<Tasks> tasksList)
     {
         dataBaseHelper = DataBaseHelper.getInstance(activity);
@@ -38,8 +36,8 @@ public class AdminWorkersInProgRecyclerAdapter extends RecyclerView.Adapter<Admi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
-        noAdminDataView = view.findViewById(R.id.noTaskDataView);
+        final View adminWorkersProgListView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
+        noAdminDataView = adminWorkersProgListView.findViewById(R.id.noTaskDataView);
         noAdminDataView.setText(R.string.noWorkerInProgTasks);
 
         if (listOfAdminWorkersInProgTask.size() > 0) {
@@ -47,7 +45,7 @@ public class AdminWorkersInProgRecyclerAdapter extends RecyclerView.Adapter<Admi
         } else {
             noAdminDataView.setVisibility(View.VISIBLE);
         }
-        AdminWorkersInProgRecyclerAdapter.ViewHolder viewHolder = new AdminWorkersInProgRecyclerAdapter.ViewHolder(view);
+        AdminWorkersInProgRecyclerAdapter.ViewHolder viewHolder = new AdminWorkersInProgRecyclerAdapter.ViewHolder(adminWorkersProgListView);
         return viewHolder;
     }
 

@@ -40,16 +40,16 @@ public class AdminWorkersNewTasksFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment, container, false);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-        listOfAdminWorkersNewTask = dataBaseHelper.getWorkersNewTasks();
 
+        listOfAdminWorkersNewTask = dataBaseHelper.getWorkersNewTasks();
         adminRecyclerView = rootView.findViewById(R.id.recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(fragmentActivity);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
         adminRecyclerView.setLayoutManager(layoutManager);
         final AdminWorkersNewTasksRecyclerAdapter adapter = new AdminWorkersNewTasksRecyclerAdapter(activity, listOfAdminWorkersNewTask);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                fragmentActivity.runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adminRecyclerView.setAdapter(adapter);

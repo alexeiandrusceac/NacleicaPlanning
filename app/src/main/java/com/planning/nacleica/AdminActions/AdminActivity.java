@@ -38,6 +38,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -65,9 +66,10 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     LayoutInflater layoutInflater;
     Toolbar toolbar;
     public AppCompatImageView imageView;
-       public Utils utils;
-       private TabLayout tabsAdmin;
-       private TabLayout tabsWorker;
+    public Utils utils;
+    private TabLayout tabsAdmin;
+    private TabLayout tabsWorker;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,13 +80,10 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     void initUI() {
         dbHelper = DataBaseHelper.getInstance(this);
         utils = new Utils(compatAdminActivity);
-
         session = new WorkerSession(getApplicationContext());
-
         layoutInflater = (LayoutInflater) compatAdminActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
         navigationView = (NavigationView) findViewById(R.id.navigationView);
-
         navigationView.setNavigationItemSelectedListener(this);
         header = navigationView.getHeaderView(0);
         usr_name_nav = header.findViewById(R.id.usr_name_nav);
@@ -105,10 +104,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
         view = layoutInflater.inflate(R.layout.admin_main, frameLayout);
         fab = view.findViewById(R.id.adminWorkerFab);
-        tabsAdmin = view.findViewById(R.id.admin_tab);
-        tabsWorker = view.findViewById(R.id.adminWorker_tab);
-        adminViewPager = view.findViewById(R.id.adminViewPager);
-        adminWorkerViewPager = view.findViewById(R.id.adminWorkerViewPager);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,8 +112,6 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             }
         });
         toolbar = view.findViewById(R.id.main_app_toolbar);
-
-
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -143,7 +137,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         final TextInputEditText nameCompText = postMainTaskView.findViewById(R.id.comp_name_value);
         final TextInputEditText dateFromText = utils.dateToEditText((TextInputEditText) postMainTaskView.findViewById(R.id.date_from_value));
         final TextInputEditText dateToText = utils.dateToEditText((TextInputEditText) postMainTaskView.findViewById(R.id.date_to_value));
-        final TextInputEditText compPhoneText =  postMainTaskView.findViewById(R.id.comp_phone_value);
+        final TextInputEditText compPhoneText = postMainTaskView.findViewById(R.id.comp_phone_value);
 
         imageBeforeView.setOnClickListener(new View.OnClickListener() {
 
@@ -159,8 +153,6 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                     @SuppressLint("ResourceType")
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-
                     }
                 }
         ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
@@ -189,11 +181,11 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
                 dbHelper.createNewTask(getApplicationContext(), task);
                 refreshListOfAdminTasks();
-
                 ad.dismiss();
 
             }
         });
+
     }
 
     private void setupDrawer() {
@@ -259,6 +251,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         }
         return true;
     }
+
     @TargetApi(Build.VERSION_CODES.N)
     @RequiresApi(api = Build.VERSION_CODES.N)
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -276,23 +269,28 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                 if (resultCode == RESULT_OK) {
                     imageView.setImageBitmap(utils.getBitmap(data.getData()));
                 }
-
                 break;
 
         }
     }
-    public void refreshListOfAdminTasks()
-    {
-        adminViewPagerAdapter = new ViewPagerAdapter(compatAdminActivity,true,getSupportFragmentManager(),0, idUser);
 
+    public void refreshListOfAdminTasks() {
+
+        tabsAdmin = view.findViewById(R.id.admin_tab);
+        tabsWorker = view.findViewById(R.id.adminWorker_tab);
+        adminViewPager = view.findViewById(R.id.adminViewPager);
+        adminWorkerViewPager = view.findViewById(R.id.adminWorkerViewPager);
+
+        adminViewPagerAdapter = new ViewPagerAdapter(compatAdminActivity, true, getSupportFragmentManager(), 0, idUser);
         adminViewPager.setAdapter(adminViewPagerAdapter);
-        tabsAdmin.setupWithViewPager(adminViewPager,true);
-
-        adminWorkerViewPageAdapter = new ViewPagerAdapter(compatAdminActivity,false,getSupportFragmentManager(), 4, idUser);
-
+        adminViewPager.refreshDrawableState();
+        tabsAdmin.setupWithViewPager(adminViewPager);
+        tabsAdmin.refreshDrawableState();
+        adminWorkerViewPageAdapter = new ViewPagerAdapter(compatAdminActivity, false, getSupportFragmentManager(), 0, idUser);
         adminWorkerViewPager.setAdapter(adminWorkerViewPageAdapter);
+        adminWorkerViewPager.refreshDrawableState();
         tabsWorker.setupWithViewPager(adminWorkerViewPager);
-
+        tabsWorker.refreshDrawableState();
 
     }
 }

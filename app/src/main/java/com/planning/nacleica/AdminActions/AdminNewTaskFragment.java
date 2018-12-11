@@ -1,6 +1,7 @@
 package com.planning.nacleica.AdminActions;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,10 +27,10 @@ public class AdminNewTaskFragment extends Fragment {
    // public List<Tasks> listOfAdminNewTask = new ArrayList<>();
     public FragmentActivity fragmentActivity = getActivity();
     RecyclerView adminRecyclerView;
-    AdminActivity activity;
+    Context activity;
     public List<Tasks> adminNewTaskList = new ArrayList<>();
 
-    public AdminNewTaskFragment(AdminActivity activity , List<Tasks> listOfAdminNewTask) {
+    public AdminNewTaskFragment(Context activity , List<Tasks> listOfAdminNewTask) {
         this.activity = activity;
         this.adminNewTaskList = listOfAdminNewTask;
     }
@@ -47,15 +49,16 @@ public class AdminNewTaskFragment extends Fragment {
             @Override
             public void run() {
 
-                activity.runOnUiThread(new Runnable() {
+                ((AppCompatActivity)activity).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adminRecyclerView.setAdapter(adapter);
+
                     }
                 });
             }
         }).start();
-
+        adminRecyclerView.refreshDrawableState();
         return rootView;
     }
 }

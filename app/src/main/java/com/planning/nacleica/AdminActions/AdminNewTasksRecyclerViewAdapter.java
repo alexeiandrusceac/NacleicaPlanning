@@ -1,10 +1,8 @@
 package com.planning.nacleica.AdminActions;
 
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.text.TextUtils;
@@ -13,24 +11,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.material.textfield.TextInputEditText;
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
-
 import com.planning.nacleica.Utils;
 import com.planning.nacleica.AuthActions.Worker;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.PopupMenu;
@@ -39,23 +31,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<AdminNewTasksRecyclerViewAdapter.ViewHolder> {
     TextView noAdminDataView;
-    AdminActivity activity;
+    Context activity;
     List<Tasks> listOfTasks = new ArrayList<>();
     CardView cardView;
     DataBaseHelper dataBaseHelper;
     Utils utils;
     public int indexChild;
-    public AdminNewTasksRecyclerViewAdapter(AdminActivity context, List<Tasks> tasksList) {
+    public View view ;
+    public AdminNewTasksRecyclerViewAdapter(Context context, List<Tasks> tasksList) {
 
-        this.listOfTasks = tasksList;
+
         this.activity = context;
         dataBaseHelper = DataBaseHelper.getInstance(context);
-
+        this.listOfTasks = tasksList;
     }
 
     @Override
     public AdminNewTasksRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
         noAdminDataView = view.findViewById(R.id.noTaskDataView);
         noAdminDataView.setText(R.string.noNewTasks);
         cardView = view.findViewById(R.id.cardViewTask);
@@ -105,6 +98,8 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                                 });
 
                                 return true;
+
+
                             case R.id.edit_task:
                                 indexChild = ((ViewGroup) (view.getParent())).indexOfChild(view);
                                 showDialogEditData(true, listOfTasks.get(indexChild), indexChild);
@@ -138,88 +133,54 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
         holder.dateTo.setText(listOfTasks.get(position).TaskPeriodTo);
         holder.imageBefore.setImageBitmap(BitmapFactory.decodeByteArray(array, 0, array.length));
 
-        //holder.infoWorker.setText(getWorkerName(listOfTasks.get(position).idWorker));
     }
 
     private void showDialogEditData(final boolean shouldUpdate, final Tasks task, final int position) {
         final LayoutInflater layoutInflaterAndroid = LayoutInflater.from(activity);
 
-        final View view = layoutInflaterAndroid.inflate(R.layout.new_task_main, null);
+        final View adminNewTasksListView = layoutInflaterAndroid.inflate(R.layout.new_task_main, null);
 
-        final TextInputEditText compName = view.findViewById(R.id.comp_name_value);
+        final TextInputEditText compName = adminNewTasksListView.findViewById(R.id.comp_name_value);
         compName.setText(String.valueOf(task.TaskCompany));
         compName.setTextColor(Color.BLACK);
         compName.setHintTextColor(Color.RED);
 
-        final TextInputEditText compPhone = view.findViewById(R.id.comp_phone_value);
+        final TextInputEditText compPhone = adminNewTasksListView.findViewById(R.id.comp_phone_value);
         compPhone.setText(String.valueOf(task.TaskCompanyPhone));
         compPhone.setTextColor(Color.BLACK);
         compPhone.setHintTextColor(Color.RED);
 
-        final TextInputEditText taskName = view.findViewById(R.id.task_name_value);
+        final TextInputEditText taskName = adminNewTasksListView.findViewById(R.id.task_name_value);
         taskName.setText(String.valueOf(task.TaskName));
         taskName.setTextColor(Color.BLACK);
         taskName.setHintTextColor(Color.RED);
 
-        final TextInputEditText dateFrom = utils.dateToEditText((TextInputEditText) view.findViewById(R.id.date_from_value));
+        final TextInputEditText dateFrom = utils.dateToEditText((TextInputEditText) adminNewTasksListView.findViewById(R.id.date_from_value));
         dateFrom.setText(String.valueOf(task.TaskPeriodFrom));
         dateFrom.setTextColor(Color.BLACK);
         dateFrom.setHintTextColor(Color.RED);
 
-        final TextInputEditText dateTo = utils.dateToEditText((TextInputEditText) view.findViewById(R.id.date_to_value));
+        final TextInputEditText dateTo = utils.dateToEditText((TextInputEditText) adminNewTasksListView.findViewById(R.id.date_to_value));
         dateFrom.setText(String.valueOf(task.TaskPeriodTo));
         dateFrom.setTextColor(Color.BLACK);
         dateFrom.setHintTextColor(Color.RED);
 
-        final AppCompatImageView imageBeforeView = view.findViewById(R.id.imageBeforeView);
+        final AppCompatImageView imageBeforeView = adminNewTasksListView.findViewById(R.id.imageBeforeView);
         imageBeforeView.setImageBitmap(BitmapFactory.decodeByteArray(task.TaskImageBefore, 0, task.TaskImageBefore.length));
         imageBeforeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //context.imageView = imageBeforeView;
                 utils.openImagePopupMenu(imageBeforeView);
             }
         });
-       /* final EditText birthView = context.utils.dateToEditText((TextInputEditText) view.findViewById(R.id.user_birth_text));
-        birthView.setText(String.valueOf(worker.Birthday));
-        birthView.setTextColor(Color.BLACK);
-        birthView.setHintTextColor(Color.RED);
 
-        final AppCompatSpinner titleSpinner = view.findViewById(R.id.user_title_text);
-        titleSpinner.setAdapter(new ArrayAdapter<Title>(context, android.R.layout.simple_spinner_item, Title.values()));
-        titleSpinner.setSelection(worker.Title - 1);
-
-
-        workerImageView.setImageBitmap(BitmapFactory.decodeByteArray(worker.Image, 0, worker.Image.length));
-        workerImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.imageView = workerImageView;
-                context.utils.openImagePopupMenu(workerImageView);
-            }
-        });
-
-        final EditText passwordView = view.findViewById(R.id.user_pass_text);
-        passwordView.setText(String.valueOf(worker.Password));
-        passwordView.setTextColor(Color.BLACK);
-        passwordView.setHintTextColor(Color.RED);
-
-        final AppCompatButton registerButton = view.findViewById(R.id.register_button);
-        registerButton.setVisibility(View.GONE);
-
-        final EditText confPasswordView = view.findViewById(R.id.user_confpass_text);
-        confPasswordView.setText(String.valueOf(worker.Password));
-        confPasswordView.setTextColor(Color.BLACK);
-        confPasswordView.setHintTextColor(Color.RED);
-
-*/
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(activity);
-        alertDialogBuilderUserInput.setView(view);
+        alertDialogBuilderUserInput.setView(adminNewTasksListView);
 
 
         alertDialogBuilderUserInput
                 .setCancelable(false)
-                .setView(view)
+                .setView(adminNewTasksListView)
                 .setPositiveButton(shouldUpdate ? "Actualizeaza" : "Salveaza", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogBox, int id) {
 
@@ -280,8 +241,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
     private void updateData(Tasks tasks, int position) {
         dataBaseHelper.updateData(activity, tasks);
         listOfTasks.set(position, tasks);
-        activity.refreshListOfAdminTasks();
-
+        //activity.refreshListOfAdminTasks();
     }
 
     @Override
@@ -290,8 +250,6 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
-
         public TextView compName, compPhone, infoWorker, taskTitle, dateFrom, dateTo;
         public AppCompatImageView imageBefore;
 

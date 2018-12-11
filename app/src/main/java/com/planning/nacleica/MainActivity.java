@@ -30,6 +30,7 @@ import androidx.viewpager.widget.ViewPager;
 
 
 public class MainActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener {
+    public MainActivity compatMainActivity = MainActivity.this;
     public ViewPagerAdapter viewPagerAdapter;
     public ViewPager viewPager;
     private DataBaseHelper dbHelper;
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         TabLayout tabs = view.findViewById(R.id.sliding_tabs);
         viewPager = view.findViewById(R.id.viewPager);
 
-        viewPagerAdapter = new ViewPagerAdapter(MainActivity.this,false ,getSupportFragmentManager(),4,idUser);
+        viewPagerAdapter = new ViewPagerAdapter(compatMainActivity,false ,getSupportFragmentManager(),4,idUser);
         viewPager.setAdapter(viewPagerAdapter);
 
         tabs.setupWithViewPager(viewPager);
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
 
     }
     private void setupDrawer() {
-        toggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+        toggle = new ActionBarDrawerToggle(compatMainActivity, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
 

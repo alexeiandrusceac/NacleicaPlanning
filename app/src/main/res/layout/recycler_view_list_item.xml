@@ -173,12 +173,14 @@
                         android:textColor="#808080" />
                 </LinearLayout>
 
-                <LinearLayout android:id="@+id/workerID"
+                <LinearLayout
+                    android:id="@+id/workerID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/periodId"
                     android:layout_weight="0.3"
                     android:orientation="horizontal">
+
                     <TextView
                         android:id="@+id/workerLabel"
                         android:layout_width="wrap_content"

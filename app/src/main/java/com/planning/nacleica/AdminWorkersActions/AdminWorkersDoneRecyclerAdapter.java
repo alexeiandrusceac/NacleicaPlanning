@@ -5,45 +5,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.planning.nacleica.AdminActions.AdminActivity;
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
-import com.planning.nacleica.Utils;
 import com.planning.nacleica.AuthActions.Worker;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class AdminWorkersDoneRecyclerAdapter  extends RecyclerView.Adapter<AdminWorkersDoneRecyclerAdapter.ViewHolder> {
+public class AdminWorkersDoneRecyclerAdapter extends RecyclerView.Adapter<AdminWorkersDoneRecyclerAdapter.ViewHolder> {
     TextView noAdminDataView;
     AdminActivity activity;
     List<Tasks> listsOfAdminWorkersDoneTasks = new ArrayList<>();
-    CardView cardView;
     DataBaseHelper dataBaseHelper;
-    Utils utils;
-    Worker worker;
 
     public AdminWorkersDoneRecyclerAdapter(AdminActivity context, List<Tasks> tasksList) {
-
         this.listsOfAdminWorkersDoneTasks = tasksList;
         this.activity = context;
         dataBaseHelper = DataBaseHelper.getInstance(context);
-
     }
 
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
-        noAdminDataView = view.findViewById(R.id.noTaskDataView);
+        final View adminWorkersDoneTasksListView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
+        noAdminDataView = adminWorkersDoneTasksListView.findViewById(R.id.noTaskDataView);
         noAdminDataView.setText(R.string.noWorkerDoneTasks);
 
         if (listsOfAdminWorkersDoneTasks.size() > 0) {
@@ -51,7 +41,7 @@ public class AdminWorkersDoneRecyclerAdapter  extends RecyclerView.Adapter<Admin
         } else {
             noAdminDataView.setVisibility(View.VISIBLE);
         }
-        AdminWorkersDoneRecyclerAdapter.ViewHolder viewHolder = new AdminWorkersDoneRecyclerAdapter.ViewHolder(view);
+        AdminWorkersDoneRecyclerAdapter.ViewHolder viewHolder = new AdminWorkersDoneRecyclerAdapter.ViewHolder(adminWorkersDoneTasksListView);
         return viewHolder;
     }
 
@@ -69,10 +59,10 @@ public class AdminWorkersDoneRecyclerAdapter  extends RecyclerView.Adapter<Admin
 
     @Override
     public int getItemCount() {
-        return 0;
+        return listsOfAdminWorkersDoneTasks.size();
     }
 
-    public static class ViewHolder  extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView compName, compPhone, infoWorker, taskTitle, dateFrom, dateTo;
         public AppCompatImageView imageAfter;

@@ -43,13 +43,13 @@ public class AdminWorkersDoneTasksFragment extends Fragment {
         listOfAdminWorkersDoneTask = dataBaseHelper.getWorkersDoneTasks();
 
         adminRecyclerView = rootView.findViewById(R.id.recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(fragmentActivity);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
         adminRecyclerView.setLayoutManager(layoutManager);
         final AdminWorkersDoneRecyclerAdapter adapter = new AdminWorkersDoneRecyclerAdapter(activity, listOfAdminWorkersDoneTask);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                fragmentActivity.runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adminRecyclerView.setAdapter(adapter);

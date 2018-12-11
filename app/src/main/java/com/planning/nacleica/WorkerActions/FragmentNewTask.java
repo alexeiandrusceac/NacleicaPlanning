@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.planning.nacleica.Database.DataBaseHelper;
+import com.planning.nacleica.MainActivity;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
-import com.planning.nacleica.WorkerRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +25,14 @@ import androidx.recyclerview.widget.RecyclerView;
 public class FragmentNewTask extends Fragment {
     TextView noDataView;
     RecyclerView recyclerView;
-    ListView list;
     public int idWorker;
     public List<Tasks> listOfNewTask = new ArrayList<Tasks>();
-
+    MainActivity mainActivity;
     @SuppressLint("ValidFragment")
-    public FragmentNewTask(int idWorker) {
+    public FragmentNewTask(MainActivity mainActivity,List<Tasks> listOfNewTask, int idWorker) {
        this.idWorker = idWorker;
+       this.mainActivity = mainActivity;
+       this.listOfNewTask= listOfNewTask;
     }
 
     @Nullable
@@ -41,10 +40,8 @@ public class FragmentNewTask extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment, container, false);
         noDataView = (TextView) rootView.findViewById(R.id.noTaskDataView);
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-        listOfNewTask = dataBaseHelper.getWorkerNewTask(idWorker);
 
-        WorkerRecyclerViewAdapter adapter = new WorkerRecyclerViewAdapter(listOfNewTask);
+        WorkerNewTaskRecyclerViewAdapter adapter = new WorkerNewTaskRecyclerViewAdapter(mainActivity,listOfNewTask);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);

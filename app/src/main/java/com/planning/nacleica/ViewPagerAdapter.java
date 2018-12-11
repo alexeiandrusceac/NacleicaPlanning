@@ -29,34 +29,30 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public int idWorker;
     public Context context;
     public boolean taskforadmin = false;
-    public int adminNewTaskCount, adminMaketTaskCount, adminWorkerNewTaskCount, adminWorkerProgCount, adminWorkerDoneCount;
-    public AdminNewTaskFragment adminNewTaskFragment;
+
     DataBaseHelper dataBaseHelper;
-   public List<Tasks> listOfAdminNewTasks,listOfAdminMakTasks,listOfAdminWorkNewTasks,listOfAdminWorkProgTasks,listOfAdminWorkDoneTasks = new ArrayList<>();
+    public List<Tasks> listOfAdminNewTasks, listOfAdminMakTasks, listOfAdminWorkNewTasks, listOfAdminWorkProgTasks, listOfAdminWorkDoneTasks, listOfWorkerNewTasks, listOfWorkerProgTasks, listOfWorkerDoneTasks = new ArrayList<>();
 
     public ViewPagerAdapter(Context context, boolean taskforadmin, FragmentManager fm, int title, int idWorker) {
         super(fm);
-        dataBaseHelper =  DataBaseHelper.getInstance(context);
-        listOfAdminNewTasks = dataBaseHelper.getAdminNewTask();
-        listOfAdminMakTasks = dataBaseHelper.getAdminMaketTask();
-        listOfAdminWorkNewTasks = dataBaseHelper.getWorkersNewTasks();
-        listOfAdminWorkProgTasks = dataBaseHelper.getWorkersInProgTasks();
-        listOfAdminWorkDoneTasks =dataBaseHelper.getWorkersDoneTasks();
         this.titleAccess = title;
         this.context = context;
         this.idWorker = idWorker;
         this.taskforadmin = taskforadmin;
-        //this.adminNewTaskFragment = new AdminNewTaskFragment((AdminActivity) context);
-    }
 
-   /* public void updateTitleData(int adminNewTaskCount, int adminMaketTaskCount, int adminWorkerNewTaskCount, int adminWorkerProgCount, int adminWorkerDoneCount) {
-        this.adminNewTaskCount = adminNewTaskCount;
-        this.adminMaketTaskCount = adminMaketTaskCount;
-        this.adminWorkerNewTaskCount = adminWorkerNewTaskCount;
-        this.adminWorkerProgCount = adminWorkerProgCount;
-        this.adminWorkerDoneCount = adminWorkerDoneCount;
-        notifyDataSetChanged();
-    }*/
+        dataBaseHelper = DataBaseHelper.getInstance(context);
+        if (titleAccess != 4) {
+            listOfAdminNewTasks = dataBaseHelper.getAdminNewTask();
+            listOfAdminMakTasks = dataBaseHelper.getAdminMaketTask();
+            listOfAdminWorkNewTasks = dataBaseHelper.getWorkersNewTasks();
+            listOfAdminWorkProgTasks = dataBaseHelper.getWorkersInProgTasks();
+            listOfAdminWorkDoneTasks = dataBaseHelper.getWorkersDoneTasks();
+        } else {
+            listOfWorkerNewTasks = dataBaseHelper.getWorkerNewTask(idWorker);
+            listOfWorkerDoneTasks = dataBaseHelper.getWorkerDoneTask(idWorker);
+            listOfWorkerProgTasks = dataBaseHelper.getWorkerInProgressTask(idWorker);
+        }
+    }
 
     @Override
     public Fragment getItem(int position) {
@@ -66,31 +62,30 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         if (titleAccess != 4 && taskforadmin == true) {
 
             if (position == 0) {
-                fragment = new AdminNewTaskFragment((AdminActivity) context, listOfAdminNewTasks);
+                fragment = new AdminNewTaskFragment(context,listOfAdminNewTasks);
 
-                //adminNewTaskFragment = (AdminNewTaskFragment) fragment;
             } else if (position == 1) {
                 fragment = new AdminMaketTaskFragment((AdminActivity) context, listOfAdminMakTasks);
-                // adminMaketTaskFragment = fragment;
+
             }
 
         } else if (titleAccess != 4 && taskforadmin == false) {
 
             if (position == 0) {
-                fragment = new AdminWorkersNewTasksFragment((AdminActivity) context,listOfAdminWorkNewTasks);
+                fragment = new AdminWorkersNewTasksFragment((AdminActivity) context, listOfAdminWorkNewTasks);
             } else if (position == 1) {
-                fragment = new AdminWorkersInProgressTasksFragment((AdminActivity) context,listOfAdminWorkProgTasks);
+                fragment = new AdminWorkersInProgressTasksFragment((AdminActivity) context, listOfAdminWorkProgTasks);
             } else if (position == 2) {
-                fragment = new AdminWorkersDoneTasksFragment((AdminActivity) context,listOfAdminWorkDoneTasks);
+                fragment = new AdminWorkersDoneTasksFragment((AdminActivity) context, listOfAdminWorkDoneTasks);
             }
 
-        } else {
+        } else if (titleAccess == 4 && taskforadmin == false) {
             if (position == 0) {
-                fragment = new FragmentNewTask(idWorker);
+                fragment = new FragmentNewTask((MainActivity) context, listOfWorkerNewTasks, idWorker);
             } else if (position == 1) {
-                fragment = new FragmentInProgressTask(idWorker);
+                fragment = new FragmentInProgressTask((MainActivity) context, listOfWorkerProgTasks, idWorker);
             } else if (position == 2) {
-                fragment = new FragmentDoneTask(idWorker);
+                fragment = new FragmentDoneTask((MainActivity) context, listOfWorkerDoneTasks, idWorker);
             }
         }
 
@@ -99,7 +94,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return (titleAccess == 4) ? 3 : 2;
+        int count = 0;
+        if (titleAccess != 4 && taskforadmin == true)
+            count = 2;
+        else if ((titleAccess != 4 && taskforadmin == false) || (titleAccess == 4 && taskforadmin == false))
+            count = 3;
+
+        return count;
     }
 
     @Override
@@ -108,9 +109,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
         if (titleAccess != 4 && taskforadmin == true) {
             if (position == 0) {
-                title = context.getResources().getText(R.string.client_Tasks) + "(" + listOfAdminNewTasks.size() +  ")";
+                title = context.getResources().getText(R.string.client_Tasks) + "(" + ")";
             } else if (position == 1) {
-                title = context.getResources().getText(R.string.maket_Tasks) + "(" + listOfAdminMakTasks.size() +  ")";
+                title = context.getResources().getText(R.string.maket_Tasks) + "(" + listOfAdminMakTasks.size() + ")";
             }
         } else if (titleAccess != 4 && taskforadmin == false) {
 
@@ -123,11 +124,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             }
         } else {
             if (position == 0) {
-                title = context.getResources().getText(R.string.new_Tasks) + "(" + ((FragmentNewTask) getItem(position)).listOfNewTask.size() + ")";
+                title = context.getResources().getText(R.string.new_Tasks) + "(" + listOfWorkerNewTasks.size() + ")";
             } else if (position == 1) {
-                title = context.getResources().getText(R.string.prel_Tasks) + "(" + ((FragmentInProgressTask) getItem(position)).listOfInProgressTask.size() + ")";
+                title = context.getResources().getText(R.string.prel_Tasks) + "(" + listOfWorkerProgTasks.size() + ")";
             } else if (position == 2) {
-                title = context.getResources().getText(R.string.done_Tasks) + "(" + ((FragmentDoneTask) getItem(position)).listOfDoneTask.size() + ")";
+                title = context.getResources().getText(R.string.done_Tasks) + "(" + listOfWorkerDoneTasks.size() + ")";
             }
         }
         return title;

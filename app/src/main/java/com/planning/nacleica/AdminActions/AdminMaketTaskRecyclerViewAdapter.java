@@ -28,49 +28,49 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class AdminMaketTaskRecyclerViewAdapter  extends RecyclerView.Adapter<AdminMaketTaskRecyclerViewAdapter.ViewHolder> {
+public class AdminMaketTaskRecyclerViewAdapter extends RecyclerView.Adapter<AdminMaketTaskRecyclerViewAdapter.ViewHolder> {
     TextView noAdminDataView;
     AdminActivity activity;
     List<Tasks> listsOfMaketTasks = new ArrayList<>();
     CardView cardView;
     DataBaseHelper dataBaseHelper;
-    Utils utils;
+    private int indexChild;
 
     public AdminMaketTaskRecyclerViewAdapter(AdminActivity context, List<Tasks> tasksList) {
-
         this.listsOfMaketTasks = tasksList;
         this.activity = context;
         dataBaseHelper = DataBaseHelper.getInstance(context);
-
     }
-
 
     @Override
     public AdminMaketTaskRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
-        noAdminDataView = view.findViewById(R.id.noTaskDataView);
+        final View adminMaketTasksListView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
+        noAdminDataView = adminMaketTasksListView.findViewById(R.id.noTaskDataView);
         noAdminDataView.setText(R.string.noMaketTasks);
-        cardView = view.findViewById(R.id.cardViewTask);
+        cardView = adminMaketTasksListView.findViewById(R.id.cardViewTask);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                PopupMenu popupMenu = new PopupMenu(activity, view);
+                PopupMenu popupMenu = new PopupMenu(activity, adminMaketTasksListView);
                 popupMenu.getMenuInflater().inflate(R.menu.maket_task_action, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @SuppressLint("NewApi")
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.ready_task:
+                                indexChild = ((ViewGroup) (adminMaketTasksListView.getParent())).indexOfChild(adminMaketTasksListView);
+
                                 LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                 View postMainTaskView = layoutInflater.inflate(R.layout.choose_worker, null, false);
                                 final AppCompatSpinner workerSpinner = postMainTaskView.findViewById(R.id.worker_choose);
-                                workerSpinner.setAdapter(new ArrayAdapter<Worker>(activity,android.R.layout.simple_spinner_item,dataBaseHelper.getWorkers(4)));
+                                workerSpinner.setAdapter(new ArrayAdapter<Worker>(activity, android.R.layout.simple_spinner_item, dataBaseHelper.getWorkers(4)));
 
-                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity).setTitle("Atribuire la prelucrare").setView(view).setCancelable(false).setPositiveButton(
+                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity).setTitle("Atribuire la prelucrare").setView(adminMaketTasksListView).setCancelable(false).setPositiveButton(
                                         "Atribuie", new DialogInterface.OnClickListener() {
                                             @SuppressLint("ResourceType")
                                             @Override
-                                            public void onClick(DialogInterface dialog, int which) {}
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
                                         }
                                 ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
                                     @Override
@@ -85,25 +85,16 @@ public class AdminMaketTaskRecyclerViewAdapter  extends RecyclerView.Adapter<Adm
                                     @SuppressLint("ResourceType")
                                     @Override
                                     public void onClick(View v) {
-                                        listsOfMaketTasks.get(v.getId()).idWorker = ((Worker)workerSpinner.getSelectedItem()).workerID;
-                                        listsOfMaketTasks.get(v.getId()).TaskState = 1;
-                                        dataBaseHelper.updateData(activity, listsOfMaketTasks.get(v.getId()));
-                                        view.refreshDrawableState();
-                                        /*listOfTasks.get(v.getId()).idWorker = ;
-                                        listOfTasks.get(v.getId()).TaskState = 1;
-                                        dataBaseHelper.updateData(activity, listOfTasks.get(v.getId()));
-                                        view.refreshDrawableState();*/
+                                        listsOfMaketTasks.get(indexChild).idWorker = ((Worker) workerSpinner.getSelectedItem()).workerID;
+                                        listsOfMaketTasks.get(indexChild).TaskState = 1;
+                                        dataBaseHelper.updateData(activity, listsOfMaketTasks.get(indexChild));
+                                        adminMaketTasksListView.refreshDrawableState();
                                         ad.dismiss();
-
                                     }
                                 });
 
                                 return true;
-                            /*case R.id.edit_task:
-                                //showDialogEditData(true, listOfTasks.get(v.getId()), v.getId());
-                                view.refreshDrawableState();
-                                return true;*/
-                        }
+                            }
 
                         return true;
                     }
@@ -118,7 +109,7 @@ public class AdminMaketTaskRecyclerViewAdapter  extends RecyclerView.Adapter<Adm
         } else {
             noAdminDataView.setVisibility(View.VISIBLE);
         }
-        AdminMaketTaskRecyclerViewAdapter.ViewHolder viewHolder = new AdminMaketTaskRecyclerViewAdapter.ViewHolder(view);
+        AdminMaketTaskRecyclerViewAdapter.ViewHolder viewHolder = new AdminMaketTaskRecyclerViewAdapter.ViewHolder(adminMaketTasksListView);
         return viewHolder;
     }
 
@@ -133,25 +124,18 @@ public class AdminMaketTaskRecyclerViewAdapter  extends RecyclerView.Adapter<Adm
         holder.imageAfter.setImageBitmap(BitmapFactory.decodeByteArray(array, 0, array.length));
         holder.infoWorker.setText(new Worker().getWorkerName(listsOfMaketTasks.get(position).idWorker));
     }
+
     @Override
     public long getItemId(int position) {
         return position;
     }
 
-    private void updateData(Tasks tasks, int position) {
-        dataBaseHelper.updateData(activity, tasks);
-        listsOfMaketTasks.set(position, tasks);
-        activity.refreshListOfAdminTasks();
-
-    }
     @Override
     public int getItemCount() {
         return listsOfMaketTasks.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
-
         public TextView compName, compPhone, infoWorker, taskTitle, idWorker, dateFrom, dateTo;
         public AppCompatImageView imageAfter;
 

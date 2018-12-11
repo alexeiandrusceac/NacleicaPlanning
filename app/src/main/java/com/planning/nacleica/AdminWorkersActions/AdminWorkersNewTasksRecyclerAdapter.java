@@ -25,10 +25,8 @@ public class AdminWorkersNewTasksRecyclerAdapter  extends RecyclerView.Adapter<A
     TextView noAdminDataView;
     AdminActivity activity;
     List<Tasks> listsOfNewTasks = new ArrayList<>();
-    CardView cardView;
     DataBaseHelper dataBaseHelper;
-    Utils utils;
-    Worker worker;
+
     public AdminWorkersNewTasksRecyclerAdapter(AdminActivity context, List<Tasks> tasksList) {
 
         this.listsOfNewTasks = tasksList;
@@ -41,8 +39,8 @@ public class AdminWorkersNewTasksRecyclerAdapter  extends RecyclerView.Adapter<A
     @NonNull
     @Override
     public AdminWorkersNewTasksRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
-        noAdminDataView = view.findViewById(R.id.noTaskDataView);
+        final View adminWorkersNewTasksListView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
+        noAdminDataView = adminWorkersNewTasksListView.findViewById(R.id.noTaskDataView);
         noAdminDataView.setText(R.string.noWorkerNewTasks);
 
         if (getItemCount() > 0) {
@@ -50,7 +48,7 @@ public class AdminWorkersNewTasksRecyclerAdapter  extends RecyclerView.Adapter<A
         } else {
             noAdminDataView.setVisibility(View.VISIBLE);
         }
-        AdminWorkersNewTasksRecyclerAdapter.ViewHolder viewHolder = new AdminWorkersNewTasksRecyclerAdapter.ViewHolder(view);
+        AdminWorkersNewTasksRecyclerAdapter.ViewHolder viewHolder = new AdminWorkersNewTasksRecyclerAdapter.ViewHolder(adminWorkersNewTasksListView);
         return viewHolder;
     }
 
@@ -64,7 +62,7 @@ public class AdminWorkersNewTasksRecyclerAdapter  extends RecyclerView.Adapter<A
         holder.dateTo.setText(listsOfNewTasks.get(position).TaskPeriodTo);
         holder.imageAfter.setImageBitmap(BitmapFactory.decodeByteArray(array, 0, array.length));
         holder.infoWorker.setText(new Worker().getWorkerName(listsOfNewTasks.get(position).idWorker));
-        activity.refreshListOfAdminTasks();
+
     }
 
     @Override

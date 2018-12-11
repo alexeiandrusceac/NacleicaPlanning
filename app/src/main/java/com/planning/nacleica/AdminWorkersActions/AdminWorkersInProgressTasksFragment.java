@@ -42,13 +42,13 @@ public class AdminWorkersInProgressTasksFragment extends Fragment {
         listOfAdminWorkersInProgTask = dataBaseHelper.getWorkersInProgTasks();
 
         adminRecyclerView = rootView.findViewById(R.id.recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(fragmentActivity);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
         adminRecyclerView.setLayoutManager(layoutManager);
         final AdminWorkersInProgRecyclerAdapter adapter = new AdminWorkersInProgRecyclerAdapter(activity, listOfAdminWorkersInProgTask);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                fragmentActivity.runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adminRecyclerView.setAdapter(adapter);

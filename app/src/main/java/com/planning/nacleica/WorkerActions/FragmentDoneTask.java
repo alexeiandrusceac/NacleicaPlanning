@@ -9,10 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.planning.nacleica.Database.DataBaseHelper;
+import com.planning.nacleica.MainActivity;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
-import com.planning.nacleica.WorkerRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,39 +28,27 @@ public class FragmentDoneTask extends Fragment {
     int idWorker;
     RecyclerView recyclerView;
     public List<Tasks> listOfDoneTask = new ArrayList<Tasks>();
-
-    public FragmentDoneTask(int idWorker)
-    {
+    MainActivity mainActivity;
+    public FragmentDoneTask(MainActivity mainActivity,List<Tasks> listOfDoneTask, int idWorker) {
+        this.listOfDoneTask = listOfDoneTask;
         this.idWorker = idWorker;
+        this.mainActivity = mainActivity;
     }
-    /*   public List<Tasks> listOfCancelTask = new ArrayList<Tasks>();
-     */
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(
-                R.layout.fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment, container, false);
+        noDataView = (TextView) rootView.findViewById(R.id.noTaskDataView);
+
+        WorkerDoneTaskRecyclerViewAdapter adapter = new WorkerDoneTaskRecyclerViewAdapter(mainActivity,listOfDoneTask);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
         return rootView;
 
 
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //noDataView = (TextView) view.findViewById(R.id.noDataView);
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-        listOfDoneTask = dataBaseHelper.getWorkerDoneTask(idWorker);
-
-        if (listOfDoneTask.size() > 0) {
-            //noDataView.setVisibility(View.GONE);
-            WorkerRecyclerViewAdapter adapter = new WorkerRecyclerViewAdapter(listOfDoneTask);
-            recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(adapter);
-        } else {
-           // noDataView.setVisibility(View.GONE);
-        }
-    }
 }
