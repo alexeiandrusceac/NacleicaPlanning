@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -272,6 +273,18 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                 break;
 
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        switch (keyCode)
+        {
+            case KeyEvent.KEYCODE_0:
+
+                return true;
+        }
+        return super.onKeyDown(keyCode,event);
     }
 
     public void refreshListOfAdminTasks() {
