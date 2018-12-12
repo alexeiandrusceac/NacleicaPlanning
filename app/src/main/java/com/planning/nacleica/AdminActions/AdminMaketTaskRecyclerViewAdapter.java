@@ -63,7 +63,7 @@ public class AdminMaketTaskRecyclerViewAdapter extends RecyclerView.Adapter<Admi
                                 LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                 View postMainTaskView = layoutInflater.inflate(R.layout.choose_worker, null, false);
                                 final AppCompatSpinner workerSpinner = postMainTaskView.findViewById(R.id.worker_choose);
-                                workerSpinner.setAdapter(new ArrayAdapter<Worker>(activity, android.R.layout.simple_spinner_item, dataBaseHelper.getWorkers(4)));
+                                workerSpinner.setAdapter(new ArrayAdapter<Worker>(activity, android.R.layout.simple_spinner_item, dataBaseHelper.getWorkers(4).indexOf(1)));
 
                                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity).setTitle("Atribuire la prelucrare").setView(adminMaketTasksListView).setCancelable(false).setPositiveButton(
                                         "Atribuie", new DialogInterface.OnClickListener() {

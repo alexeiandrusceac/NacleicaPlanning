@@ -27,12 +27,12 @@ public class AdminNewTaskFragment extends Fragment {
    // public List<Tasks> listOfAdminNewTask = new ArrayList<>();
     public FragmentActivity fragmentActivity = getActivity();
     RecyclerView adminRecyclerView;
-    Context activity;
+    AdminActivity activity;
     public List<Tasks> adminNewTaskList = new ArrayList<>();
 
-    public AdminNewTaskFragment(Context activity , List<Tasks> listOfAdminNewTask) {
-        this.activity = activity;
-        this.adminNewTaskList = listOfAdminNewTask;
+    public AdminNewTaskFragment(Context activity) {
+        this.activity = (AdminActivity)activity;
+        //this.adminNewTaskList = activity.list;
     }
 
     @Nullable
@@ -44,7 +44,7 @@ public class AdminNewTaskFragment extends Fragment {
         adminRecyclerView = rootView.findViewById(R.id.recycler_view);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
         adminRecyclerView.setLayoutManager(layoutManager);
-        final AdminNewTasksRecyclerViewAdapter adapter = new AdminNewTasksRecyclerViewAdapter(activity,adminNewTaskList);
+        final AdminNewTasksRecyclerViewAdapter adapter = new AdminNewTasksRecyclerViewAdapter(activity);
         new Thread(new Runnable() {
             @Override
             public void run() {

@@ -31,7 +31,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public boolean taskforadmin = false;
 
     DataBaseHelper dataBaseHelper;
-    public List<Tasks> listOfAdminNewTasks, listOfAdminMakTasks, listOfAdminWorkNewTasks, listOfAdminWorkProgTasks, listOfAdminWorkDoneTasks, listOfWorkerNewTasks, listOfWorkerProgTasks, listOfWorkerDoneTasks = new ArrayList<>();
+    public List<Tasks>  listOfWorkerNewTasks, listOfWorkerProgTasks, listOfWorkerDoneTasks = new ArrayList<>();
 
     public ViewPagerAdapter(Context context, boolean taskforadmin, FragmentManager fm, int title, int idWorker) {
         super(fm);
@@ -42,16 +42,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
         dataBaseHelper = DataBaseHelper.getInstance(context);
         if (titleAccess != 4) {
-            listOfAdminNewTasks = dataBaseHelper.getAdminNewTask();
-            listOfAdminMakTasks = dataBaseHelper.getAdminMaketTask();
-            listOfAdminWorkNewTasks = dataBaseHelper.getWorkersNewTasks();
-            listOfAdminWorkProgTasks = dataBaseHelper.getWorkersInProgTasks();
-            listOfAdminWorkDoneTasks = dataBaseHelper.getWorkersDoneTasks();
+
         } else {
             listOfWorkerNewTasks = dataBaseHelper.getWorkerNewTask(idWorker);
             listOfWorkerDoneTasks = dataBaseHelper.getWorkerDoneTask(idWorker);
             listOfWorkerProgTasks = dataBaseHelper.getWorkerInProgressTask(idWorker);
         }
+
     }
 
     @Override
@@ -62,21 +59,21 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         if (titleAccess != 4 && taskforadmin == true) {
 
             if (position == 0) {
-                fragment = new AdminNewTaskFragment(context,listOfAdminNewTasks);
+                fragment = new AdminNewTaskFragment(context);
 
             } else if (position == 1) {
-                fragment = new AdminMaketTaskFragment((AdminActivity) context, listOfAdminMakTasks);
+                fragment = new AdminMaketTaskFragment((AdminActivity) context, null);
 
             }
 
         } else if (titleAccess != 4 && taskforadmin == false) {
 
             if (position == 0) {
-                fragment = new AdminWorkersNewTasksFragment((AdminActivity) context, listOfAdminWorkNewTasks);
+                fragment = new AdminWorkersNewTasksFragment((AdminActivity) context, null);
             } else if (position == 1) {
-                fragment = new AdminWorkersInProgressTasksFragment((AdminActivity) context, listOfAdminWorkProgTasks);
+                fragment = new AdminWorkersInProgressTasksFragment((AdminActivity) context, null);
             } else if (position == 2) {
-                fragment = new AdminWorkersDoneTasksFragment((AdminActivity) context, listOfAdminWorkDoneTasks);
+                fragment = new AdminWorkersDoneTasksFragment((AdminActivity) context, null);
             }
 
         } else if (titleAccess == 4 && taskforadmin == false) {
@@ -109,18 +106,18 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
         if (titleAccess != 4 && taskforadmin == true) {
             if (position == 0) {
-                title = context.getResources().getText(R.string.client_Tasks) + "(" + ")";
+                title = context.getResources().getText(R.string.client_Tasks) + "(" + ((AdminActivity)context).listOfAdminNewTasks.size()+ ")";
             } else if (position == 1) {
-                title = context.getResources().getText(R.string.maket_Tasks) + "(" + listOfAdminMakTasks.size() + ")";
+                title = context.getResources().getText(R.string.maket_Tasks) + "(" + /*listOfAdminMakTasks.size() + */")";
             }
         } else if (titleAccess != 4 && taskforadmin == false) {
 
             if (position == 0) {
-                title = context.getResources().getText(R.string.new_Tasks) + "(" + listOfAdminWorkNewTasks.size() + ")";
+                title = context.getResources().getText(R.string.new_Tasks) + "(" + /*listOfAdminWorkNewTasks.size() +*/ ")";
             } else if (position == 1) {
-                title = context.getResources().getText(R.string.prel_Tasks) + "(" + listOfAdminWorkProgTasks.size() + ")";
+                title = context.getResources().getText(R.string.prel_Tasks) + "(" /*+ listOfAdminWorkProgTasks.size()*/ + ")";
             } else if (position == 2) {
-                title = context.getResources().getText(R.string.done_Tasks) + "(" + listOfAdminWorkDoneTasks.size() + ")";
+                title = context.getResources().getText(R.string.done_Tasks) + "(" /*+ listOfAdminWorkDoneTasks.size()*/ + ")";
             }
         } else {
             if (position == 0) {

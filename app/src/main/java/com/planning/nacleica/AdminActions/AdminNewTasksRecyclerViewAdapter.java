@@ -19,6 +19,8 @@ import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
 import com.planning.nacleica.Utils;
 import com.planning.nacleica.AuthActions.Worker;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import androidx.annotation.NonNull;
@@ -29,21 +31,22 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static java.lang.System.in;
+
 public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<AdminNewTasksRecyclerViewAdapter.ViewHolder> {
     TextView noAdminDataView;
-    Context activity;
+    AdminActivity adminActivity;
     List<Tasks> listOfTasks = new ArrayList<>();
     CardView cardView;
     DataBaseHelper dataBaseHelper;
-    Utils utils;
+
     public int indexChild;
     public View view ;
-    public AdminNewTasksRecyclerViewAdapter(Context context, List<Tasks> tasksList) {
+    public AdminNewTasksRecyclerViewAdapter(AdminActivity context/*, List<Tasks> tasksList*/) {
 
+        this.adminActivity = context;
 
-        this.activity = context;
-        dataBaseHelper = DataBaseHelper.getInstance(context);
-        this.listOfTasks = tasksList;
+        this.listOfTasks = context.listOfAdminNewTasks;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                PopupMenu popupMenu = new PopupMenu(activity, view);
+                PopupMenu popupMenu = new PopupMenu(adminActivity, view);
                 popupMenu.getMenuInflater().inflate(R.menu.task_action, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @SuppressLint("NewApi")
@@ -63,12 +66,17 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                         switch (item.getItemId()) {
                             case R.id.maket_task:
                                 indexChild = ((ViewGroup) (view.getParent())).indexOfChild(view);
-                                LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                LayoutInflater layoutInflater = (LayoutInflater) adminActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                 View postMainTaskView = layoutInflater.inflate(R.layout.choose_worker, null, false);
                                 final AppCompatSpinner workerSpinner = postMainTaskView.findViewById(R.id.choose_worker);
-                                workerSpinner.setAdapter(new ArrayAdapter<Worker>(activity, android.R.layout.simple_spinner_item, dataBaseHelper.getWorkers(2)));
+                                List<String> listOfNames = new ArrayList<>();
+                                for (Worker worker : adminActivity.dbHelper.getWorkers(2))
+                                {
+                                    listOfNames.add(worker.Name);
+                                }
+                                workerSpinner.setAdapter(new ArrayAdapter<String>(adminActivity, android.R.layout.simple_spinner_item, listOfNames));
 
-                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity).setTitle("Atribuire la machetare").setView(view).setCancelable(false).setPositiveButton(
+                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(adminActivity).setTitle("Atribuire la machetare").setView(postMainTaskView).setCancelable(false).setPositiveButton(
                                         "Atribuie", new DialogInterface.OnClickListener() {
                                             @SuppressLint("ResourceType")
                                             @Override
@@ -90,7 +98,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                                     public void onClick(View v) {
                                         listOfTasks.get(indexChild).idWorker = ((Worker) workerSpinner.getSelectedItem()).workerID;
                                         listOfTasks.get(indexChild).TaskState = 1;
-                                        dataBaseHelper.updateData(activity, listOfTasks.get(indexChild));
+                                        adminActivity.dbHelper.updateData(adminActivity, listOfTasks.get(indexChild));
                                         view.refreshDrawableState();
                                         ad.dismiss();
 
@@ -136,7 +144,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
     }
 
     private void showDialogEditData(final boolean shouldUpdate, final Tasks task, final int position) {
-        final LayoutInflater layoutInflaterAndroid = LayoutInflater.from(activity);
+        final LayoutInflater layoutInflaterAndroid = LayoutInflater.from(adminActivity);
 
         final View adminNewTasksListView = layoutInflaterAndroid.inflate(R.layout.new_task_main, null);
 
@@ -155,26 +163,27 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
         taskName.setTextColor(Color.BLACK);
         taskName.setHintTextColor(Color.RED);
 
-        final TextInputEditText dateFrom = utils.dateToEditText((TextInputEditText) adminNewTasksListView.findViewById(R.id.date_from_value));
+        final TextInputEditText dateFrom = adminActivity.utils.dateToEditText((TextInputEditText) adminNewTasksListView.findViewById(R.id.date_from_value));
         dateFrom.setText(String.valueOf(task.TaskPeriodFrom));
         dateFrom.setTextColor(Color.BLACK);
         dateFrom.setHintTextColor(Color.RED);
 
-        final TextInputEditText dateTo = utils.dateToEditText((TextInputEditText) adminNewTasksListView.findViewById(R.id.date_to_value));
-        dateFrom.setText(String.valueOf(task.TaskPeriodTo));
-        dateFrom.setTextColor(Color.BLACK);
-        dateFrom.setHintTextColor(Color.RED);
+        final TextInputEditText dateTo = adminActivity.utils.dateToEditText((TextInputEditText) adminNewTasksListView.findViewById(R.id.date_to_value));
+        dateTo.setText(String.valueOf(task.TaskPeriodTo));
+        dateTo.setTextColor(Color.BLACK);
+        dateTo.setHintTextColor(Color.RED);
 
         final AppCompatImageView imageBeforeView = adminNewTasksListView.findViewById(R.id.imageBeforeView);
         imageBeforeView.setImageBitmap(BitmapFactory.decodeByteArray(task.TaskImageBefore, 0, task.TaskImageBefore.length));
         imageBeforeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                utils.openImagePopupMenu(imageBeforeView);
+                adminActivity.imageView = imageBeforeView;
+                adminActivity.utils.openImagePopupMenu(imageBeforeView);
             }
         });
 
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(activity);
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(adminActivity);
         alertDialogBuilderUserInput.setView(adminNewTasksListView);
 
 
@@ -202,16 +211,16 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
             public void onClick(View v) {
 
                 if (TextUtils.isEmpty(taskName.getText().toString())) {
-                    Toast.makeText(activity, "Introduceti numele sarcinii!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(adminActivity, "Introduceti numele sarcinii!", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (TextUtils.isEmpty(compName.getText().toString())) {
-                    Toast.makeText(activity, "Introduceti numele companiei clientului!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(adminActivity, "Introduceti numele companiei clientului!", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (TextUtils.isEmpty(compPhone.getText().toString())) {
-                    Toast.makeText(activity, "Introduceti nr de telefon a clientului!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(adminActivity, "Introduceti nr de telefon a clientului!", Toast.LENGTH_SHORT).show();
                     return;
                 } else if ((TextUtils.isEmpty(dateFrom.getText().toString())) && (TextUtils.isEmpty(dateTo.getText().toString()))) {
-                    Toast.makeText(activity, "Introduceti perioada de realizare a sarcinii!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(adminActivity, "Introduceti perioada de realizare a sarcinii!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -225,7 +234,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                     task.TaskCompanyPhone = compPhone.getText().toString();
                     task.TaskPeriodFrom = dateFrom.getText().toString();
                     task.TaskPeriodTo = dateTo.getText().toString();
-                    task.TaskImageBefore = utils.convertToByteArray(imageBeforeView);
+                    task.TaskImageBefore = adminActivity.utils.convertToByteArray(imageBeforeView);
                     updateData(task, position);
                 }
             }
@@ -239,7 +248,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
     }
 
     private void updateData(Tasks tasks, int position) {
-        dataBaseHelper.updateData(activity, tasks);
+        adminActivity.dbHelper.updateData(adminActivity, tasks);
         listOfTasks.set(position, tasks);
         //activity.refreshListOfAdminTasks();
     }

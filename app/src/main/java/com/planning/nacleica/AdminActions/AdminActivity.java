@@ -30,6 +30,9 @@ import com.planning.nacleica.Utils;
 import com.planning.nacleica.ViewPagerAdapter;
 import com.planning.nacleica.AuthActions.WorkerSession;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -47,7 +50,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     public ViewPagerAdapter adminViewPagerAdapter, adminWorkerViewPageAdapter;
     public ViewPager adminViewPager, adminWorkerViewPager;
     public FloatingActionButton fab;
-    private DataBaseHelper dbHelper;
+    public DataBaseHelper dbHelper;
     private ActionBarDrawerToggle toggle;
     String userPrename, userName;
     private static final int RESULT_GALLERY_IMAGE = 1;
@@ -60,7 +63,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     public TextView usr_pren_nav;
     public View view;
     int idUser;
-
+    public List<Tasks> listOfAdminNewTasks, listOfAdminMakTasks, listOfAdminWorkNewTasks, listOfAdminWorkProgTasks, listOfAdminWorkDoneTasks = new ArrayList<>();
     private View header;
     WorkerSession session;
     FrameLayout frameLayout;
@@ -180,7 +183,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                 task.TaskImageBefore = utils.convertToByteArray(imageBeforeView);
                 task.TaskImageAfter = utils.convertToByteArray(imageBeforeView);
 
-                dbHelper.createNewTask(getApplicationContext(), task);
+                dbHelper.createNewTask(compatAdminActivity, task);
                 refreshListOfAdminTasks();
                 ad.dismiss();
 
@@ -275,20 +278,19 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        switch (keyCode)
-        {
-            case KeyEvent.KEYCODE_0:
 
-                return true;
-        }
-        return super.onKeyDown(keyCode,event);
+    public void fillData() {
+        listOfAdminNewTasks = dbHelper.getAdminNewTask();
+        listOfAdminMakTasks = dbHelper.getAdminMaketTask();
+        listOfAdminWorkNewTasks = dbHelper.getWorkersNewTasks();
+        listOfAdminWorkProgTasks = dbHelper.getWorkersInProgTasks();
+        listOfAdminWorkDoneTasks = dbHelper.getWorkersDoneTasks();
     }
 
     public void refreshListOfAdminTasks() {
 
+        fillData();
         tabsAdmin = view.findViewById(R.id.admin_tab);
         tabsWorker = view.findViewById(R.id.adminWorker_tab);
         adminViewPager = view.findViewById(R.id.adminViewPager);
