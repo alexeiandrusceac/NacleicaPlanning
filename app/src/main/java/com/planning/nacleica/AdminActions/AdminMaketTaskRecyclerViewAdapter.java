@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.planning.nacleica.AuthActions.WorkerSpinnerAdapter;
 import com.planning.nacleica.Database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
@@ -35,11 +37,14 @@ public class AdminMaketTaskRecyclerViewAdapter extends RecyclerView.Adapter<Admi
     CardView cardView;
     DataBaseHelper dataBaseHelper;
     private int indexChild;
+    List<Worker> workers = new ArrayList<>();
+    public int idWorker;
+    public Worker worker;
+    public AdminMaketTaskRecyclerViewAdapter(AdminActivity context) {
 
-    public AdminMaketTaskRecyclerViewAdapter(AdminActivity context, List<Tasks> tasksList) {
-        this.listsOfMaketTasks = tasksList;
         this.activity = context;
-        dataBaseHelper = DataBaseHelper.getInstance(context);
+        this.listsOfMaketTasks = context.listOfAdminMakTasks;
+        workers = activity.dbHelper.getWorkers();
     }
 
     @Override
@@ -59,12 +64,23 @@ public class AdminMaketTaskRecyclerViewAdapter extends RecyclerView.Adapter<Admi
                         switch (item.getItemId()) {
                             case R.id.ready_task:
                                 indexChild = ((ViewGroup) (adminMaketTasksListView.getParent())).indexOfChild(adminMaketTasksListView);
-
                                 LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                 View postMainTaskView = layoutInflater.inflate(R.layout.choose_worker, null, false);
                                 final AppCompatSpinner workerSpinner = postMainTaskView.findViewById(R.id.worker_choose);
-                                workerSpinner.setAdapter(new ArrayAdapter<Worker>(activity, android.R.layout.simple_spinner_item, dataBaseHelper.getWorkers(4).indexOf(1)));
+                                workerSpinner.setAdapter(new WorkerSpinnerAdapter(activity, android.R.layout.simple_spinner_item, workers));
+                                workerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                        worker = (Worker) parent.getItemAtPosition(position);
+                                        idWorker = worker.getWorkerID();
+                                    }
 
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> parent) {
+                                        worker = (Worker) parent.getSelectedItem();
+                                        idWorker = worker.getWorkerID();
+                                    }
+                                });
                                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity).setTitle("Atribuire la prelucrare").setView(adminMaketTasksListView).setCancelable(false).setPositiveButton(
                                         "Atribuie", new DialogInterface.OnClickListener() {
                                             @SuppressLint("ResourceType")
@@ -85,10 +101,11 @@ public class AdminMaketTaskRecyclerViewAdapter extends RecyclerView.Adapter<Admi
                                     @SuppressLint("ResourceType")
                                     @Override
                                     public void onClick(View v) {
-                                        listsOfMaketTasks.get(indexChild).idWorker = ((Worker) workerSpinner.getSelectedItem()).workerID;
-                                        listsOfMaketTasks.get(indexChild).TaskState = 1;
-                                        dataBaseHelper.updateData(activity, listsOfMaketTasks.get(indexChild));
-                                        adminMaketTasksListView.refreshDrawableState();
+                                        listsOfMaketTasks.get(indexChild).idWorker = idWorker;
+                                        listsOfMaketTasks.get(indexChild).TaskState = 2;
+                                        activity.dbHelper.updateData(activity, listsOfMaketTasks.get(indexChild));
+                                        listsOfMaketTasks.remove(indexChild);
+                                        activity.refreshListOfAdminTasks();
                                         ad.dismiss();
                                     }
                                 });
@@ -122,7 +139,9 @@ public class AdminMaketTaskRecyclerViewAdapter extends RecyclerView.Adapter<Admi
         holder.dateFrom.setText(listsOfMaketTasks.get(position).TaskPeriodFrom);
         holder.dateTo.setText(listsOfMaketTasks.get(position).TaskPeriodTo);
         holder.imageAfter.setImageBitmap(BitmapFactory.decodeByteArray(array, 0, array.length));
-        holder.infoWorker.setText(new Worker().getWorkerName(listsOfMaketTasks.get(position).idWorker));
+        String worker = ((Worker)(listsOfMaketTasks.get(position).idWorker)).toString();
+
+        holder.infoWorker.setText(listsOfMaketTasks.get(position).idWorker);
     }
 
     @Override

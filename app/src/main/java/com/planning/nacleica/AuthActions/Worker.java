@@ -1,5 +1,7 @@
 package com.planning.nacleica.AuthActions;
 
+import androidx.annotation.NonNull;
+
 public class Worker {
 
     public int workerID;
@@ -13,9 +15,41 @@ public class Worker {
     public Worker() {
     }
 
-    public String getWorkerName(int workerID)
-    {
-        return Name + " "+ Prename;
+    public int getWorkerID() {
+        return this.workerID;
     }
 
+    public String getWorkerName() {
+        return this.Name;
+    }
+
+    public String getWorkerPrename() {
+        return this.Prename;
+    }
+
+    public String getWorkerPassword() {
+        return this.Password;
+    }
+
+    public int getWorkerTitle() {
+        return this.Title;
+    }
+
+    public byte[] getWorkerImage() {
+        return this.Image;
+    }
+
+    public String getWorkerBirthday() {
+        return this.Birthday;
+    }
+
+    public String getFullName() {
+        return this.Name + " " + this.Prename;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.getFullName();
+    }
 }

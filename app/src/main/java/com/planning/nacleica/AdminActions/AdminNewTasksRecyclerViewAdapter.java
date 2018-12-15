@@ -10,19 +10,23 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.material.textfield.TextInputEditText;
-import com.planning.nacleica.Database.DataBaseHelper;
+import com.planning.nacleica.AuthActions.WorkerSpinnerAdapter;
+
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
-import com.planning.nacleica.Utils;
+
 import com.planning.nacleica.AuthActions.Worker;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+
 import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -31,22 +35,28 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static java.lang.System.in;
+
 
 public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<AdminNewTasksRecyclerViewAdapter.ViewHolder> {
+
     TextView noAdminDataView;
+    public Worker worker;
     AdminActivity adminActivity;
     List<Tasks> listOfTasks = new ArrayList<>();
     CardView cardView;
-    DataBaseHelper dataBaseHelper;
-
     public int indexChild;
-    public View view ;
-    public AdminNewTasksRecyclerViewAdapter(AdminActivity context/*, List<Tasks> tasksList*/) {
+    public View view;
+    public List<Worker> designers;
+    public int idDesigner;
+    public String nameDesigner;
+    public String pnDesigner;
+    public Worker designer;
+
+    public AdminNewTasksRecyclerViewAdapter(AdminActivity context) {
 
         this.adminActivity = context;
-
         this.listOfTasks = context.listOfAdminNewTasks;
+        designers = adminActivity.dbHelper.getDesigners();
     }
 
     @Override
@@ -69,13 +79,24 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                                 LayoutInflater layoutInflater = (LayoutInflater) adminActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                 View postMainTaskView = layoutInflater.inflate(R.layout.choose_worker, null, false);
                                 final AppCompatSpinner workerSpinner = postMainTaskView.findViewById(R.id.choose_worker);
-                                List<String> listOfNames = new ArrayList<>();
-                                for (Worker worker : adminActivity.dbHelper.getWorkers(2))
-                                {
-                                    listOfNames.add(worker.Name);
-                                }
-                                workerSpinner.setAdapter(new ArrayAdapter<String>(adminActivity, android.R.layout.simple_spinner_item, listOfNames));
+                                workerSpinner.setAdapter(new WorkerSpinnerAdapter(adminActivity, android.R.layout.simple_spinner_item, designers));
+                                workerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                        designer = (Worker) parent.getItemAtPosition(position);
+                                        idDesigner = designer.getWorkerID();
+                                        nameDesigner = designer.getWorkerName();
+                                        pnDesigner = designer.getWorkerPrename();
+                                    }
 
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> parent) {
+                                        designer = (Worker) parent.getSelectedItem();
+                                        idDesigner = designer.getWorkerID();
+                                        nameDesigner = designer.getWorkerName();
+                                        pnDesigner = designer.getWorkerPrename();
+                                    }
+                                });
                                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(adminActivity).setTitle("Atribuire la machetare").setView(postMainTaskView).setCancelable(false).setPositiveButton(
                                         "Atribuie", new DialogInterface.OnClickListener() {
                                             @SuppressLint("ResourceType")
@@ -96,10 +117,11 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                                     @SuppressLint("ResourceType")
                                     @Override
                                     public void onClick(View v) {
-                                        listOfTasks.get(indexChild).idWorker = ((Worker) workerSpinner.getSelectedItem()).workerID;
+                                        listOfTasks.get(indexChild).idWorker = idDesigner;
                                         listOfTasks.get(indexChild).TaskState = 1;
                                         adminActivity.dbHelper.updateData(adminActivity, listOfTasks.get(indexChild));
-                                        view.refreshDrawableState();
+                                        listOfTasks.remove(indexChild);
+                                        adminActivity.refreshListOfAdminTasks();
                                         ad.dismiss();
 
                                     }
@@ -250,7 +272,6 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
     private void updateData(Tasks tasks, int position) {
         adminActivity.dbHelper.updateData(adminActivity, tasks);
         listOfTasks.set(position, tasks);
-        //activity.refreshListOfAdminTasks();
     }
 
     @Override
@@ -269,8 +290,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
             taskTitle = itemLayoutView.findViewById(R.id.task_title);
             dateFrom = itemLayoutView.findViewById(R.id.task_periodFrom);
             dateTo = itemLayoutView.findViewById(R.id.task_periodTo);
-            infoWorker = itemLayoutView.findViewById(R.id.infoWorker);
-            infoWorker.setVisibility(View.GONE);
+
             imageBefore = itemLayoutView.findViewById(R.id.imageView);
 
         }

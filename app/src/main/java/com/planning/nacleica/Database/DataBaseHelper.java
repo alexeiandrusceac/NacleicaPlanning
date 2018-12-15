@@ -16,7 +16,9 @@ import com.planning.nacleica.Tasks;
 import com.planning.nacleica.AuthActions.Worker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -188,11 +190,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.d(TAG, String.format("Sarcina  cu numele " + newTask.TaskName + " nu s-a creat"));
         }
     }
-    public List<Worker> getWorkers(int title)
-    {
-        List<Worker> listDesigner  = new ArrayList<>();
+
+
+    public List<Worker> getDesigners() {
+        List<Worker> listDesigner = new ArrayList<>();
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
-        Cursor curWorker = sqLiteDatabase.rawQuery("SELECT * from " + WORKER_TABLE + " Where "+ WORKER_TITLE + "=?",new String[]{String.valueOf(title)} );
+        Cursor curWorker = sqLiteDatabase.rawQuery("SELECT * from " + WORKER_TABLE + " Where " + WORKER_TITLE + "=?", new String[]{String.valueOf(2)});
         if (curWorker.moveToFirst()) {
             do {
                 Worker worker = new Worker();
@@ -204,12 +207,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 worker.Image = curWorker.getBlob(curWorker.getColumnIndex(WORKER_IMAGE));
                 worker.Birthday = curWorker.getString(curWorker.getColumnIndex(WORKER_BIRTHDAY));
                 listDesigner.add(worker);
+                //listDesigner.add(curWorker.getString(curWorker.getColumnIndex(WORKER_NAME))/* + " " + curWorker.getString(curWorker.getColumnIndex(WORKER_PRENAME))*/);
             } while (curWorker.moveToNext());
 
         }
         curWorker.close();
         return listDesigner;
     }
+
     public List<Worker> getWorkers() {
 
         List<Worker> listOfWorkers = new ArrayList<>();
@@ -355,8 +360,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return listOfNewTask;
     }
-    public List<Tasks> getWorkersDoneTasks()
-    {
+
+    public List<Tasks> getWorkersDoneTasks() {
         SQLiteDatabase db = getReadableDatabase();
         List<Tasks> listOfWorkerDoneTask = new ArrayList<>();
 
@@ -382,6 +387,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return listOfWorkerDoneTask;
     }
+
     public List<Tasks> getWorkersInProgTasks() {
         SQLiteDatabase db = getReadableDatabase();
         List<Tasks> listOfWorkerProgTask = new ArrayList<>();

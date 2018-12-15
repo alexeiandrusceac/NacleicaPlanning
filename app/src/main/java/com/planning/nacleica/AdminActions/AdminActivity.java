@@ -301,6 +301,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         adminViewPager.refreshDrawableState();
         tabsAdmin.setupWithViewPager(adminViewPager);
         tabsAdmin.refreshDrawableState();
+
         adminWorkerViewPageAdapter = new ViewPagerAdapter(compatAdminActivity, false, getSupportFragmentManager(), 0, idUser);
         adminWorkerViewPager.setAdapter(adminWorkerViewPageAdapter);
         adminWorkerViewPager.refreshDrawableState();

@@ -54,7 +54,7 @@ public class AdminWorkersDoneRecyclerAdapter extends RecyclerView.Adapter<AdminW
         holder.dateFrom.setText(listsOfAdminWorkersDoneTasks.get(position).TaskPeriodFrom);
         holder.dateTo.setText(listsOfAdminWorkersDoneTasks.get(position).TaskPeriodTo);
         holder.imageAfter.setImageBitmap(BitmapFactory.decodeByteArray(array, 0, array.length));
-        holder.infoWorker.setText(new Worker().getWorkerName(listsOfAdminWorkersDoneTasks.get(position).idWorker));
+        //holder.infoWorker.setText(new Worker().getWorkerName(listsOfAdminWorkersDoneTasks.get(position).idWorker));
     }
 
     @Override

@@ -62,7 +62,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 fragment = new AdminNewTaskFragment(context);
 
             } else if (position == 1) {
-                fragment = new AdminMaketTaskFragment((AdminActivity) context, null);
+                fragment = new AdminMaketTaskFragment(context);
 
             }
 
