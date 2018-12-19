@@ -45,6 +45,7 @@ public class AdminMaketTaskRecyclerViewAdapter extends RecyclerView.Adapter<Admi
         this.activity = context;
         this.listsOfMaketTasks = context.listOfAdminMakTasks;
         workers = activity.dbHelper.getWorkers();
+
     }
 
     @Override
@@ -139,9 +140,9 @@ public class AdminMaketTaskRecyclerViewAdapter extends RecyclerView.Adapter<Admi
         holder.dateFrom.setText(listsOfMaketTasks.get(position).TaskPeriodFrom);
         holder.dateTo.setText(listsOfMaketTasks.get(position).TaskPeriodTo);
         holder.imageAfter.setImageBitmap(BitmapFactory.decodeByteArray(array, 0, array.length));
-        String worker = ((Worker)(listsOfMaketTasks.get(position).idWorker)).toString();
+        String worker = ((Worker)workers.get(workers.indexOf(listsOfMaketTasks.get(position).idWorker))).getFullName();//((Worker)(listsOfMaketTasks.get(position).idWorker)).toString();
 
-        holder.infoWorker.setText(listsOfMaketTasks.get(position).idWorker);
+        holder.infoWorker.setText(worker);
     }
 
     @Override
