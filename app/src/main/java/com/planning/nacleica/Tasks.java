@@ -12,7 +12,27 @@ public class Tasks {
     public byte[] TaskImageBefore;
     public byte[] TaskImageAfter;
 
+    public String getTaskName() {
+        return this.TaskName;
+    }
 
-    public Tasks(){}
+    public String getTaskCompany() {
+        return this.TaskCompany;
+    }
+
+    public String getTaskCompanyPhone() {
+        return this.TaskCompanyPhone;
+    }
+
+    public String getTaskPeriodFrom() {
+        return this.TaskPeriodFrom;
+    }
+
+    public String getTaskPeriodTo() {
+        return this.TaskPeriodTo;
+    }
+
+    public Tasks() {
+    }
 
 }

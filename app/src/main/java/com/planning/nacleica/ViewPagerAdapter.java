@@ -1,18 +1,17 @@
 package com.planning.nacleica;
 
 import android.content.Context;
-import android.provider.ContactsContract;
 
-import com.planning.nacleica.AdminActions.AdminActivity;
-import com.planning.nacleica.AdminActions.AdminMaketTaskFragment;
-import com.planning.nacleica.AdminActions.AdminNewTaskFragment;
-import com.planning.nacleica.AdminWorkersActions.AdminWorkersDoneTasksFragment;
-import com.planning.nacleica.AdminWorkersActions.AdminWorkersInProgressTasksFragment;
-import com.planning.nacleica.AdminWorkersActions.AdminWorkersNewTasksFragment;
-import com.planning.nacleica.Database.DataBaseHelper;
-import com.planning.nacleica.WorkerActions.FragmentDoneTask;
-import com.planning.nacleica.WorkerActions.FragmentInProgressTask;
-import com.planning.nacleica.WorkerActions.FragmentNewTask;
+import com.planning.nacleica.adminactions.adminActivity;
+import com.planning.nacleica.adminactions.AdminMaketTaskFragment;
+import com.planning.nacleica.adminactions.AdminNewTaskFragment;
+import com.planning.nacleica.adminworkersactions.AdminWorkersDoneTasksFragment;
+import com.planning.nacleica.adminworkersactions.AdminWorkersInProgressTasksFragment;
+import com.planning.nacleica.adminworkersactions.AdminWorkersNewTasksFragment;
+import com.planning.nacleica.database.DataBaseHelper;
+import com.planning.nacleica.workeractions.FragmentDoneTask;
+import com.planning.nacleica.workeractions.FragmentInProgressTask;
+import com.planning.nacleica.workeractions.FragmentNewTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,20 +68,20 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         } else if (titleAccess != 4 && taskforadmin == false) {
 
             if (position == 0) {
-                fragment = new AdminWorkersNewTasksFragment((AdminActivity) context, null);
+                fragment = new AdminWorkersNewTasksFragment((adminActivity) context, null);
             } else if (position == 1) {
-                fragment = new AdminWorkersInProgressTasksFragment((AdminActivity) context, null);
+                fragment = new AdminWorkersInProgressTasksFragment((adminActivity) context, null);
             } else if (position == 2) {
-                fragment = new AdminWorkersDoneTasksFragment((AdminActivity) context, null);
+                fragment = new AdminWorkersDoneTasksFragment((adminActivity) context, null);
             }
 
         } else if (titleAccess == 4 && taskforadmin == false) {
             if (position == 0) {
-                fragment = new FragmentNewTask((MainActivity) context, listOfWorkerNewTasks, idWorker);
+                fragment = new FragmentNewTask((mainActivity) context, listOfWorkerNewTasks, idWorker);
             } else if (position == 1) {
-                fragment = new FragmentInProgressTask((MainActivity) context, listOfWorkerProgTasks, idWorker);
+                fragment = new FragmentInProgressTask((mainActivity) context, listOfWorkerProgTasks, idWorker);
             } else if (position == 2) {
-                fragment = new FragmentDoneTask((MainActivity) context, listOfWorkerDoneTasks, idWorker);
+                fragment = new FragmentDoneTask((mainActivity) context, listOfWorkerDoneTasks, idWorker);
             }
         }
 
@@ -106,7 +105,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
         if (titleAccess != 4 && taskforadmin == true) {
             if (position == 0) {
-                title = context.getResources().getText(R.string.client_Tasks) + "(" + ((AdminActivity)context).listOfAdminNewTasks.size()+ ")";
+                title = context.getResources().getText(R.string.client_Tasks) + "(" + ((adminActivity)context).listOfAdminNewTasks.size()+ ")";
             } else if (position == 1) {
                 title = context.getResources().getText(R.string.maket_Tasks) + "(" + /*listOfAdminMakTasks.size() + */")";
             }
