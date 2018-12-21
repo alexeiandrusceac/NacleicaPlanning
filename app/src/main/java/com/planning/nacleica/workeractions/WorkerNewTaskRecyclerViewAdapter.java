@@ -12,6 +12,7 @@ import com.planning.nacleica.mainActivity;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -21,20 +22,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class WorkerNewTaskRecyclerViewAdapter extends RecyclerView.Adapter<WorkerNewTaskRecyclerViewAdapter.ViewHolder> {
     TextView noDataView;
-    List<Tasks> listOfWorkerNewTasks;
+
     CardView cardView;
     private int indexChild;
     DataBaseHelper dataBaseHelper;
     mainActivity context;
-    public WorkerNewTaskRecyclerViewAdapter(mainActivity context, List<Tasks> listTasks) {
-        this.listOfWorkerNewTasks = listTasks;
+    List<Tasks> listOfWorkerNewTasks = new ArrayList<>();
+
+    public WorkerNewTaskRecyclerViewAdapter(mainActivity context) {
         this.context = context;
-        dataBaseHelper = DataBaseHelper.getInstance(context);
+        this.listOfWorkerNewTasks = context.listOfNewTasks;
+
     }
 
     @Override
     public WorkerNewTaskRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
-        final View workerNewTasksListView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
+        final View workerNewTasksListView = LayoutInflater.from(parent.getContext()).inflate(R.layout.worker_recycler_iew_list, parent, false);
         noDataView = workerNewTasksListView.findViewById(R.id.noTaskDataView);
         cardView = workerNewTasksListView.findViewById(R.id.cardViewTask);
         cardView.setOnClickListener(new View.OnClickListener() {
@@ -42,8 +45,10 @@ public class WorkerNewTaskRecyclerViewAdapter extends RecyclerView.Adapter<Worke
             public void onClick(View v) {
                 indexChild = ((ViewGroup) workerNewTasksListView.getParent()).indexOfChild(workerNewTasksListView);
                 listOfWorkerNewTasks.get(indexChild).TaskState = 3;
-                dataBaseHelper.updateData(context,listOfWorkerNewTasks.get(indexChild));
-                workerNewTasksListView.refreshDrawableState();
+                context.dbHelper.updateWorker(context,listOfWorkerNewTasks.get(indexChild));
+                listOfWorkerNewTasks.remove(indexChild);
+
+                context.refreshWorkerTasks();
             }
         });
         if (getItemCount() > 0) {

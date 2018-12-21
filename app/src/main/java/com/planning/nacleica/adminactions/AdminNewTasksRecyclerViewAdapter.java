@@ -79,7 +79,7 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                                 LayoutInflater layoutInflater = (LayoutInflater) adminActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                 final View postMainTaskView = layoutInflater.inflate(R.layout.choose_worker, null, false);
                                 final AppCompatSpinner workerSpinner = postMainTaskView.findViewById(R.id.choose_worker);
-                                workerSpinner.setAdapter(new WorkerSpinnerAdapter(adminActivity, android.R.layout.simple_spinner_item, designers));
+                                workerSpinner.setAdapter(new WorkerSpinnerAdapter(adminActivity, android.R.layout.simple_spinner_dropdown_item, designers));
                                 workerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                     @Override
                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

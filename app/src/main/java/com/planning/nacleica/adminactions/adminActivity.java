@@ -57,8 +57,8 @@ public class adminActivity extends AppCompatActivity implements NavigationView.O
     private static AppCompatImageView nav_header_imageView;
     private DrawerLayout drawerLayout;
     byte[] userImage;
-    public TextView usr_name_nav;
-    public TextView usr_pren_nav;
+    public TextView user_info_nav;
+   // public TextView usr_pren_nav;
     public View view;
     int idUser;
     public List<Tasks> listOfAdminNewTasks, listOfAdminMakTasks, listOfAdminWorkNewTasks, listOfAdminWorkProgTasks, listOfAdminWorkDoneTasks = new ArrayList<>();
@@ -88,8 +88,7 @@ public class adminActivity extends AppCompatActivity implements NavigationView.O
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
         header = navigationView.getHeaderView(0);
-        usr_name_nav = header.findViewById(R.id.usr_name_nav);
-        usr_pren_nav = header.findViewById(R.id.usr_pren_nav);
+        user_info_nav = header.findViewById(R.id.usr_info_nav);
         nav_header_imageView = header.findViewById(R.id.nav_header_imageView);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -102,7 +101,7 @@ public class adminActivity extends AppCompatActivity implements NavigationView.O
         userImage = b.getByteArray("Image");
         idUser = b.getInt("Id");
         nav_header_imageView.setImageBitmap(BitmapFactory.decodeByteArray(userImage, 0, userImage.length));
-
+        user_info_nav.setText(userName + " "+ userPrename);
 
         view = layoutInflater.inflate(R.layout.admin_main, frameLayout);
         fab = view.findViewById(R.id.adminWorkerFab);
@@ -246,7 +245,8 @@ public class adminActivity extends AppCompatActivity implements NavigationView.O
 
                 break;
             case R.id.logOut_button:
-                session.logoutWorker();
+               session.logoutWorker();
+
                 finish();
             default:
                 return false;

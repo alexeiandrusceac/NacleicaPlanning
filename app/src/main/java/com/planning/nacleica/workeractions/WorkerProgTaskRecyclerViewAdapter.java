@@ -27,15 +27,16 @@ public class WorkerProgTaskRecyclerViewAdapter extends RecyclerView.Adapter<Work
     private int indexChild;
     DataBaseHelper dataBaseHelper;
     mainActivity context;
-    public WorkerProgTaskRecyclerViewAdapter(mainActivity context, List<Tasks> listTasks) {
-        this.listOfWorkerProgTasks = listTasks;
+    public WorkerProgTaskRecyclerViewAdapter(mainActivity context) {
+
         this.context = context;
-        dataBaseHelper = DataBaseHelper.getInstance(context);
+        this.listOfWorkerProgTasks = context.listOfInProgressTasks;
+        //dataBaseHelper = DataBaseHelper.getInstance(context);
     }
 
     @Override
     public WorkerProgTaskRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
-        final View workerProgTasksListView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
+        final View workerProgTasksListView = LayoutInflater.from(parent.getContext()).inflate(R.layout.worker_recycler_iew_list, parent, false);
         noDataView = workerProgTasksListView.findViewById(R.id.noTaskDataView);
         cardView = workerProgTasksListView.findViewById(R.id.cardViewTask);
         cardView.setOnClickListener(new View.OnClickListener() {
@@ -43,8 +44,9 @@ public class WorkerProgTaskRecyclerViewAdapter extends RecyclerView.Adapter<Work
             public void onClick(View v) {
                 indexChild = ((ViewGroup) workerProgTasksListView.getParent()).indexOfChild(workerProgTasksListView);
                 listOfWorkerProgTasks.get(indexChild).TaskState = 4;
-                dataBaseHelper.updateData(context,listOfWorkerProgTasks.get(indexChild));
-                workerProgTasksListView.refreshDrawableState();
+                context.dbHelper.updateData(context,listOfWorkerProgTasks.get(indexChild));
+                listOfWorkerProgTasks.remove(indexChild);
+                context.refreshWorkerTasks();
             }
         });
         if (getItemCount() > 0) {

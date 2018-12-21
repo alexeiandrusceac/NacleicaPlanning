@@ -20,33 +20,46 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.planning.nacleica.mainActivity;
+
 @SuppressLint("ValidFragment")
 public class FragmentNewTask extends Fragment {
     TextView noDataView;
     RecyclerView recyclerView;
     public int idWorker;
-    public List<Tasks> listOfNewTask = new ArrayList<Tasks>();
-    com.planning.nacleica.mainActivity mainActivity;
+    mainActivity activity;
+
     @SuppressLint("ValidFragment")
-    public FragmentNewTask(com.planning.nacleica.mainActivity mainActivity, List<Tasks> listOfNewTask, int idWorker) {
-       this.idWorker = idWorker;
-       this.mainActivity = mainActivity;
-       this.listOfNewTask= listOfNewTask;
+
+    public FragmentNewTask(mainActivity mainActivity, int idWorker) {
+        this.idWorker = idWorker;
+        this.activity = mainActivity;
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment, container, false);
-        noDataView = (TextView) rootView.findViewById(R.id.noTaskDataView);
+        View workerRootView = inflater.inflate(R.layout.worker_fragment, container, false);
+        noDataView = (TextView) workerRootView.findViewById(R.id.noTaskDataView);
 
-        WorkerNewTaskRecyclerViewAdapter adapter = new WorkerNewTaskRecyclerViewAdapter(mainActivity,listOfNewTask);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView = (RecyclerView) workerRootView.findViewById(R.id.workerRecyclerView);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        return rootView;
+        final WorkerNewTaskRecyclerViewAdapter adapter = new WorkerNewTaskRecyclerViewAdapter(activity);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.setAdapter(adapter);
+                    }
+                });
+            }
+        }).start();
+        return workerRootView;
+
+        }
 
     }
-
-}

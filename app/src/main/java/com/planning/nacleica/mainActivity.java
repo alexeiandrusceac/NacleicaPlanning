@@ -31,20 +31,19 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 
-public class mainActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener {
+public class mainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public mainActivity compatMainActivity = mainActivity.this;
-    public ViewPagerAdapter viewPagerAdapter;
+    public WorkerViewPagerAdapter viewPagerAdapter;
     public ViewPager viewPager;
-    private DataBaseHelper dbHelper;
+    public DataBaseHelper dbHelper;
     public FloatingActionButton fab;
-    public TextView usr_name_nav;
-    public TextView usr_pren_nav;
+    public TextView usr_info_nav;
     private ActionBarDrawerToggle toggle;
-    String userPrename, userName;
     private NavigationView navigationView;
     private static AppCompatImageView nav_header_imageView;
     private DrawerLayout drawerLayout;
     byte[] userImage;
+    String userName, userPrename;
     private View header;
     WorkerSession session;
     FrameLayout frameLayout;
@@ -52,51 +51,58 @@ public class mainActivity extends AppCompatActivity implements  NavigationView.O
     Toolbar toolbar;
     int idUser;
     private View view;
+    public List<Tasks> listOfNewTasks;
+    public List<Tasks> listOfInProgressTasks;
+    public List<Tasks> listOfDoneTasks;
+    private Bundle bundleData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_frame);
+        setContentView(R.layout.worker_main_frame);
         initUI();
+        getBundleData();
+    }
+
+    void getBundleData() {
+        bundleData = getIntent().getExtras();
+        userPrename = bundleData.getString("Prename");
+        userName = bundleData.getString("Name");
+        userImage = bundleData.getByteArray("Image");
+        idUser = bundleData.getInt("Id");
+        usr_info_nav.setText(userName + " " + userPrename);
+        nav_header_imageView.setImageBitmap(BitmapFactory.decodeByteArray(userImage, 0, userImage.length));
     }
 
     void initUI() {
+
         dbHelper = DataBaseHelper.getInstance(this);
 
         session = new WorkerSession(getApplicationContext());
 
         layoutInflater = (LayoutInflater) mainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        frameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        frameLayout = (FrameLayout) findViewById(R.id.worker_content_frame);
         navigationView = (NavigationView) findViewById(R.id.navigationView);
 
         navigationView.setNavigationItemSelectedListener(this);
         header = (navigationView).getHeaderView(0);
-        usr_name_nav = header.findViewById(R.id.usr_name_nav);
-        usr_pren_nav = header.findViewById(R.id.usr_pren_nav);
+        usr_info_nav = header.findViewById(R.id.usr_info_nav);
+
         nav_header_imageView = header.findViewById(R.id.nav_header_imageView);
+
+        Bundle bundleData = getIntent().getExtras();
+        userPrename = bundleData.getString("Prename");
+        userName = bundleData.getString("Name");
+        userImage = bundleData.getByteArray("Image");
+        idUser = bundleData.getInt("Id");
+        usr_info_nav.setText(userName + " " + userPrename);
+        nav_header_imageView.setImageBitmap(BitmapFactory.decodeByteArray(userImage, 0, userImage.length));
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setupDrawer();
 
-
-        Bundle b = getIntent().getExtras();
-        userPrename = b.getString("Prename");
-        userName = b.getString("Name");
-        userImage = b.getByteArray("Image");
-        idUser = b.getInt("Id");
-        nav_header_imageView.setImageBitmap(BitmapFactory.decodeByteArray(userImage, 0, userImage.length));
-
         view = layoutInflater.inflate(R.layout.activity_main, frameLayout);
         toolbar = view.findViewById(R.id.worker_toolbar);
-
-        /*fab = view.findViewById(R.id.buttonFloating);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });*/
-
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -110,17 +116,30 @@ public class mainActivity extends AppCompatActivity implements  NavigationView.O
                 drawerLayout.openDrawer(Gravity.START);
             }
         });
-        List<Tasks> listOfNewTasks = dbHelper.getWorkerNewTask(idUser);
+        fillWorkerTasks();
+        refreshWorkerTasks();
+
+    }
+
+   public void refreshWorkerTasks() {
         TabLayout tabs = view.findViewById(R.id.worker_tab);
         viewPager = view.findViewById(R.id.workerViewPager);
 
-        viewPagerAdapter = new ViewPagerAdapter(compatMainActivity,false ,getSupportFragmentManager(),4,idUser);
+        viewPagerAdapter = new WorkerViewPagerAdapter(compatMainActivity, getSupportFragmentManager(), idUser);
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.refreshDrawableState();
 
         tabs.setupWithViewPager(viewPager);
         tabs.refreshDrawableState();
     }
+
+    public void fillWorkerTasks() {
+        listOfNewTasks = dbHelper.getWorkerNewTask(idUser);
+        listOfInProgressTasks = dbHelper.getWorkerInProgressTask(idUser);
+        listOfDoneTasks = dbHelper.getWorkerDoneTask(idUser);
+
+    }
+
     private void setupDrawer() {
         toggle = new ActionBarDrawerToggle(compatMainActivity, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerOpened(View drawerView) {
@@ -139,6 +158,7 @@ public class mainActivity extends AppCompatActivity implements  NavigationView.O
         toggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(toggle);
     }
+
     @Override
     public void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -150,7 +170,7 @@ public class mainActivity extends AppCompatActivity implements  NavigationView.O
         switch (item.getItemId()) {
             case R.id.home:
                 Toast.makeText(mainActivity.this, "Ati ajuns acasa", Toast.LENGTH_SHORT).show();
-                Intent homeActivity = new Intent(getApplicationContext(), mainActivity.class);
+                Intent homeActivity = new Intent(mainActivity.this, mainActivity.class);
                 homeActivity.putExtra("Image", userImage);
                 homeActivity.putExtra("Prename", userPrename);
                 homeActivity.putExtra("Name", userName);

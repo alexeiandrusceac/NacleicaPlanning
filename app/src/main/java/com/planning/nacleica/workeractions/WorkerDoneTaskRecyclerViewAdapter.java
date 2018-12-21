@@ -27,15 +27,16 @@ public class WorkerDoneTaskRecyclerViewAdapter extends RecyclerView.Adapter<Work
     private int indexChild;
     DataBaseHelper dataBaseHelper;
     mainActivity context;
-    public WorkerDoneTaskRecyclerViewAdapter(mainActivity context, List<Tasks> listTasks) {
-        this.listOfWorkerDoneTasks = listTasks;
+    public WorkerDoneTaskRecyclerViewAdapter(mainActivity context) {
+
         this.context = context;
-        dataBaseHelper = DataBaseHelper.getInstance(context);
+        this.listOfWorkerDoneTasks = context.listOfDoneTasks;
+
     }
 
     @Override
     public WorkerDoneTaskRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
-        final View workerDoneTasksListView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
+        final View workerDoneTasksListView = LayoutInflater.from(parent.getContext()).inflate(R.layout.worker_recycler_iew_list, parent, false);
         noDataView = workerDoneTasksListView.findViewById(R.id.noTaskDataView);
         cardView = workerDoneTasksListView.findViewById(R.id.cardViewTask);
         cardView.setOnClickListener(new View.OnClickListener() {
@@ -43,8 +44,9 @@ public class WorkerDoneTaskRecyclerViewAdapter extends RecyclerView.Adapter<Work
             public void onClick(View v) {
                 indexChild = ((ViewGroup) workerDoneTasksListView.getParent()).indexOfChild(workerDoneTasksListView);
                 listOfWorkerDoneTasks.get(indexChild).TaskState = 4;
-                dataBaseHelper.updateData(context,listOfWorkerDoneTasks.get(indexChild));
-                workerDoneTasksListView.refreshDrawableState();
+                context.dbHelper.updateData(context,listOfWorkerDoneTasks.get(indexChild));
+                listOfWorkerDoneTasks.remove(indexChild);
+                context.refreshWorkerTasks();
             }
         });
         if (getItemCount() > 0) {

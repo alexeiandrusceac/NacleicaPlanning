@@ -92,7 +92,7 @@ public class registerActivity extends AppCompatActivity implements View.OnClickL
         userBirthdayValue = utils.dateToEditText((TextInputEditText)findViewById(R.id.user_birth_text));
 
         registerButton = (AppCompatButton) findViewById(R.id.register_button);
-        workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(compatRegisterActivity, android.R.layout.simple_spinner_item, Title.values()));
+        workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(compatRegisterActivity, android.R.layout.simple_spinner_dropdown_item, Title.values()));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.register_app_toolbar);
         registerButton.setOnClickListener(this);

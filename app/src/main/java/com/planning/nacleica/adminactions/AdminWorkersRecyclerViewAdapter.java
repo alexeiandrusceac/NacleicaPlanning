@@ -93,7 +93,7 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
         birthView.setHintTextColor(Color.RED);
 
         final AppCompatSpinner titleSpinner = registeWorkerView.findViewById(R.id.user_title_text);
-        titleSpinner.setAdapter(new ArrayAdapter<Title>(context, android.R.layout.simple_spinner_item, Title.values()));
+        titleSpinner.setAdapter(new ArrayAdapter<Title>(context, android.R.layout.simple_spinner_dropdown_item, Title.values()));
         titleSpinner.setSelection(worker.Title - 1);
 
         final AppCompatImageView workerImageView = registeWorkerView.findViewById(R.id.userImage);

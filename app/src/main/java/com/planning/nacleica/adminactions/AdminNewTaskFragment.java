@@ -50,4 +50,5 @@ public class AdminNewTaskFragment extends Fragment {
 
         return rootView;
     }
+
 }

@@ -42,6 +42,7 @@ public class AdminMaketTaskRecyclerViewAdapter extends RecyclerView.Adapter<Admi
     public int idWorker;
     public Worker worker;
     public View adminMaketTasksListView;
+
     public AdminMaketTaskRecyclerViewAdapter(adminActivity context) {
 
         this.activity = context;
@@ -70,7 +71,7 @@ public class AdminMaketTaskRecyclerViewAdapter extends RecyclerView.Adapter<Admi
                                 LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                 final View postMainTaskView = layoutInflater.inflate(R.layout.choose_worker, null, false);
                                 final AppCompatSpinner workerSpinner = postMainTaskView.findViewById(R.id.choose_worker);
-                                workerSpinner.setAdapter(new WorkerSpinnerAdapter(activity, android.R.layout.simple_spinner_item, workers));
+                                workerSpinner.setAdapter(new WorkerSpinnerAdapter(activity, android.R.layout.simple_spinner_dropdown_item, workers));
                                 workerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                     @Override
                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -109,7 +110,6 @@ public class AdminMaketTaskRecyclerViewAdapter extends RecyclerView.Adapter<Admi
                                         activity.dbHelper.updateWorker(activity, listsOfMaketTasks.get(indexChild));
                                         listsOfMaketTasks.remove(indexChild);
                                         activity.refreshListOfAdminTasks();
-                                       /// ((ViewGroup)postMainTaskView.getParent()).removeView(postMainTaskView);
                                         adialog.dismiss();
                                     }
                                 });

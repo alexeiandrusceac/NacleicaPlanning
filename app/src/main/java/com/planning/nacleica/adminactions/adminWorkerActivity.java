@@ -62,10 +62,10 @@ public class adminWorkerActivity extends AppCompatActivity implements Navigation
     Toolbar adminWorker_toolbar;
     DrawerLayout drawerLayout;
     private RecyclerView adminWorkerRecView;
-    public TextView usr_name_nav;
+
     public AdminWorkersRecyclerViewAdapter adapterWorkers;
     private ActionBarDrawerToggle toggle;
-    public TextView usr_pren_nav;
+    public TextView usr_info_nav;
     public View view;
     byte[] userImage;
     private ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -116,8 +116,8 @@ public class adminWorkerActivity extends AppCompatActivity implements Navigation
 
         navigationView.setNavigationItemSelectedListener(this);
         header = (navigationView).getHeaderView(0);
-        usr_name_nav = header.findViewById(R.id.usr_name_nav);
-        usr_pren_nav = header.findViewById(R.id.usr_pren_nav);
+        usr_info_nav = header.findViewById(R.id.usr_info_nav);
+
 
         nav_header_imageView = header.findViewById(R.id.nav_header_imageView);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -130,6 +130,7 @@ public class adminWorkerActivity extends AppCompatActivity implements Navigation
         idUser = b.getInt("Id");
 
         nav_header_imageView.setImageBitmap(BitmapFactory.decodeByteArray(userImage, 0, userImage.length));
+        usr_info_nav.setText(userName + " " + userPrename);
         view = layoutInflater.inflate(R.layout.admin_worker_main, frameLayout);
         fab = view.findViewById(R.id.adminWorkerAdd);
         noAdminWorkersView = view.findViewById(R.id.noWorkers);
@@ -147,13 +148,13 @@ public class adminWorkerActivity extends AppCompatActivity implements Navigation
                 final AppCompatButton workerButton = postMainView.findViewById(R.id.register_button);
                 workerButton.setVisibility(View.GONE);
 
-                int[] array= {android.R.attr.text};
-                TypedArray typedArray = obtainStyledAttributes(R.style.add_worker,array);
+                int[] array = {android.R.attr.text};
+                TypedArray typedArray = obtainStyledAttributes(R.style.add_worker, array);
                 registerToolbar.setTitle(typedArray.getString(0));
                 registerToolbar.setTitleTextAppearance(compatAdminWorkerActivity, R.style.add_worker);
 
                 workerTitleSpinner = postMainView.findViewById(R.id.user_title_text);
-                workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(compatAdminWorkerActivity, android.R.layout.simple_spinner_item, Title.values()));
+                workerTitleSpinner.setAdapter(new ArrayAdapter<Title>(compatAdminWorkerActivity, android.R.layout.simple_spinner_dropdown_item, Title.values()));
                 workerImage = postMainView.findViewById(R.id.userImage);
                 workerImage.setOnClickListener(new View.OnClickListener() {
 
