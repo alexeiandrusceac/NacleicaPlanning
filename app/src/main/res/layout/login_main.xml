@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".authactions.LoginActivity">
+    tools:context=".authactions.loginActivity">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll"
@@ -26,51 +26,50 @@
                 android:layout_width="300dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:src="@drawable/logo_loading"/>
+                android:src="@drawable/logo_loading" />
 
-             <com.google.android.material.textfield.TextInputLayout
-                 android:id="@+id/user_name_layout"
-                 android:layout_width="match_parent"
-                 android:gravity="center"
-                 android:layout_height="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/user_name_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
 
-                 android:layout_marginTop="40dp"
-                 android:text="@string/user_name"
-                 />
+                android:gravity="center"
+                android:text="@string/user_name" />
             <!-- app:passwordToggleDrawable="@string/user_name"-->
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/user_name_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="10dp"
                 android:background="@drawable/edit_text_design"
+                android:gravity="center"
                 android:hint="@string/user_name"
                 android:inputType="text"
                 android:maxLines="1"
+                android:padding="10dp"
                 android:textColor="@android:color/holo_blue_light" />
 
 
-             <com.google.android.material.textfield.TextInputLayout
-                 android:id="@+id/password_layout"
-                 android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/password_layout"
+                android:layout_width="match_parent"
 
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="5dp"
-                 android:text="@string/password"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/password"
 
-                 />
+                />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/password_Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:gravity="center"
-                android:padding="10dp"
                 android:background="@drawable/edit_text_design"
+                android:gravity="center"
+                android:hint="@string/password"
                 android:inputType="textPassword"
                 android:maxLines="1"
+                android:padding="10dp"
                 android:textColor="@android:color/holo_blue_light" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -84,8 +83,8 @@
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:textColor="@color/colorWhite"
                 android:text="@string/login_button"
+                android:textColor="@color/colorWhite"
                 android:textSize="16sp" />
 
             <TextView
@@ -100,33 +99,35 @@
 
             <TextView
                 android:id="@+id/numberAdmin"
-                android:layout_gravity="center"
-                android:textSize="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:autoLink="phone"
-                android:textColorLink="@color/design_default_color_primary"
+                android:text="079665088"
                 android:textColor="@color/design_default_color_primary"
-                android:text="079665088" />
+                android:textColorLink="@color/design_default_color_primary"
+                android:textSize="20dp" />
 
             <TextView
                 android:id="@+id/orRegister"
-                android:layout_gravity="center"
-                android:textSize="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="sau" />
+                android:layout_gravity="center"
+                android:text="sau"
+                android:textSize="20dp" />
+
             <TextView
                 android:id="@+id/registerlink"
-                android:layout_gravity="center"
-                android:textSize="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/register_button"
 
-                android:textColorLink="@color/design_default_color_primary"
                 android:textColor="@color/design_default_color_primary"
-                android:text="@string/register_button" />
+                android:textColorLink="@color/design_default_color_primary"
+                android:textSize="20dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

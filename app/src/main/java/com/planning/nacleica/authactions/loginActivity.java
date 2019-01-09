@@ -2,6 +2,8 @@ package com.planning.nacleica.authactions;
 
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -10,6 +12,8 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.planning.nacleica.BaseActivity;
+import com.planning.nacleica.BroadcastReceiver;
 import com.planning.nacleica.adminactions.adminActivity;
 import com.planning.nacleica.mainActivity;
 import com.planning.nacleica.R;
@@ -22,6 +26,7 @@ import androidx.core.widget.NestedScrollView;
 public class loginActivity extends AppCompatActivity implements View.OnClickListener {
     private final AppCompatActivity compatActivity = loginActivity.this;
     private NestedScrollView scrollView;
+    private TextView networkView;
     private TextInputLayout nameLayout;
     private TextInputLayout passwordLayout;
     private TextInputEditText nameInputEditText;
@@ -34,7 +39,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
     private TextView orRegister;
     // private Toolbar loginToolbar;
     WorkerSession session;
-
+    BroadcastReceiver myBroadCastReceiver;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,14 +61,32 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
         orRegister = (TextView) findViewById(R.id.orRegister);
         loginButton = (AppCompatButton) findViewById(R.id.login_button);
         registerLink = (TextView) findViewById(R.id.registerlink);
-
+        //networkView = (TextView)findViewById(R.id.networkView);
         // Initializarea Listeners
         loginButton.setOnClickListener(this);
         registerLink.setOnClickListener(this);
 
         valWorkerInput = new ValidationWorkerInputData(compatActivity);
+        myBroadCastReceiver = new BroadcastReceiver();
+        registerNetworkBroadcast();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    private void registerNetworkBroadcast() {
+          registerReceiver(myBroadCastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+      }
+      protected void unregisterNetworkChanges() {
+          try {
+              unregisterReceiver(myBroadCastReceiver);
+          } catch (IllegalArgumentException e) {
+              e.printStackTrace();
+          }
+      }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -115,5 +138,11 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
         } else {
             Snackbar.make(scrollView, getString(R.string.error_name_password), Snackbar.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterNetworkChanges();
     }
 }
