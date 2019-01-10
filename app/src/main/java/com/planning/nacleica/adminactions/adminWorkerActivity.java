@@ -6,12 +6,14 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -28,6 +30,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.planning.nacleica.BroadcastReceiver;
 import com.planning.nacleica.database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Title;
@@ -96,7 +99,7 @@ public class adminWorkerActivity extends AppCompatActivity implements Navigation
     public Utils utils;
     public AppCompatImageView imageView;
     public TextView noAdminWorkersView;
-
+BroadcastReceiver myBroadCastReceiver;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -220,6 +223,25 @@ public class adminWorkerActivity extends AppCompatActivity implements Navigation
         });
         //listOfWorkers = dbHelper.getWorkers();
         refreshListOfWorkers();
+        myBroadCastReceiver = new BroadcastReceiver();
+        registerNetworkBroadcast();
+
+    }
+    private void registerNetworkBroadcast() {
+        registerReceiver(myBroadCastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    protected void unregisterNetworkChanges() {
+        try {
+            unregisterReceiver(myBroadCastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterNetworkChanges();
     }
 
     @Override

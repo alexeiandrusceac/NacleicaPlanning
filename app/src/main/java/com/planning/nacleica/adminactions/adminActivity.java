@@ -5,9 +5,11 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -22,6 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
+import com.planning.nacleica.BroadcastReceiver;
 import com.planning.nacleica.database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Tasks;
@@ -58,7 +61,7 @@ public class adminActivity extends AppCompatActivity implements NavigationView.O
     private DrawerLayout drawerLayout;
     byte[] userImage;
     public TextView user_info_nav;
-   // public TextView usr_pren_nav;
+    // public TextView usr_pren_nav;
     public View view;
     int idUser;
     public List<Tasks> listOfAdminNewTasks, listOfAdminMakTasks, listOfAdminWorkNewTasks, listOfAdminWorkProgTasks, listOfAdminWorkDoneTasks = new ArrayList<>();
@@ -71,6 +74,7 @@ public class adminActivity extends AppCompatActivity implements NavigationView.O
     public Utils utils;
     private TabLayout tabsAdmin;
     private TabLayout tabsWorker;
+    BroadcastReceiver myBroadCastReceiver;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +105,7 @@ public class adminActivity extends AppCompatActivity implements NavigationView.O
         userImage = b.getByteArray("Image");
         idUser = b.getInt("Id");
         nav_header_imageView.setImageBitmap(BitmapFactory.decodeByteArray(userImage, 0, userImage.length));
-        user_info_nav.setText(userName + " "+ userPrename);
+        user_info_nav.setText(userName + " " + userPrename);
 
         view = layoutInflater.inflate(R.layout.admin_main, frameLayout);
         fab = view.findViewById(R.id.adminWorkerFab);
@@ -127,6 +131,28 @@ public class adminActivity extends AppCompatActivity implements NavigationView.O
             }
         });
         refreshListOfAdminTasks();
+
+        myBroadCastReceiver = new BroadcastReceiver();
+        registerNetworkBroadcast();
+
+    }
+
+    private void registerNetworkBroadcast() {
+        registerReceiver(myBroadCastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    protected void unregisterNetworkChanges() {
+        try {
+            unregisterReceiver(myBroadCastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterNetworkChanges();
     }
 
     void createTask() {
@@ -245,7 +271,7 @@ public class adminActivity extends AppCompatActivity implements NavigationView.O
 
                 break;
             case R.id.logOut_button:
-               session.logoutWorker();
+                session.logoutWorker();
 
                 finish();
             default:
@@ -275,7 +301,6 @@ public class adminActivity extends AppCompatActivity implements NavigationView.O
 
         }
     }
-
 
 
     public void fillData() {

@@ -1,12 +1,22 @@
 package com.planning.nacleica.authactions;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
@@ -14,6 +24,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.planning.nacleica.BaseActivity;
 import com.planning.nacleica.BroadcastReceiver;
+import com.planning.nacleica.KeyboardUtils;
 import com.planning.nacleica.adminactions.adminActivity;
 import com.planning.nacleica.mainActivity;
 import com.planning.nacleica.R;
@@ -21,9 +32,11 @@ import com.planning.nacleica.database.DataBaseHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.widget.NestedScrollView;
 
 public class loginActivity extends AppCompatActivity implements View.OnClickListener {
+    long  touchDownTime = 0;
     private final AppCompatActivity compatActivity = loginActivity.this;
     private NestedScrollView scrollView;
     private TextView networkView;
@@ -40,6 +53,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
     // private Toolbar loginToolbar;
     WorkerSession session;
     BroadcastReceiver myBroadCastReceiver;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +75,9 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
         orRegister = (TextView) findViewById(R.id.orRegister);
         loginButton = (AppCompatButton) findViewById(R.id.login_button);
         registerLink = (TextView) findViewById(R.id.registerlink);
-        //networkView = (TextView)findViewById(R.id.networkView);
+        myBroadCastReceiver = new BroadcastReceiver();
+
+        //CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.coordinatorlayout);
         // Initializarea Listeners
         loginButton.setOnClickListener(this);
         registerLink.setOnClickListener(this);
@@ -69,6 +85,15 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
         valWorkerInput = new ValidationWorkerInputData(compatActivity);
         myBroadCastReceiver = new BroadcastReceiver();
         registerNetworkBroadcast();
+
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -77,16 +102,32 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+
     private void registerNetworkBroadcast() {
-          registerReceiver(myBroadCastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-      }
-      protected void unregisterNetworkChanges() {
-          try {
-              unregisterReceiver(myBroadCastReceiver);
-          } catch (IllegalArgumentException e) {
-              e.printStackTrace();
-          }
-      }
+        registerReceiver(myBroadCastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    protected void unregisterNetworkChanges() {
+        try {
+            unregisterReceiver(myBroadCastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+    /*@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+
+        // Checks whether a hardware keyboard is available
+        if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
+            Toast.makeText(this, "keyboard visible", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
+            Toast.makeText(this, "keyboard hidden", Toast.LENGTH_SHORT).show();
+        }
+    }*/
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -114,7 +155,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
 
             session.createWorkerLoginSession(nameInputEditText.getText().toString(), passwordInputEditText.getText().toString());
 
-            if(currWorker !=null) {
+            if (currWorker != null) {
                 if (currWorker.Title != 4) {
                     Intent mainActivityIntent = new Intent(getApplicationContext(), adminActivity.class);
                     mainActivityIntent.putExtra("Image", currWorker.Image);

@@ -3,10 +3,12 @@ package com.planning.nacleica.authactions;
 import android.app.DatePickerDialog;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 
 import android.graphics.Bitmap;
 
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -25,6 +27,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.planning.nacleica.BroadcastReceiver;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Title;
 import com.planning.nacleica.database.DataBaseHelper;
@@ -63,7 +66,7 @@ public class registerActivity extends AppCompatActivity implements View.OnClickL
     public String data;
     Intent loginActivity;
     public Utils utils;
-
+    BroadcastReceiver myBroadCastReceiver;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,10 +149,20 @@ public class registerActivity extends AppCompatActivity implements View.OnClickL
                 finish();
             }
         });
-
+        myBroadCastReceiver = new BroadcastReceiver();
+        registerNetworkBroadcast();
 
     }
-
+    private void registerNetworkBroadcast() {
+        registerReceiver(myBroadCastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    protected void unregisterNetworkChanges() {
+        try {
+            unregisterReceiver(myBroadCastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -205,7 +218,6 @@ public class registerActivity extends AppCompatActivity implements View.OnClickL
             workerData.Title = ((Title) (workerTitleSpinner.getSelectedItem())).getTitleIndex();
             workerDBHelper.registerNewWorker(getApplicationContext(), workerData);
             Snackbar.make(scrollView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
-            nameInputValue.setText(null);
             startActivity(loginActivity);
             finish();
         } else {
@@ -255,4 +267,9 @@ public class registerActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterNetworkChanges();
+    }
 }

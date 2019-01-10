@@ -3,7 +3,9 @@ package com.planning.nacleica;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -55,7 +57,7 @@ public class mainActivity extends AppCompatActivity implements NavigationView.On
     public List<Tasks> listOfInProgressTasks;
     public List<Tasks> listOfDoneTasks;
     private Bundle bundleData;
-
+BroadcastReceiver broadcastReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +120,25 @@ public class mainActivity extends AppCompatActivity implements NavigationView.On
         });
         fillWorkerTasks();
         refreshWorkerTasks();
+        broadcastReceiver = new BroadcastReceiver();
+        registerNetworkBroadcast();
 
+    }
+    private void registerNetworkBroadcast() {
+        registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    protected void unregisterNetworkChanges() {
+        try {
+            unregisterReceiver(broadcastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterNetworkChanges();
     }
 
    public void refreshWorkerTasks() {

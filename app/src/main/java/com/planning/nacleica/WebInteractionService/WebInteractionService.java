@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.planning.nacleica.CheckNetworkConnection.ConnectionNetworkCheck;
 import com.planning.nacleica.IInternetCheckCallback;
+import com.planning.nacleica.authactions.Worker;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -38,7 +39,7 @@ public class WebInteractionService {
         ActionMap.put(WebServiceActions.GETDONEWORKERTASKS, "");
         ActionMap.put(WebServiceActions.GETWORKERS, "");
         ActionMap.put(WebServiceActions.GETWORKER, "");
-        ActionMap.put(WebServiceActions.ADDWORKERS, "");
+        ActionMap.put(WebServiceActions.ADDWORKERS, "CreateWorker");
         ActionMap.put(WebServiceActions.UPDATEWORKER, "");
         ActionMap.put(WebServiceActions.ASSIGNTASK, "");
         ActionMap.put(WebServiceActions.UPDATETASK, "");
@@ -106,9 +107,9 @@ public class WebInteractionService {
         return this;
     }
 
-    public WebInteractionService assignTask(final WebCallBack callBack, int indexTask, int indexWorker) {
-        String params = "index1=" + indexTask + "index2=" + indexWorker;
-        new WebInteractionServiceAsyncTask(callBack, new WebRequest(WebServiceActions.CREATENEWTASK, HttpMethods.POST, params)).execute(new WebRequest(WebServiceActions.CREATENEWTASK, HttpMethods.POST, params));
+    public WebInteractionService createWorker(final WebCallBack callBack, int index) {
+        String params = "index=" + index;
+        new WebInteractionServiceAsyncTask(callBack, new WebRequest(WebServiceActions.ADDWORKERS, HttpMethods.POST, params)).execute(new WebRequest(WebServiceActions.ADDWORKERS, HttpMethods.POST, params));
         return this;
     }
 
