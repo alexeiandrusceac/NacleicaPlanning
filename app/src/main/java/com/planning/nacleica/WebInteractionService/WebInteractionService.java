@@ -28,7 +28,7 @@ import java.util.Map;
 public class WebInteractionService {
     //public final String SOAP_ACTION = "http://tempuri.org/Create";
     public  final String WSDL_TARGET_NAMESPACE = "http://tempuri.org/";
-    private static final String BASE_URL = "http://192.168.14.148:8080/NalceicaPlanningService.asmx";
+    private static final String BASE_URL = "http://192.168.14.148/NacleicaPlanning/NacleicaPlanning/NalceicaPlanningService.asmx";
     public static Map<WebServiceActions, String> ActionMap = new HashMap<WebServiceActions, String>();
     private static List<WebInteractionServiceAsyncTask> listInteractions = new ArrayList<WebInteractionServiceAsyncTask>();
 
