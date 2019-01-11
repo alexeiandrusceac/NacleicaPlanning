@@ -26,7 +26,9 @@ import java.util.List;
 import java.util.Map;
 
 public class WebInteractionService {
-    private static final String BASE_URL = "";
+    //public final String SOAP_ACTION = "http://tempuri.org/Create";
+    public  final String WSDL_TARGET_NAMESPACE = "http://tempuri.org/";
+    private static final String BASE_URL = "http://192.168.14.148:8080/NalceicaPlanningService.asmx";
     public static Map<WebServiceActions, String> ActionMap = new HashMap<WebServiceActions, String>();
     private static List<WebInteractionServiceAsyncTask> listInteractions = new ArrayList<WebInteractionServiceAsyncTask>();
 
@@ -107,8 +109,8 @@ public class WebInteractionService {
         return this;
     }
 
-    public WebInteractionService createWorker(final WebCallBack callBack, int index) {
-        String params = "index=" + index;
+    public WebInteractionService createWorker(final WebCallBack callBack, int index,String name) {
+        String params = "name=" + name;
         new WebInteractionServiceAsyncTask(callBack, new WebRequest(WebServiceActions.ADDWORKERS, HttpMethods.POST, params)).execute(new WebRequest(WebServiceActions.ADDWORKERS, HttpMethods.POST, params));
         return this;
     }

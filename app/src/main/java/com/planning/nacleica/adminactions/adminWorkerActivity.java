@@ -31,6 +31,11 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.planning.nacleica.BroadcastReceiver;
+import com.planning.nacleica.Singleton;
+import com.planning.nacleica.WebInteractionService.BackgroundResponse;
+import com.planning.nacleica.WebInteractionService.WebCallBack;
+import com.planning.nacleica.WebInteractionService.WebRequestException;
+import com.planning.nacleica.WebInteractionService.WebResponse;
 import com.planning.nacleica.database.DataBaseHelper;
 import com.planning.nacleica.R;
 import com.planning.nacleica.Title;
@@ -200,6 +205,33 @@ BroadcastReceiver myBroadCastReceiver;
                         worker.Birthday = workerBirth.getText().toString();
                         worker.Password = workerPassword.getText().toString();
                         dbHelper.registerNewWorker(getApplicationContext(), worker);
+
+                        Singleton.WebApi.createWorker(new WebCallBack() {
+                            @Override
+                            public void onSuccess(WebResponse result) {
+
+                            }
+
+                            @Override
+                            public void onConnectionError(WebRequestException result) {
+
+                            }
+
+                            @Override
+                            public void onException(WebRequestException result) {
+
+                            }
+
+                            @Override
+                            public void onCompleted(BackgroundResponse result) {
+
+                            }
+
+                            @Override
+                            public void onFail(BackgroundResponse result) {
+
+                            }
+                        },0,worker.Name);
                         refreshListOfWorkers();
                         ad.dismiss();
 
