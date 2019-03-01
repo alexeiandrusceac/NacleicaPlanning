@@ -28,23 +28,23 @@ import java.util.Map;
 public class WebInteractionService {
     //public final String SOAP_ACTION = "http://tempuri.org/Create";
     public  final String WSDL_TARGET_NAMESPACE = "http://tempuri.org/";
-    private static final String BASE_URL = "http://192.168.14.148/NacleicaPlanning/NacleicaPlanning/NalceicaPlanningService.asmx";
+    private static final String BASE_URL = "http://localhost:1416/api";// "http://192.168.14.148/NacleicaPlanning/NacleicaPlanning/NalceicaPlanningService.asmx";
     public static Map<WebServiceActions, String> ActionMap = new HashMap<WebServiceActions, String>();
     private static List<WebInteractionServiceAsyncTask> listInteractions = new ArrayList<WebInteractionServiceAsyncTask>();
 
     public WebInteractionService() {
-        ActionMap.put(WebServiceActions.AUTHENTIFICATION, "");
-        ActionMap.put(WebServiceActions.GETADMINMAKETTASKS, "");
+        ActionMap.put(WebServiceActions.AUTHENTIFICATION, "/Worker/GetLoggedUser");
+        /*ActionMap.put(WebServiceActions.GETADMINMAKETTASKS, "");
         ActionMap.put(WebServiceActions.GETNEWADMINTASKS, "");
         ActionMap.put(WebServiceActions.GETNEWWORKERTASKS, "");
         ActionMap.put(WebServiceActions.GETPROGRESSWORKERTASKS, "");
-        ActionMap.put(WebServiceActions.GETDONEWORKERTASKS, "");
-        ActionMap.put(WebServiceActions.GETWORKERS, "");
+        ActionMap.put(WebServiceActions.GETDONEWORKERTASKS, "");*/
+        ActionMap.put(WebServiceActions.GETWORKERS, "/Worker/GetWorkers");
         ActionMap.put(WebServiceActions.GETWORKER, "");
-        ActionMap.put(WebServiceActions.ADDWORKERS, "CreateWorker");
-        ActionMap.put(WebServiceActions.UPDATEWORKER, "");
-        ActionMap.put(WebServiceActions.ASSIGNTASK, "");
-        ActionMap.put(WebServiceActions.UPDATETASK, "");
+        ActionMap.put(WebServiceActions.ADDWORKERS, "/Worker/CreateWorker");
+        ActionMap.put(WebServiceActions.UPDATEWORKER, "/Worker/UpdateWorker");
+        ActionMap.put(WebServiceActions.ASSIGNTASK, "/Task/AssignTask");
+        ActionMap.put(WebServiceActions.UPDATETASK, "/Task/UpdateTask");
         ActionMap.put(WebServiceActions.GETSTATUSTASKSWORKERS, "");
         ActionMap.put(WebServiceActions.CREATENEWTASK, "");
     }

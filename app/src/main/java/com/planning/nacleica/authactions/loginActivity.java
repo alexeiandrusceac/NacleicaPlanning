@@ -25,6 +25,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.planning.nacleica.BaseActivity;
 import com.planning.nacleica.BroadcastReceiver;
 import com.planning.nacleica.KeyboardUtils;
+import com.planning.nacleica.Singleton;
+import com.planning.nacleica.WebInteractionService.BackgroundResponse;
+import com.planning.nacleica.WebInteractionService.WebCallBack;
+import com.planning.nacleica.WebInteractionService.WebInteractionService;
+import com.planning.nacleica.WebInteractionService.WebRequestException;
+import com.planning.nacleica.WebInteractionService.WebResponse;
 import com.planning.nacleica.adminactions.adminActivity;
 import com.planning.nacleica.mainActivity;
 import com.planning.nacleica.R;
@@ -53,7 +59,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
     // private Toolbar loginToolbar;
     WorkerSession session;
     BroadcastReceiver myBroadCastReceiver;
-
+    WebInteractionService webInteractionService;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +72,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
     void initUI() {
         workerDBHelper = DataBaseHelper.getInstance(this);
         session = new WorkerSession(getApplicationContext());
+
         ///Initializarea obiectelor din activity
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
         nameLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
@@ -149,22 +156,49 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
         if (!valWorkerInput.textFilled(passwordInputEditText, passwordLayout, getString(R.string.error_password)))
             return;
 
-        if (workerDBHelper.checkUserOnLogin(nameInputEditText.getText().toString().trim(), passwordInputEditText.getText().toString().trim())) {
-
-            Worker currWorker = workerDBHelper.getWorker(nameInputEditText.getText().toString(), passwordInputEditText.getText().toString());
-
-            session.createWorkerLoginSession(nameInputEditText.getText().toString(), passwordInputEditText.getText().toString());
-
-            if (currWorker != null) {
-                if (currWorker.Title != 4) {
+       // if (workerDBHelper.checkUserOnLogin(nameInputEditText.getText().toString().trim(), passwordInputEditText.getText().toString().trim())) {
+        Singleton.WebApi.authorization(new WebCallBack(){
+            @Override
+            public void onSuccess(WebResponse result) {
+                //if (result.IsCode2xx()) {
                     Intent mainActivityIntent = new Intent(getApplicationContext(), adminActivity.class);
-                    mainActivityIntent.putExtra("Image", currWorker.Image);
+                   /* mainActivityIntent.putExtra("Image", currWorker.Image);
                     mainActivityIntent.putExtra("Name", currWorker.Name);
                     mainActivityIntent.putExtra("Prename", currWorker.Prename);
                     mainActivityIntent.putExtra("Id", currWorker.workerID);
-
+*/
                     startActivity(mainActivityIntent);
                     finish();
+               // }
+            }
+
+            @Override
+            public void onConnectionError(WebRequestException result) {
+
+            }
+
+            @Override
+            public void onException(WebRequestException result) {
+
+            }
+
+            @Override
+            public void onCompleted(BackgroundResponse result) {
+
+            }
+
+            @Override
+            public void onFail(BackgroundResponse result) {
+
+            }
+        });
+            //Worker currWorker = workerDBHelper.getWorker(nameInputEditText.getText().toString(), passwordInputEditText.getText().toString());
+
+            //session.createWorkerLoginSession(nameInputEditText.getText().toString(), passwordInputEditText.getText().toString());
+
+           /* if (currWorker != null) {
+                if (currWorker.Title != 4) {
+
                 } else {
                     Intent mainActivityIntent = new Intent(getApplicationContext(), mainActivity.class);
                     mainActivityIntent.putExtra("Image", currWorker.Image);
@@ -178,7 +212,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
             }
         } else {
             Snackbar.make(scrollView, getString(R.string.error_name_password), Snackbar.LENGTH_LONG).show();
-        }
+        }*/
     }
 
     @Override
