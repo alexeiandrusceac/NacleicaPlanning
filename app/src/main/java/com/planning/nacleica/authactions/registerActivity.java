@@ -42,10 +42,12 @@ import androidx.core.widget.NestedScrollView;
 public class registerActivity extends AppCompatActivity implements View.OnClickListener {
     private final AppCompatActivity compatRegisterActivity = registerActivity.this;
     private NestedScrollView scrollView;
-    private TextInputEditText nameInputValue;
-    private TextInputLayout nameInputLayout;
-    private TextInputEditText prenameInputValue;
-    private TextInputLayout prenameInputLayout;
+    private TextInputEditText userNameInputValue;
+    private TextInputLayout userNameInputLayout;
+    private TextInputEditText workerFirstNameInputValue;
+    private TextInputEditText workerFirstNameInputLayout;
+    private TextInputEditText workerLastNameInputValue;
+    private TextInputLayout workerLastNameInputLayout;
     private TextInputEditText passwordInputValue;
 
     private TextInputLayout passwordInputLayout;
@@ -81,12 +83,13 @@ public class registerActivity extends AppCompatActivity implements View.OnClickL
         utils = new Utils(compatRegisterActivity);
         workerData = new Worker();
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
-        nameInputLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
-        prenameInputLayout = (TextInputLayout) findViewById(R.id.user_prename_layout);
+        userNameInputLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
+        workerLastNameInputValue = (TextInputEditText) findViewById(R.id.worker_prename_text);
+        workerLastNameInputLayout = (TextInputLayout) findViewById(R.id.worker_prename_layout);
         passwordInputLayout = (TextInputLayout) findViewById(R.id.user_pass_layout);
         confPasswordInputLayout = (TextInputLayout) findViewById(R.id.user_confpass_layout);
-        nameInputValue = (TextInputEditText) findViewById(R.id.user_name_text);
-        prenameInputValue = (TextInputEditText) findViewById(R.id.user_prename_text);
+        workerFirstNameInputValue = (TextInputEditText) findViewById(R.id.user_name_text);
+
         workerTitleSpinner = (AppCompatSpinner) findViewById(R.id.user_title_text);
         passwordInputValue = (TextInputEditText) findViewById(R.id.user_pass_text);
         confPasswdInputValue = (TextInputEditText) findViewById(R.id.user_confpass_text);
@@ -198,7 +201,7 @@ public class registerActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void registerUser() {
-        if (!valUserData.textFilled(nameInputValue, nameInputLayout, getString(R.string.error_name))) {
+        if (!valUserData.textFilled(userNameInputValue, userNameInputLayout, getString(R.string.error_name))) {
             return;
         }
         if (!valUserData.textFilled(passwordInputValue, passwordInputLayout, getString(R.string.error_password))) {
@@ -209,10 +212,11 @@ public class registerActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
-        if (!workerDBHelper.checkUserOnLogin(nameInputValue.getText().toString().trim())) {
-            workerData.Name = nameInputValue.getText().toString();
-            workerData.Prename = prenameInputValue.getText().toString();
+        if (!workerDBHelper.checkUserOnLogin(userNameInputValue.getText().toString().trim())) {
+            workerData.FirstName = workerFirstNameInputValue.getText().toString();
+            workerData.LastName = workerLastNameInputValue.getText().toString();
             workerData.Password = passwordInputValue.getText().toString();
+            //workerData.IsOnline = ;
             workerData.Image = utils.convertToByteArray(userImageValue);
             workerData.Birthday = userBirthdayValue.getText().toString();
             workerData.Title = ((Title) (workerTitleSpinner.getSelectedItem())).getTitleIndex();

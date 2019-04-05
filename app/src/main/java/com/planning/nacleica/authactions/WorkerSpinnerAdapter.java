@@ -44,7 +44,7 @@ public class WorkerSpinnerAdapter extends ArrayAdapter<Worker> {
         TextView label = new TextView(mContext);
         label.setTextColor(Color.BLACK);
         label.setTextSize(18);
-        label.setText(" " + mValues.get(position).getWorkerName());
+        label.setText(" " + mValues.get(position).FirstName);
         label.setHeight(50);
         label.setGravity(Gravity.LEFT | Gravity.CENTER );
         return label;
@@ -58,7 +58,7 @@ public class WorkerSpinnerAdapter extends ArrayAdapter<Worker> {
         TextView label = new TextView(mContext);
         label.setTextColor(Color.BLACK);
         label.setTextSize(18);
-        label.setText(" " + mValues.get(position).getWorkerName());
+        label.setText(" " + mValues.get(position).FirstName);
         label.setHeight(70);
         label.setGravity(Gravity.LEFT | Gravity.CENTER );
 

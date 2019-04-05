@@ -109,7 +109,7 @@ public class WebInteractionService {
         return this;
     }
 
-    public WebInteractionService createWorker(final WebCallBack callBack, int index,String name) {
+    public WebInteractionService createWorker(final WebCallBack callBack, String name) {
         String params = "name=" + name;
         new WebInteractionServiceAsyncTask(callBack, new WebRequest(WebServiceActions.ADDWORKERS, HttpMethods.POST, params)).execute(new WebRequest(WebServiceActions.ADDWORKERS, HttpMethods.POST, params));
         return this;

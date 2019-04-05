@@ -6,8 +6,10 @@
     <string name="pendingTask">Sarcina in asteptare</string>
     <string name="doneTask">Sarcina finisata</string>
     <string name="cancelTask">Sarcina anulata</string>
-    <string name="user_name">Numele *</string>
-    <string name="user_prename">Prenumele *</string>
+    <string name="user_name">Numele utilizatorului *</string>
+    <string name="worker_name">Numele angajatului *</string>
+    <string name="worker_prename">Prenumele angajatului *</string>
+    <string name="worker_phone">Nr. de telefon</string>
     <string name="password">Parola *</string>
     <string name="conf_password">Conf. parola *</string>
     <string name="user_title">Functia angajat *</string>
@@ -21,10 +23,10 @@
     <string name="from_period">De la</string>
     <string name="to_period">Pina la</string>
     <string name="assign_button">Atribuie</string>
-    <string name="worker_name">Numele:</string>
-    <string name="worker_prename">Prenumele:</string>
-    <string name="worker_birth">Data nasterii:</string>
-    <string name="worker_title">Functia angajat:</string>
+    <string name="workerName">Numele:</string>
+    <string name="workerPrename">Prenumele:</string>
+    <string name="workerBirth">Data nașterii:</string>
+    <string name="workerTitle">Functia angajat:</string>
     <string name="comp_name">Denumirea companiei *</string>
     <string name="create">Creare</string>
     <string name="comp_phone">Nr. telefon * </string>

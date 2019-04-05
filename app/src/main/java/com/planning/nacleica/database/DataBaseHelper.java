@@ -44,9 +44,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     /*Crearea tabelului cu Utilizatori*/
     private static String WORKER_TABLE = "Worker";
     private static String WORKER_ID = "idWorker";
+    private static String WORKER_USER_NAME = "UserName";
     private static String WORKER_NAME = "FirstName";
     private static String WORKER_PRENAME = "LastName";
     private static String WORKER_PASSWORD = "Password";
+    private static String WORKER_PHONE = "Phone";
     private static String WORKER_TITLE = "Title";
     private static String WORKER_IMAGE = "Image";
     private static String WORKER_BIRTHDAY = "Birthday";
@@ -76,8 +78,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private String CREATE_TASK_TABLE = "CREATE TABLE " + TASK_TABLE + "(" + TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TASK_WORKER_ID + " INTEGER, " +
             TASK_NAME + " TEXT," + TASK_COM_NAME + " TEXT," + TASK_COM_PHONE + " TEXT," + TASK_STATE + " INTEGER,  " + TASK_PERIOD_FROM + " TEXT, " + TASK_PERIOD_TO + " TEXT," + TASK_IMAGE_BEFORE + " BLOB, " + TASK_IMAGE_AFTER + " BLOB" + ")";
 
-    private String CREATE_WORKER_TABLE = "CREATE TABLE " + WORKER_TABLE + "(" + WORKER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            WORKER_NAME + " TEXT," + WORKER_PRENAME + " TEXT, " + WORKER_PASSWORD + " TEXT, " + WORKER_TITLE + " INT," + WORKER_IMAGE + " BLOB," + WORKER_BIRTHDAY + " TEXT" + ")";
+    private String CREATE_WORKER_TABLE = "CREATE TABLE " + WORKER_TABLE + "(" + WORKER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + WORKER_USER_NAME + " TEXT," +
+            WORKER_NAME + " TEXT," + WORKER_PRENAME + " TEXT, " + WORKER_PASSWORD + " TEXT, " + WORKER_TITLE + " INT," + WORKER_PHONE + " TEXT," + WORKER_IMAGE + " BLOB," + WORKER_BIRTHDAY + " TEXT" + ")";
 
     private String DROP_TASK_TABLE = "DROP TABLE IF EXISTS " + TASK_TABLE;
     private String DROP_WORKER_TABLE = "DROP TABLE IF EXISTS " + WORKER_TABLE;
@@ -133,10 +135,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void updateData(Context context, Worker worker) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(WORKER_NAME, worker.Name);
-        contentValues.put(WORKER_PRENAME, worker.Prename);
+        contentValues.put(WORKER_NAME, worker.FirstName);
+        contentValues.put(WORKER_PRENAME, worker.LastName);
         contentValues.put(WORKER_BIRTHDAY, worker.Birthday);
         contentValues.put(WORKER_IMAGE, worker.Image);
+        contentValues.put(WORKER_PHONE, worker.Phone);
         contentValues.put(WORKER_PASSWORD, worker.Password);
         contentValues.put(WORKER_TITLE, worker.Title);
         sqLiteDatabase.update(WORKER_TABLE, contentValues, WORKER_ID + "= ?", new String[]{String.valueOf(worker.workerID)});
@@ -167,19 +170,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         ContentValues workerValues = new ContentValues();
-        workerValues.put(WORKER_NAME, worker.Name);
-        workerValues.put(WORKER_PRENAME, worker.Prename);
+        workerValues.put(WORKER_USER_NAME, worker.UserName);
+        workerValues.put(WORKER_NAME, worker.FirstName);
+        workerValues.put(WORKER_PRENAME, worker.LastName);
         workerValues.put(WORKER_IMAGE, worker.Image);
         workerValues.put(WORKER_BIRTHDAY, worker.Birthday);
         workerValues.put(WORKER_PASSWORD, worker.Password);
         workerValues.put(WORKER_TITLE, worker.Title);
         long id = sqLiteDatabase.insert(WORKER_TABLE, null, workerValues);
         if (sqLiteDatabase != null) {
-            Toast.makeText(context, String.format("Angajatul  cu numele " + worker.Name + " " + worker.Prename + " s-a inregistrat cu succes"), Toast.LENGTH_SHORT).show();
-            Log.d(TAG, String.format("Angajatul  cu numele " + worker.Name + " " + worker.Prename + " s-a inregistrat cu succes"));
+            Toast.makeText(context, String.format("Angajatul  cu numele " + worker.FirstName + " " + worker.LastName + " s-a inregistrat cu succes"), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, String.format("Angajatul  cu numele " + worker.FirstName + " " + worker.LastName + " s-a inregistrat cu succes"));
         } else {
-            Toast.makeText(context, String.format("Angajatul  cu numele " + worker.Name + " " + worker.Prename + "nu s-a inregistrat"), Toast.LENGTH_SHORT).show();
-            Log.d(TAG, String.format("Angajatul  cu numele " + worker.Name + " " + worker.Prename + "nu s-a inregistrat"));
+            Toast.makeText(context, String.format("Angajatul  cu numele " + worker.FirstName + " " + worker.LastName + "nu s-a inregistrat"), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, String.format("Angajatul  cu numele " + worker.FirstName + " " + worker.LastName + "nu s-a inregistrat"));
         }
     }
 
@@ -213,8 +217,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             do {
                 Worker worker = new Worker();
                 worker.workerID = curWorker.getInt(curWorker.getColumnIndex(WORKER_ID));
-                worker.Name = curWorker.getString(curWorker.getColumnIndex(WORKER_NAME));
-                worker.Prename = curWorker.getString(curWorker.getColumnIndex(WORKER_PRENAME));
+                worker.UserName = curWorker.getString(curWorker.getColumnIndex(WORKER_USER_NAME));
+                worker.FirstName = curWorker.getString(curWorker.getColumnIndex(WORKER_NAME));
+                worker.LastName = curWorker.getString(curWorker.getColumnIndex(WORKER_PRENAME));
                 worker.Password = curWorker.getString(curWorker.getColumnIndex(WORKER_PASSWORD));
                 worker.Title = curWorker.getInt(curWorker.getColumnIndex(WORKER_TITLE));
                 worker.Image = curWorker.getBlob(curWorker.getColumnIndex(WORKER_IMAGE));
@@ -237,9 +242,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             do {
                 Worker worker = new Worker();
                 worker.workerID = curWorker.getInt(curWorker.getColumnIndex(WORKER_ID));
-                worker.Name = curWorker.getString(curWorker.getColumnIndex(WORKER_NAME));
-                worker.Prename = curWorker.getString(curWorker.getColumnIndex(WORKER_PRENAME));
-                worker.Password = curWorker.getString(curWorker.getColumnIndex(WORKER_PASSWORD));
+                worker.UserName= curWorker.getString(curWorker.getColumnIndex(WORKER_USER_NAME));
+                worker.FirstName = curWorker.getString(curWorker.getColumnIndex(WORKER_NAME));
+                worker.LastName = curWorker.getString(curWorker.getColumnIndex(WORKER_PRENAME));
+                worker.Phone = curWorker.getString(curWorker.getColumnIndex(WORKER_PHONE));
+               // worker.Password = curWorker.getString(curWorker.getColumnIndex(WORKER_PASSWORD));
                 worker.Title = curWorker.getInt(curWorker.getColumnIndex(WORKER_TITLE));
                 worker.Image = curWorker.getBlob(curWorker.getColumnIndex(WORKER_IMAGE));
                 worker.Birthday = curWorker.getString(curWorker.getColumnIndex(WORKER_BIRTHDAY));
@@ -262,8 +269,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             do {
 
                 worker.workerID = curWorker.getInt(curWorker.getColumnIndex(WORKER_ID));
-                worker.Name = curWorker.getString(curWorker.getColumnIndex(WORKER_NAME));
-                worker.Prename = curWorker.getString(curWorker.getColumnIndex(WORKER_PRENAME));
+                worker.UserName= curWorker.getString(curWorker.getColumnIndex(WORKER_USER_NAME));
+                worker.FirstName = curWorker.getString(curWorker.getColumnIndex(WORKER_NAME));
+                worker.LastName = curWorker.getString(curWorker.getColumnIndex(WORKER_PRENAME));
+                worker.Phone = curWorker.getString(curWorker.getColumnIndex(WORKER_PHONE));
                 worker.Password = curWorker.getString(curWorker.getColumnIndex(WORKER_PASSWORD));
                 worker.Title = curWorker.getInt(curWorker.getColumnIndex(WORKER_TITLE));
                 worker.Image = curWorker.getBlob(curWorker.getColumnIndex(WORKER_IMAGE));

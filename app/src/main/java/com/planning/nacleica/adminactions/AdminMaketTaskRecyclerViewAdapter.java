@@ -76,13 +76,13 @@ public class AdminMaketTaskRecyclerViewAdapter extends RecyclerView.Adapter<Admi
                                     @Override
                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                         worker = (Worker) parent.getItemAtPosition(position);
-                                        idWorker = worker.getWorkerID();
+                                        idWorker = worker.workerID;
                                     }
 
                                     @Override
                                     public void onNothingSelected(AdapterView<?> parent) {
                                         worker = (Worker) parent.getSelectedItem();
-                                        idWorker = worker.getWorkerID();
+                                        idWorker = worker.workerID;
                                     }
                                 });
                                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity).setTitle("Atribuire la prelucrare").setView(postMainTaskView).setCancelable(false).setPositiveButton(

@@ -124,7 +124,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/prenameID"
                         android:layout_alignLeft="@id/prenameID"
-                        android:text="@string/worker_birth"
+                        android:text="@string/workerBirth"
                         android:textColor="#000000"
                         android:textSize="16dp" />
 
@@ -152,7 +152,7 @@
                         android:id="@+id/titleLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/worker_title"
+                        android:text="@string/workerTitle"
                         android:textColor="#000000"
                         android:textSize="16dp" />
 

@@ -84,17 +84,17 @@ public class AdminNewTasksRecyclerViewAdapter extends RecyclerView.Adapter<Admin
                                     @Override
                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                         designer = (Worker) parent.getItemAtPosition(position);
-                                        idDesigner = designer.getWorkerID();
-                                        nameDesigner = designer.getWorkerName();
-                                        pnDesigner = designer.getWorkerPrename();
+                                        idDesigner = designer.workerID;
+                                        nameDesigner = designer.FirstName;
+                                        pnDesigner = designer.LastName;
                                     }
 
                                     @Override
                                     public void onNothingSelected(AdapterView<?> parent) {
                                         designer = (Worker) parent.getSelectedItem();
-                                        idDesigner = designer.getWorkerID();
-                                        nameDesigner = designer.getWorkerName();
-                                        pnDesigner = designer.getWorkerPrename();
+                                        idDesigner = designer.workerID;
+                                        nameDesigner = designer.FirstName;
+                                        pnDesigner = designer.LastName;
                                     }
                                 });
                                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(adminActivity).setTitle("Atribuire la machetare").setView(postMainTaskView).setCancelable(false).setPositiveButton(

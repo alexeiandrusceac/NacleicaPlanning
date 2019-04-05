@@ -149,8 +149,10 @@ BroadcastReceiver myBroadCastReceiver;
                 LayoutInflater layoutInflater = (LayoutInflater) compatAdminWorkerActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View postMainView = layoutInflater.inflate(R.layout.register_main, null, false);
                 final Toolbar registerToolbar = postMainView.findViewById(R.id.register_app_toolbar);
-                final TextInputEditText workerName = postMainView.findViewById(R.id.user_name_text);
-                final TextInputEditText workerPrename = postMainView.findViewById(R.id.user_prename_text);
+                final TextInputEditText userName = postMainView.findViewById(R.id.user_name_text);
+                final TextInputEditText workerName = postMainView.findViewById(R.id.worker_name_text);
+                final TextInputEditText workerPhone = postMainView.findViewById(R.id.worker_phone_text);
+                final TextInputEditText workerPrename = postMainView.findViewById(R.id.worker_prename_text);
                 final TextInputEditText workerBirth = utils.dateToEditText((TextInputEditText) postMainView.findViewById(R.id.user_birth_text));
                 final TextInputEditText workerPassword = postMainView.findViewById(R.id.user_pass_text);
                 final AppCompatButton workerButton = postMainView.findViewById(R.id.register_button);
@@ -198,8 +200,10 @@ BroadcastReceiver myBroadCastReceiver;
                     public void onClick(View v) {
 
                         Worker worker = new Worker();
-                        worker.Name = workerName.getText().toString();
-                        worker.Prename = workerPrename.getText().toString();
+                        worker.UserName = userName.getText().toString();
+                        worker.FirstName = workerName.getText().toString();
+                        worker.LastName = workerPrename.getText().toString();
+                        worker.Phone = workerPhone.getText().toString();
                         worker.Title = ((Title) (workerTitleSpinner.getSelectedItem())).getTitleIndex();
                         worker.Image = utils.convertToByteArray(workerImage);
                         worker.Birthday = workerBirth.getText().toString();
@@ -231,7 +235,7 @@ BroadcastReceiver myBroadCastReceiver;
                             public void onFail(BackgroundResponse result) {
 
                             }
-                        },0,worker.Name);
+                        },worker.UserName);
                         refreshListOfWorkers();
                         ad.dismiss();
 

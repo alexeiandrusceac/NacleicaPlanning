@@ -42,6 +42,7 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
     public Worker worker;
     public CardView cardView;
     private int indexChild;
+
     public AdminWorkersRecyclerViewAdapter(adminWorkerActivity context, List<Worker> dbList, int user_id) {
 
         this.idUser = user_id;
@@ -77,13 +78,13 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
         editToolbar.setTitle("Editare angajat");
         editToolbar.setTitleTextAppearance(context, R.style.add_worker);
 
-        final EditText nameView = registeWorkerView.findViewById(R.id.user_name_text);
-        nameView.setText(String.valueOf(worker.Name));
+        final EditText nameView = registeWorkerView.findViewById(R.id.worker_name_text);
+        nameView.setText(String.valueOf(worker.FirstName));
         nameView.setTextColor(Color.BLACK);
         nameView.setHintTextColor(Color.RED);
 
-        final EditText prenameView = registeWorkerView.findViewById(R.id.user_prename_text);
-        prenameView.setText(String.valueOf(worker.Prename));
+        final EditText prenameView = registeWorkerView.findViewById(R.id.worker_prename_text);
+        prenameView.setText(String.valueOf(worker.LastName));
         prenameView.setTextColor(Color.BLACK);
         prenameView.setHintTextColor(Color.RED);
 
@@ -126,7 +127,8 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
                 .setCancelable(false)
                 .setView(registeWorkerView)
                 .setPositiveButton(shouldUpdate ? "Actualizeaza" : "Salveaza", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogBox, int id) { }
+                    public void onClick(DialogInterface dialogBox, int id) {
+                    }
                 })
                 .setNegativeButton("Anuleaza",
                         new DialogInterface.OnClickListener() {
@@ -165,8 +167,8 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
                 // verifica daca utilizatorul actualizeaza datele
                 if (shouldUpdate && worker != null) {
                     // actualizeaza datele
-                    worker.Name = nameView.getText().toString();
-                    worker.Prename = prenameView.getText().toString();
+                    worker.FirstName = nameView.getText().toString();
+                    worker.LastName = prenameView.getText().toString();
                     worker.Title = ((Title) (titleSpinner.getSelectedItem())).getTitleIndex();
                     worker.Birthday = birthView.getText().toString();
                     worker.Password = passwordView.getText().toString();
@@ -188,8 +190,8 @@ public class AdminWorkersRecyclerViewAdapter extends RecyclerView.Adapter<AdminW
     @Override
     public void onBindViewHolder(@NonNull AdminWorkersRecyclerViewAdapter.ViewHolder holder, int position) {
         byte[] byteArray = dbWorkerList.get(position).Image;
-        holder.name.setText(dbWorkerList.get(position).Name);
-        holder.prename.setText(dbWorkerList.get(position).Prename);
+        holder.name.setText(dbWorkerList.get(position).FirstName);
+        holder.prename.setText(dbWorkerList.get(position).LastName);
         holder.birthday.setText(dbWorkerList.get(position).Birthday);
         holder.title.setText(String.valueOf(Title.values()[dbWorkerList.get(position).Title - 1]));
         holder.image.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
